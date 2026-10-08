@@ -1,0 +1,263 @@
+#ifndef DR_DRAFT_SIGNATURES_H
+#define DR_DRAFT_SIGNATURES_H
+
+#include "psx.h"
+#include "xport.h"
+
+/* Unverified draft interfaces frozen before translation */
+/* TODO: Integrate modules and reconcile legacy forward declarations separately */
+
+void sub_80015074(uint32 source, uint32 destination, sint32 capacity);
+uint32 sub_80015150(uint32 source);
+sint32 sub_80015238(uint32 image);
+void sub_80015E38(void);
+uint32 sub_80017484(uint32 model);
+uint32 sub_80018278(void);
+uint32 sub_80018430(uint32 index, uint32 object);
+uint32 sub_8001860C(void);
+uint32 sub_800187D0(uint32 object_index, uint32 face_index);
+uint32 sub_8001896C(uint32 object_index);
+uint32 sub_800197B8(uint32 flags);
+sint32 sub_8001993C(uint32 offset, uint32 clut);
+uint32 sub_80019A3C(uint32 clut_offset, const uint8 *first_color, const uint8 *second_color);
+uint32 sub_80019C6C(uint32 clut_offset, uint32 color_bits);
+uint32 sub_80019D80(uint32 index, uint32 destination, uint32 source);
+uint32 sub_80019DA0(uint32 palette, uint8 *base_color, uint8 *mixed_color, uint32 palette_index, uint32 blend, uint32 fade);
+uint32 sub_8001AB18(uint32 model, uint32 texture_a, uint32 texture_b);
+uint32 sub_8001B7B0(uint32 tim, uint32 x, uint32 y, uint32 clut_x, uint32 clut_y, uint32 load_clut);
+uint32 sub_8001C958(void);
+uint32 sub_8001D01C(uint32 sound_index);
+uint32 sub_8001E13C(void);
+uint32 sub_8001E20C(uint32 header, uint32 total_bytes, uint32 *sound_info);
+void sub_8001E320(uint32 value);
+uint32 sub_8001E858(uint32 sound_index, uint32 voice, uint32 pitch, uint32 mode, uint32 volume);
+uint32 sub_8001F8FC(uint32 voice, sint32 frequency, sint32 pan, sint32 volume);
+sint32 sub_8001FE94(void);
+sint32 sub_8001FEF4(void);
+uint32 sub_8001FF98(void);
+sint32 sub_800200E0(void);
+sint32 sub_800201EC(uint32 path, uint32 channel);
+uint32 sub_80020430(uint32 index);
+uint32 sub_800237D8(void);
+sint32 sub_80023968(void);
+uint32 sub_80023C2C(uint32 card_slot);
+uint32 sub_80023F78(uint32 index);
+sint32 sub_80023FDC(uint32 index);
+uint32 sub_80024A30(uint32 port);
+uint32 sub_8002B4B0(void);
+uint32 sub_8002B6AC(void);
+uint32 sub_8002B6CC(void);
+sint32 sub_8002B840(void);
+void sub_8002B88C(uint32 buffer, uint32 path);
+uint32 sub_8002BC5C(uint32 movie_path);
+sint32 sub_8003132C(uint32 object, uint32 flags);
+uint32 sub_80039690(uint32 ordering_table_entries);
+void sub_8003970C(uint32 value);
+uint32 sub_80039718(uint32 mode);
+uint32 sub_80039908(void);
+uint32 sub_80039934(void);
+uint32 sub_800399D4(void);
+uint32 sub_80039A10(void);
+void sub_80039A4C(uint32 value);
+uint32 sub_80039ADC(uint32 name);
+uint32 sub_80041694(uint32 first_name, uint32 second_name);
+uint32 sub_800182D8(uint32 index, uint32 object, uint32 data, uint32 offset);
+sint32 sub_8003367C(sint32 x, sint32 y, sint32 bank);
+void sub_80035308(uint32 indices, uint32 records, uint32 vertices, uint32 weights);
+
+uint32 sub_8003A448(void);
+uint32 sub_8003A578(void);
+void sub_8003AAFC(uint32 value);
+uint32 sub_8003B674(uint32 remainder);
+uint32 sub_8003B898(void);
+void sub_8003BC14(void);
+uint32 sub_8003BC1C(void);
+uint32 sub_8003BF0C(uint32 x, uint32 y, uint32 incoming_v0);
+uint32 sub_8003BF48(uint32 projection);
+uint32 sub_8003BF7C(uint32 value);
+uint32 sub_8003C034(const sint32 *vector);
+void sub_8003C0B4(uint32 red, uint32 green, uint32 blue);
+uint32 sub_8003C0DC(uint32 row, const sint16 *vector, uint32 x_scale, uint32 y_scale, uint32 z_scale);
+void sub_8003C164(const MATRIX *matrix);
+uint32 sub_8003C1F8(uint32 angles);
+uint32 sub_8003C4B0(const sint32 *target, uint32 angle);
+uint32 sub_8003C960(sint16 *matrix, const sint16 *angles);
+const uint16 *sub_8003CED8(const MATRIX *matrix, uint32 transform);
+void sub_800416E0(uint32 packet);
+uint8 *sub_80041A5C(uint32 sector, uint8 *position);
+uint32 sub_80041C3C(uint32 path, uint32 destination, uint32 capacity);
+sint32 sub_80041D50(const char *path);
+uint32 sub_80041E24(uint32 path);
+uint32 sub_8004225C(const char *path, uint32 buffer, uint32 capacity);
+uint32 sub_800423EC(const char *path, uint32 enabled);
+uint32 sub_80042488(const char *path, uint32 enabled);
+uint32 sub_8004250C(uint32 heap, uint32 size);
+uint32 sub_80042544(uint32 bytes);
+uint32 sub_8004261C(uint32 allocation);
+uint32 sub_80042E98(uint32 selector);
+void sub_800437BC(void);
+void sub_8004395C(const uint8 *source, uint8 *destination);
+void sub_80047254(void);
+uint32 sub_8004A914(uint32 source, uint32 bytes);
+uint32 sub_8004B294(void);
+uint32 sub_8004B89C(const uint8 *volume);
+sint32 sub_8004B8BC(uint32 destination, uint32 words);
+sint32 sub_8004BA44(uint32 position);
+void sub_8004DB74(uint32 mode);
+void sub_8004DBE0(void);
+void sub_8004E1A4(void);
+uint32 sub_8004F3B0(void);
+void sub_8004FABC(uint32 projection);
+void sub_8004FACC(uint32 x, uint32 y);
+uint32 sub_800511F0(void);
+sint32 sub_800535C8(void);
+uint32 sub_80056C54(void);
+sint32 sub_800582C8(sint32 mode);
+sint32 sub_800584A8(void);
+uint32 sub_80058548(uint32 pattern, uint32 directory_entry);
+uint32 sub_80058C38(uint32 owner);
+
+uint32 sub_80036914(uint32 object, uint32 reset, uint32 player);
+uint32 sub_80040640(uint32 far_address, uint32 color_address);
+uint32 sub_800152DC(void);
+
+uint32 sub_80019F30(void);
+sint32 sub_8003909C(void);
+uint32 sub_80012D58(void);
+uint32 sub_800162D8(uint32 path);
+uint32 sub_8002060C(void);
+uint32 sub_80020890(void);
+
+uint32 sub_80020A14(uint32 font, uint32 text);
+uint32 sub_80021430(uint32 index);
+void sub_80012C3C(void);
+uint32 sub_800208E4(void);
+
+uint32 sub_8001697C(void);
+uint32 sub_80015664(void);
+
+void game_800AE17C(void);
+void game_800AEB4C(void);
+
+uint32 sub_80020AB8(uint32 font, sint32 x, sint32 y, const char *text);
+
+uint32 sub_8002F5F8(uint32 angles, uint32 positions, uint32 heights);
+uint32 sub_8002F78C(uint32 angles, uint32 positions, uint32 heights);
+uint32 sub_8002F860(uint32 angles, uint32 positions, uint32 heights);
+uint32 dr_race_motion_sqrt(uint32 value);
+void game_8008F6F8(void);
+void game_800B3924(void);
+void game_800B77CC(void);
+void game_8009564C(void);
+void game_8008FCA4(uint32 port);
+uint32 sub_80042754(void);
+void game_80090040(uint32 player, uint32 port);
+void game_800A7098(uint32 player);
+void game_800A6E8C(uint32 player);
+void game_800A60C8(uint32 player);
+void game_800A5BC4(uint32 freeze);
+void game_800A7940(uint32 player);
+uint32 game_800B5904(uint32 player);
+void game_800A23CC(uint32 port);
+void game_800A315C(uint32 player, uint32 port, uint32 flag);
+
+void sub_80033918(uint32 player, uint32 object);
+uint32 sub_8003408C(void);
+void game_800A5864(uint32 player, uint32 port);
+void game_800A4D28(uint32 player, uint32 port);
+
+uint32 sub_8001CDBC(uint32 player, uint32 object, uint32 view);
+
+uint32 dr_camera_angles(const sint16 *angles);
+uint32 sub_80042784(void);
+uint32 sub_80037DC8(uint32 object, uint32 port);
+
+void game_80090C50(uint32 object, uint32 view);
+
+void game_800A37B8(uint32 object, uint32 port);
+void game_800A3C5C(uint32 object, uint32 port);
+void game_800A4230(uint32 object, uint32 port);
+
+void game_80090858(uint32 player, uint32 port);
+
+uint32 sub_80017670(uint32 player);
+uint32 sub_80017820(uint32 player);
+uint32 sub_80017C9C(void);
+uint32 sub_80017D80(void);
+uint32 sub_80017E68(void);
+uint32 sub_8003D188(uint32 model);
+
+void game_800A7794(uint32 argument);
+void game_800B053C(void);
+void game_800B13A8(void);
+void game_800B3638(uint32 object);
+void game_800B8DB8(uint32 port, sint32 track, sint32 progress);
+void game_800B9374(uint32 port);
+
+void game_8009E320(uint32 object);
+void game_8009F030(uint32 player);
+void game_8009F500(uint32 object);
+void game_800AA78C(void);
+void game_800AA544(void);
+void game_8008F784(uint32 port);
+void game_800A9A68(void);
+void game_800BC0B4(void);
+void game_800BB558(void);
+void game_800B3810(void);
+uint32 sub_8001372C(void);
+void sub_80013364(void);
+void game_800BA7B4(void);
+void game_800AB0D8(uint32 object);
+void game_800AFC88(uint32 player);
+void game_800AF0BC(uint32 player);
+void game_800AFE28(uint32 player);
+void game_800AEC08(uint32 player);
+void game_800B24B4(uint32 object);
+void sub_800340F0(uint32 player,uint32 object);
+void sub_80019304(uint32 player);
+void game_800AADF4(uint32 object);
+void game_800AE020(uint32 object);
+void game_800A9078(uint32 object);
+void game_800A9504(uint32 object);
+void game_800A96C4(uint32 object);
+uint32 sub_8001E328(void);
+uint32 sub_8001E450(void);
+uint32 sub_8002037C(void);
+uint32 sub_800203A4(void);
+uint32 sub_8001B9A4(uint32 mode);
+void dr_geometry_apply_matrix(const MATRIX *matrix,const VECTOR *input,VECTOR *output);
+uint32 sub_8001D070(uint32 classification,uint32 strength,uint32 player);
+void game_800ADCE8(uint32 object,uint32 mask);
+void game_800AAA94(uint32 object,uint32 position,sint32 angle,sint32 penetration);
+void game_800A81F0(uint32 packet,uint32 frames);
+void game_800A8DD8(uint32 object);
+void game_800B1804(uint32 object,uint32 strength);
+void game_800B1A70(uint32 object,uint32 strength);
+void game_800B1F98(uint32 object,uint32 flags);
+void game_800B1D30(uint32 object,uint32 flags);
+uint32 sub_80038ABC(uint32 object,uint32 port);
+uint32 sub_80038E8C(uint32 object,uint32 port);
+void game_80099F74(uint32 object);
+void game_80097AA0(uint32 object);
+void game_80097EC4(uint32 object);
+void game_80096CA0(uint32 object);
+void game_80096E10(uint32 object);
+void game_80091FDC(uint32 playerIndex,uint32 callbackEntry,uint32 wheelList);
+void game_8009745C(uint32 object,uint32 model,sint32 force_x,sint32 force_z);
+uint32 game_80095D6C(uint32 object);
+void game_8009A8E8(uint32 object);
+void game_80096D84(uint32 object);
+void game_80016404(uint32 object,uint32 model);
+sint32 game_8001675C(uint32 object,uint32 model);
+void game_80097C44(uint32 object);
+void dr_race_quaternion_angles(const sint16 *angles,sint16 *output);
+void dr_race_quaternion_matrix(const sint16 *quaternion,MATRIX *matrix);
+void dr_driving_quaternion(const SVECTOR *angles,SVECTOR *quaternion);
+void dr_driving_rotation(const SVECTOR *quaternion,MATRIX *matrix);
+void dr_driving_matrix(uint32 object,MATRIX *right);
+void game_800964B0(uint32 object,uint32 contact_mask);
+void game_80091A6C(uint32 object,uint32 guestposition,uint32 angle,sint32 penetration,uint32 wheel);
+void game_8009082C(uint32 owner,uint32 value);
+void game_800AEDDC(uint32 player);
+#endif
+

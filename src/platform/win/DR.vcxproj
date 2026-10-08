@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32"><Configuration>Debug</Configuration><Platform>Win32</Platform></ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32"><Configuration>Release</Configuration><Platform>Win32</Platform></ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals"><VCProjectVersion>17.0</VCProjectVersion><ProjectGuid>{77251D8B-5833-438A-90FA-3F09A43A5396}</ProjectGuid><RootNamespace>DR</RootNamespace><WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion></PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration"><ConfigurationType>Application</ConfigurationType><UseDebugLibraries>true</UseDebugLibraries><PlatformToolset>v143</PlatformToolset><CharacterSet>MultiByte</CharacterSet></PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration"><ConfigurationType>Application</ConfigurationType><UseDebugLibraries>false</UseDebugLibraries><PlatformToolset>v143</PlatformToolset><CharacterSet>MultiByte</CharacterSet><WholeProgramOptimization>true</WholeProgramOptimization></PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <PropertyGroup><OutDir>$(ProjectDir)..\..\..\bin\</OutDir><IntDir>$(ProjectDir)..\..\..\_build\x86\$(Configuration)\</IntDir><LocalDebuggerWorkingDirectory>$(OutDir)</LocalDebuggerWorkingDirectory><LocalDebuggerCommand>$(TargetPath)</LocalDebuggerCommand><DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor><LinkIncremental>false</LinkIncremental></PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"><TargetName>DR_debug</TargetName></PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"><TargetName>DR</TargetName></PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile><WarningLevel>Level3</WarningLevel><TreatWarningAsError>true</TreatWarningAsError><DisableSpecificWarnings>4100;%(DisableSpecificWarnings)</DisableSpecificWarnings><SDLCheck>true</SDLCheck><PreprocessorDefinitions>_DEBUG;_CRT_SECURE_NO_WARNINGS;FULL_NAME=&quot;Demolition Racer&quot;;WND_TITLE=&quot;Demolition Racer (xport)&quot;;WND_WIDTH=960;WND_HEIGHT=768;FIELD_RATE=50;%(PreprocessorDefinitions)</PreprocessorDefinitions><AdditionalIncludeDirectories>$(ProjectDir)..\..;$(ProjectDir)..\..\..\..\xport\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories><CompileAs>CompileAsC</CompileAs><Optimization>Disabled</Optimization><RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary><DebugInformationFormat>ProgramDatabase</DebugInformationFormat><ProgramDataBaseFileName>$(IntDir)DR-compile.pdb</ProgramDataBaseFileName><MultiProcessorCompilation>true</MultiProcessorCompilation></ClCompile>
+    <Link><SubSystem>Windows</SubSystem><GenerateDebugInformation>true</GenerateDebugInformation><ProgramDatabaseFile>$(IntDir)DR_debug.pdb</ProgramDatabaseFile><ImportLibrary>$(IntDir)DR_debug.lib</ImportLibrary><AdditionalDependencies>user32.lib;gdi32.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies></Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile><WarningLevel>Level3</WarningLevel><TreatWarningAsError>true</TreatWarningAsError><DisableSpecificWarnings>4100;%(DisableSpecificWarnings)</DisableSpecificWarnings><SDLCheck>true</SDLCheck><PreprocessorDefinitions>NDEBUG;_CRT_SECURE_NO_WARNINGS;FULL_NAME=&quot;Demolition Racer&quot;;WND_TITLE=&quot;Demolition Racer (xport)&quot;;WND_WIDTH=960;WND_HEIGHT=768;FIELD_RATE=50;%(PreprocessorDefinitions)</PreprocessorDefinitions><AdditionalIncludeDirectories>$(ProjectDir)..\..;$(ProjectDir)..\..\..\..\xport\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories><CompileAs>CompileAsC</CompileAs><Optimization>MaxSpeed</Optimization><RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary><FunctionLevelLinking>true</FunctionLevelLinking><IntrinsicFunctions>true</IntrinsicFunctions><MultiProcessorCompilation>true</MultiProcessorCompilation></ClCompile>
+    <Link><SubSystem>Windows</SubSystem><GenerateDebugInformation>false</GenerateDebugInformation><ImportLibrary>$(IntDir)DR.lib</ImportLibrary><EnableCOMDATFolding>true</EnableCOMDATFolding><OptimizeReferences>true</OptimizeReferences><AdditionalDependencies>user32.lib;gdi32.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies></Link>
+  </ItemDefinitionGroup>
+  <ItemGroup><ClCompile Include="..\..\game_main.c" /><ClCompile Include="..\..\..\..\xport\src\psx.c" /><ClCompile Include="..\..\..\..\xport\src\psx_gpu.c" /><ClCompile Include="..\..\..\..\xport\src\psx_spu.c" /><ClCompile Include="..\..\..\..\xport\src\xport_trace.c" /><ClCompile Include="..\..\..\..\xport\src\platform\win\main.c"><ObjectFileName>$(IntDir)xport_main.obj</ObjectFileName></ClCompile></ItemGroup>
+  <ItemGroup><ClInclude Include="..\..\..\..\xport\src\xport.h" /><ClInclude Include="..\..\..\..\xport\src\psx.h" /><ClInclude Include="..\..\..\..\xport\src\xport_trace.h" /><ClInclude Include="..\..\..\..\xport\src\psx_gpu.h" /><ClInclude Include="..\..\..\..\xport\src\psx_spu.h" /></ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+<ItemGroup><ClCompile Include="..\..\game_link_stubs.c" /></ItemGroup>
+<ItemGroup><ClCompile Include="..\..\draft_agent1.c" /><ClCompile Include="..\..\draft_agent1_extra.c" /><ClCompile Include="..\..\draft_agent2.c" /><ClCompile Include="..\..\draft_agent3.c" /><ClCompile Include="..\..\game_bootstrap.c" /><ClCompile Include="..\..\game_missing.c" /></ItemGroup>
+<ItemGroup><ClCompile Include="..\..\game_pres_init.c" /></ItemGroup>
+<ItemGroup><ClCompile Include="..\..\game_pres_main.c" /><ClCompile Include="..\..\game_pres_support.c" /></ItemGroup>
+<ItemGroup><ClCompile Include="..\..\game_pres_menu.c" /></ItemGroup>
+<ItemGroup><ClCompile Include="..\..\game_race_start.c" /></ItemGroup>
+<ItemGroup><ClCompile Include="..\..\game_race_setup.c" /></ItemGroup>
+<ItemGroup><ClCompile Include="..\..\game_race_init.c" /></ItemGroup>
+<ItemGroup><ClCompile Include="..\..\game_pres_model.c" /></ItemGroup>
+<ItemGroup><ClCompile Include="..\..\game_pres_basic.c" /></ItemGroup>
+<ItemGroup><ClCompile Include="..\..\game_race_math.c" /></ItemGroup>
+<ItemGroup><ClCompile Include="..\..\game_pres_options.c" /></ItemGroup>
+<ItemGroup><ClCompile Include="..\..\game_pres_selection.c" /></ItemGroup>
+<ItemGroup><ClCompile Include="..\..\game_pres_records.c" /></ItemGroup>
+<ItemGroup><ClCompile Include="..\..\game_pres_extra.c" /></ItemGroup>
+<ItemGroup><ClCompile Include="..\..\game_race_track.c" /></ItemGroup>
+<ItemGroup><ClCompile Include="..\..\game_pres_controls.c" /></ItemGroup>
+<ItemGroup><ClCompile Include="..\..\game_race_palette.c" /></ItemGroup>
+<ItemGroup><ClCompile Include="..\..\game_race_packets.c" /></ItemGroup>
+<ItemGroup><ClCompile Include="..\..\game_race_effects.c" /></ItemGroup>
+<ItemGroup><ClCompile Include="..\..\game_race_hud_init.c" /></ItemGroup>
+<ItemGroup><ClCompile Include="..\..\game_race_input_init.c" /></ItemGroup>
+<ItemGroup><ClCompile Include="..\..\game_race_palette_tick.c" /></ItemGroup>
+<ItemGroup><ClCompile Include="..\..\game_race_audio.c" /></ItemGroup>
+<ItemGroup><ClCompile Include="..\..\game_race_text.c" /></ItemGroup>
+<ItemGroup><ClCompile Include="..\..\game_race_camera.c" /><ClCompile Include="..\..\game_race_physics.c" /><ClCompile Include="..\..\game_race_motion_angles.c" /><ClCompile Include="..\..\game_race_hud.c" /><ClCompile Include="..\..\game_race_hud_status.c" /><ClCompile Include="..\..\game_race_hud_panels.c" /><ClCompile Include="..\..\game_race_flare.c" /><ClCompile Include="..\..\game_race_view.c" /><ClCompile Include="..\..\game_race_view_modes.c" /><ClCompile Include="..\..\game_race_vehicle_render.c" /><ClCompile Include="..\..\game_race_hud_stats.c" /><ClCompile Include="..\..\game_race_car_draw.c" /><ClCompile Include="..\..\game_race_car_lighting.c" /><ClCompile Include="..\..\game_race_finish.c" /><ClCompile Include="..\..\game_race_pause.c" /><ClCompile Include="..\..\game_race_pause_audio.c" /><ClCompile Include="..\..\game_race_car_effects.c" /><ClCompile Include="..\..\game_race_car_surface.c" /><ClCompile Include="..\..\game_race_frame_render.c" /><ClCompile Include="..\..\game_race_frame_effects.c" /><ClCompile Include="..\..\game_race_scene.c" /><ClCompile Include="..\..\game_race_scene_packets.c" /><ClCompile Include="..\..\game_race_scene_subdivide_ft.c" /><ClCompile Include="..\..\game_race_scene_subdivide_gt.c" /><ClCompile Include="..\..\game_race_scene_clip_gt.c" /><ClCompile Include="..\..\game_race_scene_clip_ft.c" /><ClCompile Include="..\..\game_race_car_parts.c" /><ClCompile Include="..\..\game_race_car_packets.c" /><ClCompile Include="..\..\game_race_frame_objects.c" /><ClCompile Include="..\..\game_race_frame_animation.c" /><ClCompile Include="..\..\game_race_object_effects.c" /><ClCompile Include="..\..\game_race_object_collision.c" /><ClCompile Include="..\..\game_race_controls.c" /><ClCompile Include="..\..\game_race_driving_effects.c" /><ClCompile Include="..\..\game_race_driving.c" /><ClCompile Include="..\..\game_race_driving_control.c" /><ClCompile Include="..\..\game_race_driving_force.c" /><ClCompile Include="..\..\game_race_driving_callbacks.c" /><ClCompile Include="..\..\game_race_driving_alignment.c" /><ClCompile Include="..\..\game_race_driving_engine.c" /><ClCompile Include="..\..\game_race_driving_contact.c" /><ClCompile Include="..\..\game_race_driving_matrix.c" /><ClCompile Include="..\..\game_race_driving_recovery.c" /><ClCompile Include="..\..\game_race_driving_collision.c" /></ItemGroup>
+</Project>
+
+
+
+
+
+
