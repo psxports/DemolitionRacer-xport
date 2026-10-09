@@ -15,7 +15,6 @@ sint32 CdReset(sint32 mode);
 sint32 draft_agent1_missing_cd_command(uint32 command, const uint8 *parameters, uint8 *result);
 sint32 draft_agent1_missing_cd_command_wait(uint32 command, const uint8 *parameters);
 sint32 CdControlBPSX(uint8 command, uint8 *parameters, uint8 *result);
-void *CdSearchFilePSX(void *file, const char *path);
 sint32 draft_agent1_missing_cd_position_to_sector(const uint8 *position);
 void draft_agent1_missing_cd_sector_to_position(uint32 sector, uint8 *position);
 sint32 draft_agent1_missing_diagnostic(const char *format, ...);
@@ -122,7 +121,7 @@ sint32 sub_800201EC(uint32 path, uint32 channel)
     uint32 start, end, track;
     sint32 bytes;
     CdReset(1);
-    if (!CdSearchFilePSX(file, (const char *)psx_addr(path, 1u)))
+    if (!CdSearchFile((CdlFILE *)file, (const char *)psx_addr(path, 1u)))
         return draft_agent1_missing_diagnostic("Got here: PlayXA\n");
     start = (uint32)draft_agent1_missing_cd_position_to_sector(file);
     track = r_u32(0x800652CCu);

@@ -54,13 +54,6 @@ uint32 game_800B5688(uint32 car)
     return (uint32)((sint32)(x * (uint32)sine + z * (uint32)cosine) / 4096);
 }
 
-static uint32 physics_pending(uint32 target, uint32 first, uint32 second)
-{
-    (void)first; (void)second;
-    fprintf(stderr, "Untranslated GAME physics dependency %08X\n", target);
-    abort();
-}
-
 void game_8009AC50(uint32 car)
 {
     uint32 state = 0x80066D14u + car * 952u, i, count = 0u, action;
@@ -332,12 +325,12 @@ void game_800B77CC(void)
             game_8009AC50(i);
         } else if (type < 3u) {
             uint32 action = r_u8(cache + 95u);
-            if (!action) physics_pending(0x800B6498u, i, 0u);
-            else if (action == 1u) physics_pending(0x800B6294u, i, 0u);
-            else if (action == 2u) physics_pending(0x800B68B0u, i, 0u);
-            else if (action == 5u) physics_pending(0x800B6C50u, i, 0u);
-            physics_pending(0x800B59F0u, cache, 0x20000u);
-            physics_pending(r_u8(state + 948u) ? 0x8009CE54u : 0x8009C35Cu, i, 0u);
+            if (!action) game_800B6498(i);
+            else if (action == 1u) game_800B6294(i);
+            else if (action == 2u) game_800B68B0(i);
+            else if (action == 5u) game_800B6C50(i);
+            game_800B59F0(cache,0x20000);
+            if(r_u8(state+948u))game_8009CE54(i);else game_8009C35C(i);
         }
     }
 }
@@ -357,7 +350,7 @@ void game_8009564C(void)
         uint32 bucket = (uint32)((sint32)(sint16)r_u16(state + 90u) >> 2) + 1u;
         physics_bounds(descriptor, state + 100u, (sint16)r_u16(r_u32(state) + 128u));
         w_u8(descriptor + 16u, r_u8(0x800BFFC0u + bucket)); w_u8(0x800BFFC0u + bucket, i);
-        if (r_u8(state + 306u)) physics_pending(0x80093F94u, state, 0u);
+        if (r_u8(state + 306u)) game_80093F94(state);
         w_u8(state + 946u, 255u);
     }
     for (i = 0; i < 30u; ++i) {
@@ -381,10 +374,10 @@ void game_8009564C(void)
                     uint32 fast = !r_u8(state + 940u) && r_u8(state + 942u) < 15u &&
                         !r_u8(other_state + 940u) && r_u8(other_state + 942u) < 15u;
                     if (fast) game_800946D4(i, other);
-                    else physics_pending(0x80095054u, i, other);
+                    else game_80095054(i, other);
                 }
                 if (!r_u8(0x800C03E1u + i * 20u) && r_u8(0x800C03E1u + other * 20u) == 1u && i < other)
-                    physics_pending(0x800AD59Cu, i, other);
+                    game_800AD59C(i, other);
                 w_u32(0x800C03C0u, r_u32(0x800C03C0u) + 1u);
                 ++visited; other = r_u8(0x800C03E0u + other * 20u);
             }
@@ -465,9 +458,8 @@ static uint32 physics_collision_geometry(uint32 first, uint32 second, const Phys
 
 static void physics_collision_response(uint32 first, uint32 second, const PhysicsContact *contact, sint32 angle, sint32 fraction, uint32 corner)
 {
-    /* TODO Translate the complete 1745-word response at GAME 80092450 */
-    (void)contact; (void)angle; (void)fraction; (void)corner;
-    physics_pending(0x80092450u, first, second);
+    sint16 components[4]={contact->x,contact->z,contact->offset_x,contact->offset_z};
+    game_80092450(first,second,components,angle,fraction,corner);
 }
 
 void game_800946D4(uint32 first, uint32 second)
@@ -516,9 +508,7 @@ void game_800946D4(uint32 first, uint32 second)
         return;
     }
     {
-        uint32 seed_address=0x80067050u+first*952u;
-        uint32 seed=r_u32(seed_address)*0x01DF5E0Du+1u;
-        w_u32(seed_address,seed); selected=((seed<<24)|(seed>>8))&7u;
+        selected=sub_8001B884(first)&7u;
     }
     while(!(mask&(1u<<selected))) selected=(selected+1u)&7u;
     side=selected/4u;

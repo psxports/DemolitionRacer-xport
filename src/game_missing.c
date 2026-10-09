@@ -21,6 +21,11 @@ static void dr_missing(const char *name)
 static void dr_validate_gpu_packet(uint32 address, uint32 words)
 {
     uint32 command = r_u32(address + 4u) >> 24, minimum = 0u;
+    /* Cache invalidation precedes the remaining commands in PsyQ move packets */
+    if (command == 1u) {
+        if (words > 1u) dr_validate_gpu_packet(address + 4u, words - 1u);
+        return;
+    }
     /* A packet of only GP0 NOP words has no GPU effect */
     if (command == 0u) {
         uint32 index;

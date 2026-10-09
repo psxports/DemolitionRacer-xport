@@ -135,8 +135,7 @@ uint32 psx_bios_init_user_heap(uint32 base, uint32 bytes);
 static sint32 dr_native_exec(void *context, uint32 entry, uint32 argc, uint32 argv)
 {
     (void)context; (void)argc; (void)argv;
-    /* Movie playback is explicitly disabled */
-    if (entry == 0x800C14B8u) return 0;
+    if (entry == 0x800C14B8u) return dr_movie_entry();
     fprintf(stderr, "Unsupported native PS-X EXE entry %08X\n", entry);
     abort();
 }

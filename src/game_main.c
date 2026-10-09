@@ -23,7 +23,6 @@ uint32 _patch_card(void);
 uint32 _patch_card2(void);
 uint32 _SpuDataCallback(uint32 guest_callback);
 uint32 _bu_init(void);
-void *CdSearchFilePSX(void *result, const char *path);
 sint32 CdReset(sint32 mode);
 sint32 CdControlBPSX(uint8 command, uint8 *parameter, uint8 *result);
 sint32 CdRead(sint32 count, uint32 *destination, sint32 mode);
@@ -34,7 +33,7 @@ uint32 ReadInitPadFlag(void);
 sint32 sub_80047C94(uint32 first, uint32 second, uint32 third);
 void dr_native_scanout(void);
 sint32 CdInit(void);
-uint32 randPSX(void);
+sint32 randPSX(void);
 sint32 sub_8004BA44(uint32 position);
 uint32 sub_800511F0(void);
 sint32 sub_80023968(void);
@@ -247,7 +246,7 @@ void sub_80015E38(void)
         w_u32(0x8005E7F4u, 1u);
     sub_80047C94(0x801FFFF0u, 16u, 16u);
     ResetCallback();
-    VSyncCallback((void *)dr_native_scanout);
+    VSyncCallback(dr_native_scanout);
     CdInit();
     sub_8002BC5C(0x800597C4u);
     ResetGraph(0);
@@ -344,7 +343,7 @@ uint32 sub_80041C3C(uint32 path, uint32 destination, uint32 capacity)
     uint32 file[6];
     for (;;)
     {
-        if (CdSearchFilePSX(file, (const char *)psx_addr(path, 1u)) == NULL)
+        if (CdSearchFile((CdlFILE *)file, (const char *)psx_addr(path, 1u)) == NULL)
         {
             CdReset(0);
             continue;
@@ -362,14 +361,6 @@ uint32 sub_80041C3C(uint32 path, uint32 destination, uint32 capacity)
     {
     }
     return file[1];
-}
-
-uint32 sub_8002BC5C(uint32 movie_path)
-{
-    FUNCTION_MARKER(0x8002BC5Cu, "SLUS_009.69");
-    (void)movie_path;
-    /* Skip movies until the shared native MDEC decoder is available */
-    return 0u;
 }
 
 uint32 sub_800237D8(void)
@@ -452,7 +443,7 @@ void xport_missing_pad_cleanup_callback(uint32 target, uint32 owner);
 void xport_missing_guest_sprintf_format(char *destination, uint32 format_address);
 uint32 xport_missing_pad_owner_callback(uint32 target, uint32 owner);
 void xport_mips_break(uint32 code);
-uint32 bzero(uint32 destination, uint32 length);
+
 uint32 SysEnqIntRP(uint32 priority, uint32 node);
 uint32 ChangeClearRCnt(uint32 counter, uint32 mode);
 uint32 sub_80057160(uint32 owner, sint32 value);
@@ -465,7 +456,6 @@ sint32 CD_vol(CdlATV *volume);
 void SpuSetReverbDepth(SpuReverbAttr *attr);
 sint32 SpuReserveReverbWorkArea(sint32 mode);
 sint32 CdReset(sint32 mode);
-void *CdSearchFilePSX(void *result, const char *path);
 sint32 CdControlBPSX(uint8 command, uint8 *parameter, uint8 *result);
 sint32 CdRead(sint32 count, uint32 *destination, sint32 mode);
 sint32 CdReadSync(sint32 mode, uint8 *result);
@@ -475,7 +465,7 @@ uint32 sub_8003A448(void)
     FUNCTION_MARKER(0x8003A448u, "SLUS_009.69");
     PadInitDirect((uint8 *)psx_addr(0x80081B20u, 0x22u), (uint8 *)psx_addr(0x80081B42u, 0x22u));
     PadStartCom();
-    return bzero(0x800654F8u, 8u);
+    return bzeroPSX(0x800654F8u, 8u);
 }
 
 uint32 sub_80056C54(void)
@@ -599,7 +589,7 @@ uint32 sub_80041E24(uint32 path)
     printf((const char *)psx_addr(0x800123BCu, 1u), (const char *)psx_addr(path, 1u));
     for (;;)
     {
-        if (CdSearchFilePSX(file, (const char *)psx_addr(path, 1u)) == NULL)
+        if (CdSearchFile((CdlFILE *)file, (const char *)psx_addr(path, 1u)) == NULL)
         {
             CdReset(0);
             continue;

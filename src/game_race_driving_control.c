@@ -22,16 +22,7 @@ static sint32 dc_magic(sint32 a,uint32 shift){return dc_sub(dc_high(a,0x0C907DA5
 static sint32 dc_rpm_div(sint32 a){return dc_sub(dc_add(dc_high(a,(sint32)0xB60B60B7u),a)>>5,a>>31);}
 static sint32 dc_read(uint32 a){return (sint32)r_u32(a);}
 static sint32 dc_half(uint32 a){return (sint16)r_u16(a);}
-static uint32 dc_sqrt(uint32 input)
-{
-    uint32 leading,even,index,shift;
-    xport_gte_write_data(30u,input);leading=xport_gte_read_data(31u);
-    if(leading==32u)return 0u;
-    even=leading&~1u;shift=(uint32)((31-(sint32)even)>>1)&31u;
-    index=(sint32)even>=24?input<<((even-24u)&31u):(uint32)((sint32)input>>((24u-even)&31u));
-    return ((uint32)(sint32)(sint16)r_u16(0x800602C0u+(index-64u)*2u)<<shift)>>12;
-}
-static void dc_gears(uint32 object,uint32 model)
+void dr_driving_gears(uint32 object,uint32 model)
 {
     sint32 throttle=dc_half(object+16u),rpm,gear;
     uint32 sound,value;
@@ -118,7 +109,7 @@ static void dc_slip(uint32 object,sint32 wheel_speed,uint32 command_address,sint
     if(slip<65)w_u8(object+938u,0u);
     w_u16(object+908u,(uint16)slip);
     scaled=dc_product(slip,coefficient,8u);reduced=dc_shift(lateral,8u);
-    norm=dc_add((sint32)dc_sqrt((uint32)dc_add(dc_product(reduced,lateral,8u),dc_mul(scaled,scaled))),1);
+    norm=dc_add((sint32)dr_race_motion_sqrt((uint32)dc_add(dc_product(reduced,lateral,8u),dc_mul(scaled,scaled))),1);
     *limit=dc_div(dc_mul(*limit,reduced<0?dc_neg(reduced):reduced),norm);
     *longitudinal=dc_div(dc_mul(dc_shift(*longitudinal,1u),scaled),norm);
 }
@@ -126,7 +117,7 @@ static void dc_slip(uint32 object,sint32 wheel_speed,uint32 command_address,sint
 static sint32 dc_force_limit(sint32 limit,sint32 *lateral,sint32 longitudinal)
 {
     sint32 a=dc_shift(*lateral,4u),b=dc_shift(longitudinal,4u);
-    sint32 magnitude=(sint32)(dc_sqrt((uint32)dc_add(dc_mul(a,a),dc_mul(b,b)))<<4);
+    sint32 magnitude=(sint32)(dr_race_motion_sqrt((uint32)dc_add(dc_mul(a,a),dc_mul(b,b)))<<4);
     if(limit<magnitude) {
         sint32 ratio=dc_div((sint32)((uint32)limit<<8),magnitude);
         *lateral=dc_product(*lateral,ratio,8u);return dc_sub(magnitude,limit);
@@ -158,7 +149,7 @@ void game_80097EC4(uint32 object)
     steering=dc_shift(dc_read(object+8u),8u);yaw=dc_read(object+128u)>>8;
     yawrate=dc_read(object+140u);throttle=dc_half(object+16u);
     first=vx>>8;second=vz>>8;
-    w_u16(object+904u,(uint16)dc_sqrt((uint32)dc_add(dc_mul(first,first),dc_mul(second,second))));
+    w_u16(object+904u,(uint16)dr_race_motion_sqrt((uint32)dc_add(dc_mul(first,first),dc_mul(second,second))));
     front=dc_half(model+40u);rear=dc_half(model+42u);axle_sum=dc_add(front,rear);
     inertia=dc_read(model+32u);height=dc_half(model+44u);drive=(uint32)dc_half(model+118u);
     slip_coefficient=dc_half(model+124u);
@@ -207,7 +198,7 @@ void game_80097EC4(uint32 object)
                 force[2]=force[3]=dc_brake(second,dc_shift(wheel_rear,1u));
             }
         } else {
-            dc_gears(object,model);game_80016404(object,model);
+            dr_driving_gears(object,model);game_80016404(object,model);
             limit=(sint32)((uint32)dc_half(model+116u)<<((r_u8(object+950u)&1u)?9u:8u));
             if(dc_read(object+888u)<limit) {
                 first=game_8001675C(object,model);

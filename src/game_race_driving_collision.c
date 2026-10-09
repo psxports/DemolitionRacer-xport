@@ -22,11 +22,6 @@ static uint32 collision_divide(uint32 a,uint32 b)
     if(a==0x80000000u&&b==0xFFFFFFFFu){fprintf(stderr,"GAME91A6C original DIV break6\n");abort();}
     return (uint32)((sint32)a/(sint32)b);
 }
-static void collision_pending_vector(uint32 target,uint32 a,uint32 b,uint32 c,uint32 d,const VECTOR *vector)
-{
-    /* TODO Translate the complete native vector callee before this effect path */
-    fprintf(stderr,"TODO GAME %08X(%08X,%08X,%08X,%08X, vector %d,%d,%d)\n",target,a,b,c,d,vector->vx,vector->vy,vector->vz);abort();
-}
 static void collision_pending(uint32 target,uint32 a,uint32 b,uint32 c)
 {fprintf(stderr,"TODO GAME %08X(%08X,%08X,%08X)\n",target,a,b,c);abort();}
 void game_80091A6C(uint32 object,uint32 position,uint32 angle,sint32 penetration,uint32 wheel)
@@ -71,10 +66,10 @@ void game_80091A6C(uint32 object,uint32 position,uint32 angle,sint32 penetration
                 uint32 volume=collision_shift(across,2u),sound;
                 if((sint32)volume>4096)volume=4096u;
                 sound=(uint32)((sint32)randPSX()%3+11);
-                collision_pending_vector(0x8001EA08u,sound,0xFFFFFFFFu,volume,4096u,&local);
+                (void)sub_8001EA08(sound,-1,(sint32)volume,4096,&local);
             }else{
                 uint32 strength=across;if((sint32)strength>4096)strength=4096u;
-                collision_pending_vector(0x8001CF18u,owner,strength,0u,0u,&local);
+                (void)sub_8001CF18(owner,(sint32)strength,&local);
             }
         }else if((sint32)across>12800){
             uint32 volume=(uint32)(((sint32)across+(sint32)(across>>31))>>1),sound;
@@ -88,7 +83,7 @@ void game_80091A6C(uint32 object,uint32 position,uint32 angle,sint32 penetration
         uint32 current_owner=R8(object+937u);
         if((sint32)R32(0x80064C14u)>=(sint32)current_owner)game_8009082C(current_owner,2048u);
     }
-    if(R8(object+306u)!=0u&&R8(object+309u)==0u){uint32 owner_index=R8(object+307u);R8(object+309u)=1u;collision_pending(0x8001532Cu,owner_index,4u,0u);}
+    if(R8(object+306u)!=0u&&R8(object+309u)==0u){uint32 owner_index=R8(object+307u);R8(object+309u)=1u;sub_8001532C(owner_index,4u);}
     if((sint32)impulse<0)impulse=0u-impulse;
-    if((sint32)impulse>0)collision_pending(0x80030110u,owner,R8(0x800BE988u+wheel),(uint32)((sint32)impulse>>10));
+    if((sint32)impulse>0)sub_80030110(owner,R8(0x800BE988u+wheel),(sint32)impulse>>10);
 }
