@@ -30,8 +30,10 @@ static void draft_agent1_volume(uint8 volume[4])
     volume[1] = (uint8)(word >> 8);
     volume[2] = (uint8)(word >> 16);
     volume[3] = (uint8)(word >> 24);
-    if (level < 0) level = 0;
-    if (level > 255) level = 255;
+    if (level < 0)
+        level = 0;
+    if (level > 255)
+        level = 255;
     volume[0] = volume[2] = (uint8)level;
 }
 
@@ -39,7 +41,8 @@ sint32 sub_80015238(uint32 image)
 {
     uint32 index;
     draft_agent1_missing_draw_mode(1);
-    for (index = 0; index < 2u; ++index) {
+    for (index = 0; index < 2u; ++index)
+    {
         uint32 record = image + 20u * index;
         sint16 rect[4];
         rect[0] = (sint16)r_u32(record);
@@ -57,8 +60,7 @@ sint32 sub_8001993C(uint32 offset, uint32 clut)
     w_u16(0x80064C7Au, (uint16)((sint16)clut >> 6));
     draft_agent1_missing_store_image(0x80064C78u, 0x800739ECu);
     draft_agent1_missing_palette_update(0x800739ECu, r_u32(0x80064C70u), r_u32(0x80064C74u) + offset);
-    return (sint16)(((r_u32(0x80064C74u) + offset) << 6) |
-        (((sint32)r_u32(0x80064C70u) >> 4) & 63));
+    return (sint16)(((r_u32(0x80064C74u) + offset) << 6) | (((sint32)r_u32(0x80064C70u) >> 4) & 63));
 }
 
 sint32 sub_8001FEF4(void)
@@ -78,12 +80,14 @@ sint32 sub_800200E0(void)
     uint32 previous = r_u32(0x80064D38u);
     sint32 result = (sint32)previous < 61;
     w_u32(0x80064D38u, previous + 1u);
-    if (!result) {
+    if (!result)
+    {
         uint8 *status = (uint8 *)psx_addr(0x800652D0u, 8u);
         w_u32(0x80064D38u, 0);
         draft_agent1_missing_cd_command(1, NULL, status);
         result = r_u8(0x800652D0u) & 32;
-        if (result) {
+        if (result)
+        {
             uint8 position[8];
             sint32 sector;
             draft_agent1_missing_cd_command(16, NULL, status);
@@ -94,8 +98,10 @@ sint32 sub_800200E0(void)
             sector = draft_agent1_missing_cd_position_to_sector(position);
             w_u32(0x800652BCu, (uint32)sector);
             result = (sint32)r_u32(0x800652B4u) < sector;
-            if (!result) result = sector < (sint32)r_u32(0x800652B0u);
-            if (result) {
+            if (!result)
+                result = sector < (sint32)r_u32(0x800652B0u);
+            if (result)
+            {
                 uint8 parameters[8], restart[8];
                 uint32 start = r_u32(0x800652C4u);
                 uint32 end = r_u32(0x800652C8u);
@@ -151,7 +157,8 @@ sint32 sub_80023FDC(uint32 index)
     uint32 row = 0x80074700u + 4396u * index;
     uint32 count;
     for (count = 0; count < 15u; ++count, row += 292u)
-        if ((sint16)r_u16(row) == 0) return 0;
+        if ((sint16)r_u16(row) == 0)
+            return 0;
     return 1;
 }
 
@@ -166,16 +173,27 @@ uint32 sub_8002B6CC(void)
     w_u16(0x800650AAu, (uint16)((page << 8) + 128u));
     draft_agent1_missing_load_image((const sint16 *)psx_addr(0x800650A8u, 8u), pixels);
     draft_agent1_missing_draw_sync(0);
-    w_u8(0x80078C5Bu, 9); w_u8(0x80078C5Fu, 44);
-    w_u8(0x80078C75u, 191); w_u8(0x80078C7Du, 191);
-    w_u8(0x80078C6Cu, 63); w_u8(0x80078C7Cu, 63);
-    w_u16(0x80078C62u, 180); w_u16(0x80078C6Au, 180);
-    w_u8(0x80078C64u, 0); w_u8(0x80078C65u, 128);
-    w_u8(0x80078C6Du, 128); w_u8(0x80078C74u, 0);
-    w_u16(0x80078C60u, 256); w_u16(0x80078C68u, 319);
-    w_u16(0x80078C70u, 256); w_u16(0x80078C72u, 243);
-    w_u16(0x80078C78u, 319); w_u16(0x80078C7Au, 243);
-    w_u8(0x80078C5Cu, 128); w_u8(0x80078C5Du, 128); w_u8(0x80078C5Eu, 128);
+    w_u8(0x80078C5Bu, 9);
+    w_u8(0x80078C5Fu, 44);
+    w_u8(0x80078C75u, 191);
+    w_u8(0x80078C7Du, 191);
+    w_u8(0x80078C6Cu, 63);
+    w_u8(0x80078C7Cu, 63);
+    w_u16(0x80078C62u, 180);
+    w_u16(0x80078C6Au, 180);
+    w_u8(0x80078C64u, 0);
+    w_u8(0x80078C65u, 128);
+    w_u8(0x80078C6Du, 128);
+    w_u8(0x80078C74u, 0);
+    w_u16(0x80078C60u, 256);
+    w_u16(0x80078C68u, 319);
+    w_u16(0x80078C70u, 256);
+    w_u16(0x80078C72u, 243);
+    w_u16(0x80078C78u, 319);
+    w_u16(0x80078C7Au, 243);
+    w_u8(0x80078C5Cu, 128);
+    w_u8(0x80078C5Du, 128);
+    w_u8(0x80078C5Eu, 128);
     page = r_u32(0x80065218u) << 8;
     w_u16(0x80078C6Eu, (uint16)(((page & 256u) >> 4) | 256u | ((page & 512u) << 2)));
     return draft_agent1_missing_vsync_callback(0x8002B6ACu);
@@ -201,19 +219,37 @@ uint32 sub_80039908(void)
 uint32 dr_texture_lookup(const char *name)
 {
     uint32 record = r_u32(0x800654F4u);
-    for (;;) {
+    for (;;)
+    {
         uint32 offset;
         sint32 matched = 1;
-        for (offset = 0; offset < 8u; ++offset) {
+        for (offset = 0; offset < 8u; ++offset)
+        {
             uint32 left = r_u8(record + offset), right = (uint8)name[offset];
-            if (!left) { matched = !right; break; }
-            if (!right) { matched = 0; break; }
-            if (left >= 97u) left = (left - 32u) & 255u;
-            if (right >= 97u) right = (right - 32u) & 255u;
-            if (left != right) { matched = 0; break; }
+            if (!left)
+            {
+                matched = !right;
+                break;
+            }
+            if (!right)
+            {
+                matched = 0;
+                break;
+            }
+            if (left >= 97u)
+                left = (left - 32u) & 255u;
+            if (right >= 97u)
+                right = (right - 32u) & 255u;
+            if (left != right)
+            {
+                matched = 0;
+                break;
+            }
         }
-        if (matched) return record;
-        if (!r_u8(record)) {
+        if (matched)
+            return record;
+        if (!r_u8(record))
+        {
             draft_agent1_missing_diagnostic("couldn't find texture %s\n", name);
             return record - 26u;
         }
@@ -233,7 +269,8 @@ void sub_8003BC14(void)
 sint32 sub_80041D50(const char *path)
 {
     uint32 index = 0;
-    while ((sint32)index < (sint32)r_u32(0x80065180u)) {
+    while ((sint32)index < (sint32)r_u32(0x80065180u))
+    {
         if (!strcmp(path, (const char *)psx_addr(0x800839D4u + 40u * index, 1u)))
             return (sint32)index;
         ++index;
@@ -244,7 +281,8 @@ sint32 sub_80041D50(const char *path)
 
 uint32 sub_80042488(const char *path, uint32 enabled)
 {
-    if (!enabled) return 0;
+    if (!enabled)
+        return 0;
     return r_u32(0x800839F4u + 40u * (uint32)sub_80041D50(path));
 }
 
@@ -264,8 +302,10 @@ uint32 sub_8004250C(uint32 heap, uint32 size)
 
 uint32 sub_80042E98(uint32 selector)
 {
-    if (!selector) return draft_agent1_missing_event_operation(0xF2000002u);
-    if (selector == 1u) return draft_agent1_missing_event_operation(0xF2000001u);
+    if (!selector)
+        return draft_agent1_missing_event_operation(0xF2000002u);
+    if (selector == 1u)
+        return draft_agent1_missing_event_operation(0xF2000001u);
     return 1u;
 }
 

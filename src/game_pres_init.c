@@ -26,7 +26,8 @@ static void pres_copy_random_name(uint32 destination)
 static void pres_init_fixed_group(uint32 base, uint32 bytes)
 {
     uint32 offset;
-    for (offset = 0u; offset < bytes; offset += 32u) {
+    for (offset = 0u; offset < bytes; offset += 32u)
+    {
         pres_copy_random_name(base + offset);
         PRES_WORD(base + offset + 20u) = 0u;
         PRES_WORD(base + offset + 24u) = 2000u;
@@ -36,7 +37,8 @@ static void pres_init_fixed_group(uint32 base, uint32 bytes)
 static void pres_init_scaled_group(uint32 base, uint32 bytes)
 {
     uint32 offset;
-    for (offset = 0u; offset < bytes; offset += 32u) {
+    for (offset = 0u; offset < bytes; offset += 32u)
+    {
         uint32 scale;
         uint32 half;
         pres_copy_random_name(base + offset);

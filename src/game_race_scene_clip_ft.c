@@ -6,6 +6,7 @@ static void ft_vertex_load(uint32 index, const SceneSubdivisionVertex *vertex)
     xport_gte_write_data(index * 2u, (uint16)vertex->x | ((uint32)(uint16)vertex->y << 16));
     xport_gte_write_data(index * 2u + 1u, (uint32)(sint32)vertex->z);
 }
+
 static uint32 ft_link(uint32 packet, uint32 ordering, uint32 depth, uint32 words, uint32 size)
 {
     uint32 slot = ordering + depth * 4u;
@@ -16,6 +17,7 @@ static uint32 ft_link(uint32 packet, uint32 ordering, uint32 depth, uint32 words
     w_u32(0x80065570u, packet + size);
     return result;
 }
+
 uint32 scene_80051BC0(const SceneSubdivisionHeader *header, SceneSubdivisionVertex *const *vertices)
 {
     uint32 packet, depth;
@@ -35,9 +37,11 @@ uint32 scene_80051BC0(const SceneSubdivisionHeader *header, SceneSubdivisionVert
     w_u16(packet + 22u, header->tpage);
     w_u16(packet + 28u, (uint16)vertices[2]->uv);
     depth = xport_gte_read_data(7u);
-    if ((sint32)depth <= 0) return header->ordering;
+    if ((sint32)depth <= 0)
+        return header->ordering;
     return ft_link(packet, header->ordering, depth, 7u, 32u);
 }
+
 uint32 scene_80051C90(const SceneSubdivisionHeader *header, SceneSubdivisionVertex *const *vertices)
 {
     uint32 packet, depth;
@@ -60,12 +64,13 @@ uint32 scene_80051C90(const SceneSubdivisionHeader *header, SceneSubdivisionVert
     w_u16(packet + 36u, (uint16)vertices[3]->uv);
     xport_gte_execute(0x168002Eu);
     depth = xport_gte_read_data(7u);
-    if ((sint32)depth <= 0) return header->ordering;
+    if ((sint32)depth <= 0)
+        return header->ordering;
     w_u32(packet + 32u, xport_gte_read_data(14u));
     return ft_link(packet, header->ordering, depth, 9u, 40u);
 }
-uint32 scene_80051F60(SceneSubdivisionVertex *output, const SceneSubdivisionVertex *left,
-    const SceneSubdivisionVertex *right)
+
+uint32 scene_80051F60(SceneSubdivisionVertex *output, const SceneSubdivisionVertex *left, const SceneSubdivisionVertex *right)
 {
     sint16 x = (sint16)(((sint32)left->x + right->x) >> 1);
     sint16 y = (sint16)(((sint32)left->y + right->y) >> 1);
@@ -74,19 +79,26 @@ uint32 scene_80051F60(SceneSubdivisionVertex *output, const SceneSubdivisionVert
     sint32 sx, sy, width, height;
     xport_gte_write_data(0u, (uint16)x | ((uint32)(uint16)y << 16));
     xport_gte_write_data(1u, (uint32)(sint32)z);
-    output->x = x; output->y = y; output->z = z;
+    output->x = x;
+    output->y = y;
+    output->z = z;
     xport_gte_execute(0x180001u);
     u = ((uint16)left->uv & 255u) + ((uint16)right->uv & 255u);
     output->depth = (sint16)(((sint32)left->depth + right->depth) >> 1);
     v = ((uint16)left->uv >> 8) + ((uint16)right->uv >> 8);
     output->uv = (sint16)((u >> 1) | ((v >> 1) << 8));
     screen = xport_gte_read_data(14u);
-    sx = (sint16)screen; sy = (sint16)(screen >> 16);
-    width = (sint32)r_u32(0x8006511Cu); height = (sint32)r_u32(0x80065120u);
+    sx = (sint16)screen;
+    sy = (sint16)(screen >> 16);
+    width = (sint32)r_u32(0x8006511Cu);
+    height = (sint32)r_u32(0x80065120u);
     clip = sx < 0 ? 1u : 0u;
-    if (sx >= width) clip |= 2u;
-    if (sy < 0) clip |= 4u;
-    if (sy >= height) clip |= 8u;
+    if (sx >= width)
+        clip |= 2u;
+    if (sy < 0)
+        clip |= 4u;
+    if (sy >= height)
+        clip |= 8u;
     output->clip = (sint16)clip;
     return (uint32)(sy < height);
 }

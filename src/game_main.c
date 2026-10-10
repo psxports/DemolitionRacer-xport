@@ -177,65 +177,64 @@ sint32 sub_800535C8(void)
             uint32 status_word = r_u32(0x8005FBDCu);
             uint32 detail_word = r_u32(0x8005FBE0u);
             uint32 command_name = r_u32(0x8005FBF4u + 4u * command_index);
-            printf((const char *)psx_addr(0x80012AD0u, 1u),
-                   (const char *)psx_addr(command_name, 1u), status_word, detail_word);
+            printf((const char *)psx_addr(0x80012AD0u, 1u), (const char *)psx_addr(command_name, 1u), status_word, detail_word);
         }
     }
     switch (interrupt_code)
     {
-    case 1:
-        if (error != 0u && count == 1u)
-            error = 0u;
-        w_u8(0x8005FEADu, error != 0u ? 5u : 1u);
-        for (i = 0u; i < 8u; ++i)
-            w_u8(0x8008B36Cu + i, result_bytes[i]);
-        w_u8(r_u32(0x8005FE94u), 0u);
-        w_u8(r_u32(0x8005FEA0u), 0u);
-        return 4;
-    case 2:
-        w_u8(0x8005FEACu, error != 0u ? 5u : 2u);
-        for (i = 0u; i < 8u; ++i)
-            w_u8(0x8008B364u + i, result_bytes[i]);
-        return 2;
-    case 3:
-        if (error != 0u)
-        {
-            w_u8(0x8005FEACu, 5u);
+        case 1:
+            if (error != 0u && count == 1u)
+                error = 0u;
+            w_u8(0x8005FEADu, error != 0u ? 5u : 1u);
+            for (i = 0u; i < 8u; ++i)
+                w_u8(0x8008B36Cu + i, result_bytes[i]);
+            w_u8(r_u32(0x8005FE94u), 0u);
+            w_u8(r_u32(0x8005FEA0u), 0u);
+            return 4;
+        case 2:
+            w_u8(0x8005FEACu, error != 0u ? 5u : 2u);
             for (i = 0u; i < 8u; ++i)
                 w_u8(0x8008B364u + i, result_bytes[i]);
             return 2;
-        }
-        if (r_u32(0x8005FC94u + 4u * r_u8(0x8005FBEDu)) != 0u)
-        {
-            w_u8(0x8005FEACu, 3u);
+        case 3:
+            if (error != 0u)
+            {
+                w_u8(0x8005FEACu, 5u);
+                for (i = 0u; i < 8u; ++i)
+                    w_u8(0x8008B364u + i, result_bytes[i]);
+                return 2;
+            }
+            if (r_u32(0x8005FC94u + 4u * r_u8(0x8005FBEDu)) != 0u)
+            {
+                w_u8(0x8005FEACu, 3u);
+                for (i = 0u; i < 8u; ++i)
+                    w_u8(0x8008B364u + i, result_bytes[i]);
+                return 1;
+            }
+            w_u8(0x8005FEACu, 2u);
             for (i = 0u; i < 8u; ++i)
                 w_u8(0x8008B364u + i, result_bytes[i]);
-            return 1;
-        }
-        w_u8(0x8005FEACu, 2u);
-        for (i = 0u; i < 8u; ++i)
-            w_u8(0x8008B364u + i, result_bytes[i]);
-        return 2;
-    case 4:
-        w_u8(0x8005FEAEu, 4u);
-        w_u8(0x8005FEADu, r_u8(0x8005FEAEu));
-        for (i = 0u; i < 8u; ++i)
-            w_u8(0x8008B374u + i, result_bytes[i]);
-        for (i = 0u; i < 8u; ++i)
-            w_u8(0x8008B36Cu + i, result_bytes[i]);
-        return 4;
-    case 5:
-        w_u8(0x8005FEADu, 5u);
-        w_u8(0x8005FEACu, r_u8(0x8005FEADu));
-        for (i = 0u; i < 8u; ++i)
-            w_u8(0x8008B364u + i, result_bytes[i]);
-        for (i = 0u; i < 8u; ++i)
-            w_u8(0x8008B36Cu + i, result_bytes[i]);
-        return 6;
-    default:
-        puts((const char *)psx_addr(0x80012AECu, 1u));
-        printf((const char *)psx_addr(0x80012B00u, 1u), interrupt_code);
-        return 0;
+            return 2;
+        case 4:
+            w_u8(0x8005FEAEu, 4u);
+            w_u8(0x8005FEADu, r_u8(0x8005FEAEu));
+            for (i = 0u; i < 8u; ++i)
+                w_u8(0x8008B374u + i, result_bytes[i]);
+            for (i = 0u; i < 8u; ++i)
+                w_u8(0x8008B36Cu + i, result_bytes[i]);
+            return 4;
+        case 5:
+            w_u8(0x8005FEADu, 5u);
+            w_u8(0x8005FEACu, r_u8(0x8005FEADu));
+            for (i = 0u; i < 8u; ++i)
+                w_u8(0x8008B364u + i, result_bytes[i]);
+            for (i = 0u; i < 8u; ++i)
+                w_u8(0x8008B36Cu + i, result_bytes[i]);
+            return 6;
+        default:
+            puts((const char *)psx_addr(0x80012AECu, 1u));
+            printf((const char *)psx_addr(0x80012B00u, 1u), interrupt_code);
+            return 0;
     }
 }
 
@@ -540,7 +539,8 @@ sint32 sub_8001FE94(void)
     attr.mode = 0x103;
     attr.depth.left = 0;
     attr.depth.right = 0;
-    if (SpuSetReverbModeParam(&attr) == 0) {
+    if (SpuSetReverbModeParam(&attr) == 0)
+    {
         spu_reverb_export(&control);
         w_u32(0x8005FF14u, (uint32)control.mode);
         w_u32(0x8005FF0Cu, control.work_address);
@@ -1018,4 +1018,3 @@ uint32 sub_800399D4(void)
     w_u32(0x80065118u, 0x80081A38u + offset);
     return 0x80081A38u;
 }
-

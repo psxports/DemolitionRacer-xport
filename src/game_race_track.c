@@ -9,8 +9,10 @@ extern void dr_race_normalize(VECTOR *input, SVECTOR *output);
 
 static uint32 track_div(uint32 numerator, uint32 denominator)
 {
-    if (!denominator) xport_mips_break(7u);
-    if (numerator == 0x80000000u && denominator == 0xFFFFFFFFu) xport_mips_break(6u);
+    if (!denominator)
+        xport_mips_break(7u);
+    if (numerator == 0x80000000u && denominator == 0xFFFFFFFFu)
+        xport_mips_break(6u);
     return (uint32)((sint32)numerator / (sint32)denominator);
 }
 
@@ -22,7 +24,8 @@ static uint32 track_rem(uint32 numerator, uint32 denominator)
 
 static uint32 track_integer(uint32 value)
 {
-    if ((sint32)value < 0) value += 255u;
+    if ((sint32)value < 0)
+        value += 255u;
     return (uint32)((sint32)value >> 8);
 }
 
@@ -57,8 +60,10 @@ uint32 sub_8002DA40(sint16 first, sint16 second, sint16 third, const sint32 *poi
     cross.vy >>= 4;
     cross.vz >>= 4;
     vertex = track_vertex((uint32)(sint32)first);
-    if (!cross.vx && !cross.vz) return track_component(vertex, 2u) << 8;
-    if (!cross.vy) cross.vy = 1;
+    if (!cross.vx && !cross.vz)
+        return track_component(vertex, 2u) << 8;
+    if (!cross.vy)
+        cross.vy = 1;
     numerator = (track_component(vertex, 0u) - (uint32)point[0]) * (uint32)cross.vx;
     numerator += (track_component(vertex, 4u) - (uint32)point[2]) * (uint32)cross.vz;
     return (track_div(numerator, (uint32)cross.vy) + track_component(vertex, 2u)) << 8;
@@ -67,16 +72,13 @@ uint32 sub_8002DA40(sint16 first, sint16 second, sint16 third, const sint32 *poi
 static int track_positive_side(uint32 first, uint32 second, const sint32 *point)
 {
     uint32 a = track_vertex(first), b = track_vertex(second + 1u);
-    uint32 value = ((uint32)point[2] - track_component(a, 4u)) *
-        (track_component(b, 0u) - track_component(a, 0u));
-    value -= ((uint32)point[0] - track_component(a, 0u)) *
-        (track_component(b, 4u) - track_component(a, 4u));
+    uint32 value = ((uint32)point[2] - track_component(a, 4u)) * (track_component(b, 0u) - track_component(a, 0u));
+    value -= ((uint32)point[0] - track_component(a, 0u)) * (track_component(b, 4u) - track_component(a, 4u));
     return (sint32)value > 0;
 }
 
 /* The four original jump tables select triangle corners by section type */
-static int track_triangle(const uint8 *state, const sint32 *position, int height_only,
-    uint32 *section, uint32 *first, uint32 *second, uint32 *third, sint32 *point)
+static int track_triangle(const uint8 *state, const sint32 *position, int height_only, uint32 *section, uint32 *first, uint32 *second, uint32 *third, sint32 *point)
 {
     uint32 type, segment, count, left, right, i;
     *section = R32(GP + 0x9C4u) + (uint32)(sint32)(sint16)(state[0] | ((uint16)state[1] << 8)) * 24u;
@@ -93,42 +95,72 @@ static int track_triangle(const uint8 *state, const sint32 *position, int height
     right += segment;
     if (!segment)
     {
-        if (height_only && (type - 1u) >= 11u) return 0;
+        if (height_only && (type - 1u) >= 11u)
+            return 0;
         switch (type)
         {
-        case 3u: case 4u:
-            *first = left + 1u; *second = right; *third = right + 1u;
-            return 1;
-        case 1u: case 2u: case 5u: case 8u: case 9u: case 10u: case 11u:
-            break;
-        case 6u: case 7u: default:
-            *first = left; *second = right + 1u; *third = left + 1u;
-            return 1;
+            case 3u:
+            case 4u:
+                *first = left + 1u;
+                *second = right;
+                *third = right + 1u;
+                return 1;
+            case 1u:
+            case 2u:
+            case 5u:
+            case 8u:
+            case 9u:
+            case 10u:
+            case 11u:
+                break;
+            case 6u:
+            case 7u:
+            default:
+                *first = left;
+                *second = right + 1u;
+                *third = left + 1u;
+                return 1;
         }
     }
     else if (segment == count - 1u)
     {
-        if (height_only && (type - 1u) >= 11u) return 0;
+        if (height_only && (type - 1u) >= 11u)
+            return 0;
         switch (type)
         {
-        case 2u: case 4u:
-            *first = left; *second = right; *third = right + 1u;
-            return 1;
-        case 1u: case 3u: case 6u: case 8u: case 9u: case 10u: case 11u:
-            break;
-        case 5u: case 7u: default:
-            *first = left; *second = right; *third = left + 1u;
-            return 1;
+            case 2u:
+            case 4u:
+                *first = left;
+                *second = right;
+                *third = right + 1u;
+                return 1;
+            case 1u:
+            case 3u:
+            case 6u:
+            case 8u:
+            case 9u:
+            case 10u:
+            case 11u:
+                break;
+            case 5u:
+            case 7u:
+            default:
+                *first = left;
+                *second = right;
+                *third = left + 1u;
+                return 1;
         }
     }
     *first = left;
     if (track_positive_side(left, right, point))
     {
-        *second = right + 1u; *third = left + 1u;
+        *second = right + 1u;
+        *third = left + 1u;
     }
     else
     {
-        *second = right; *third = right + 1u;
+        *second = right;
+        *third = right + 1u;
     }
     return 1;
 }
@@ -170,13 +202,17 @@ static void track_grid(const sint32 *position, int height_only, VECTOR *left, VE
     right->vz = (sint32)spacing;
     if ((sint32)rz < (sint32)rx)
     {
-        left->vy = (sint32)(h10 - h00); left->vz = 0;
-        right->vx = (sint32)spacing; right->vy = (sint32)(h11 - h00);
+        left->vy = (sint32)(h10 - h00);
+        left->vz = 0;
+        right->vx = (sint32)spacing;
+        right->vy = (sint32)(h11 - h00);
     }
     else
     {
-        left->vy = (sint32)(h11 - h00); left->vz = (sint32)spacing;
-        right->vx = 0; right->vy = (sint32)(h01 - h00);
+        left->vy = (sint32)(h11 - h00);
+        left->vz = (sint32)spacing;
+        right->vx = 0;
+        right->vy = (sint32)(h01 - h00);
     }
 }
 
@@ -199,8 +235,11 @@ uint32 dr_track_height(const uint8 *state, const sint32 *position, sint32 *heigh
         cross = (VECTOR *)psx_addr(0x80078EF4u, 12u);
         track_grid(position, 1, left, right);
         OuterProduct0(left, right, cross);
-        cross->vx >>= 7; cross->vy >>= 7; cross->vz >>= 7;
-        if (!cross->vy) cross->vy = 1;
+        cross->vx >>= 7;
+        cross->vy >>= 7;
+        cross->vz >>= 7;
+        if (!cross->vy)
+            cross->vy = 1;
         numerator = R32(GP + 0x988u) * (uint32)cross->vx + R32(GP + 0x98Cu) * (uint32)cross->vz;
         result = (track_div(0u - numerator, (uint32)cross->vy) + R32(GP + 0x978u)) << 8;
     }
@@ -210,8 +249,7 @@ uint32 dr_track_height(const uint8 *state, const sint32 *position, sint32 *heigh
 
 uint32 sub_8002DC38(uint32 state, uint32 position, uint32 height_output)
 {
-    return dr_track_height((const uint8 *)psx_addr(state, 10u),
-        (const sint32 *)psx_addr(position, 12u), (sint32 *)psx_addr(height_output, 4u));
+    return dr_track_height((const uint8 *)psx_addr(state, 10u), (const sint32 *)psx_addr(position, 12u), (sint32 *)psx_addr(height_output, 4u));
 }
 
 uint32 sub_8002E408(uint32 state, uint32 position, uint32 normal_output, uint32 mode)
@@ -221,11 +259,11 @@ uint32 sub_8002E408(uint32 state, uint32 position, uint32 normal_output, uint32 
     sint32 point[3];
     if (!R32(0x800593A0u))
     {
-        track_triangle((const uint8 *)psx_addr(state, 10u),
-            (const sint32 *)psx_addr(position, 12u), 0, &section, &first, &second, &third, point);
+        track_triangle((const uint8 *)psx_addr(state, 10u), (const sint32 *)psx_addr(position, 12u), 0, &section, &first, &second, &third, point);
         track_edges(first, second, third, &left, &right);
         OuterProduct0(&left, &right, &cross);
-        cross.vx >>= 12; cross.vz >>= 12;
+        cross.vx >>= 12;
+        cross.vz >>= 12;
         if (!cross.vx && !cross.vz)
         {
             R16(normal_output + 4u) = 0u;
@@ -243,15 +281,17 @@ uint32 sub_8002E408(uint32 state, uint32 position, uint32 normal_output, uint32 
             numerator += (track_component(vertex, 4u) + R32(section + 20u)) * track_component(normal_output, 4u);
             return (uint32)((sint32)(0u - numerator) >> 4);
         }
-        if (!R16(normal_output + 2u)) R16(normal_output + 2u) = 1u;
+        if (!R16(normal_output + 2u))
+            R16(normal_output + 2u) = 1u;
         numerator = (track_component(vertex, 0u) - (uint32)point[0]) * track_component(normal_output, 0u);
         numerator += (track_component(vertex, 4u) - (uint32)point[2]) * track_component(normal_output, 4u);
-        return (track_div(numerator, track_component(normal_output, 2u)) +
-            track_component(vertex, 2u) + R32(section + 16u)) << 8;
+        return (track_div(numerator, track_component(normal_output, 2u)) + track_component(vertex, 2u) + R32(section + 16u)) << 8;
     }
     track_grid((const sint32 *)psx_addr(position, 12u), 0, &left, &right);
     OuterProduct0(&left, &right, &cross);
-    cross.vx >>= 7; cross.vy >>= 7; cross.vz >>= 7;
+    cross.vx >>= 7;
+    cross.vy >>= 7;
+    cross.vz >>= 7;
     dr_race_normalize(&cross, (SVECTOR *)psx_addr(normal_output, 6u));
     if (mode)
     {
@@ -260,11 +300,13 @@ uint32 sub_8002E408(uint32 state, uint32 position, uint32 normal_output, uint32 
         uint32 x = (R32(GP + 0x938u) - half) * spacing;
         uint32 z = (R32(GP + 0x93Cu) - half) * spacing;
         numerator = x * track_component(normal_output, 0u) + z * track_component(normal_output, 4u);
-        R32(GP + 0x940u) = x; R32(GP + 0x944u) = z;
+        R32(GP + 0x940u) = x;
+        R32(GP + 0x944u) = z;
         numerator += R32(GP + 0x948u) * track_component(normal_output, 2u);
         return (uint32)((sint32)(0u - numerator) >> 4);
     }
-    if (!cross.vy) cross.vy = 1;
+    if (!cross.vy)
+        cross.vy = 1;
     numerator = R32(GP + 0x940u) * (uint32)cross.vx + R32(GP + 0x944u) * (uint32)cross.vz;
     return (track_div(0u - numerator, (uint32)cross.vy) + R32(GP + 0x948u)) << 8;
 }
@@ -277,7 +319,8 @@ uint32 sub_8002F4A4(uint32 state, uint32 position)
     uint32 ax, az, dx, dz, divisor, numerator, x, z;
     first = R16(section + 4u) + (uint32)(sint32)(sint8)R8(0x8005AA30u + type * 2u);
     second = R16(section + 6u) + (uint32)(sint32)(sint8)R8(0x8005AA31u + type * 2u);
-    if ((sint32)lane >= (sint32)count) lane = count - 1u;
+    if ((sint32)lane >= (sint32)count)
+        lane = count - 1u;
     vertex_a = track_vertex(first + lane);
     vertex_b = track_vertex(second + lane);
     ax = track_component(vertex_a, 0u);
@@ -287,7 +330,8 @@ uint32 sub_8002F4A4(uint32 state, uint32 position)
     x = (uint32)((sint32)R32(position) >> 8) - R32(section + 12u);
     z = (uint32)((sint32)R32(position + 8u) >> 8) - R32(section + 20u) - az;
     divisor = (uint32)((sint32)(dx * dx + dz * dz) >> 8);
-    if (!divisor) return 128u;
+    if (!divisor)
+        return 128u;
     numerator = (x - ax) * dx + z * dz;
     return track_div(numerator, divisor);
 }
@@ -295,9 +339,11 @@ uint32 sub_8002F4A4(uint32 state, uint32 position)
 void game_800A7B6C(uint32 player, uint32 lap, uint32 lap_limit)
 {
     uint32 shown_players, texture, end, index, packet, uoffset;
-    if ((sint32)lap < 0) return;
+    if ((sint32)lap < 0)
+        return;
     shown_players = R32(0x80064C14u);
-    if ((sint32)shown_players < (sint32)player) return;
+    if ((sint32)shown_players < (sint32)player)
+        return;
     end = player + 2u;
     texture = R32(0x800C0F44u);
     index = player;

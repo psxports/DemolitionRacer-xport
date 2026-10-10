@@ -30,14 +30,15 @@ void pres_800964DC(void)
 
 void pres_80096608(uint32 object)
 {
-    (void)object;
-    if (r_u16(0x80065524u) & 0x1000u) {
+    if (r_u16(0x80065524u) & 0x1000u)
+    {
         sub_8001D01C(3u);
         w_u32(0x800ABB20u, 3u);
         w_u32(0x800ABB30u, 2u);
         return;
     }
-    if (r_u32(0x800ABB38u)) return;
+    if (r_u32(0x800ABB38u))
+        return;
     if ((r_u16(0x80065520u) & 0x80u) && (sint32)r_u32(0x80064BF0u) > 0)
         w_u32(0x80064BF0u, r_u32(0x80064BF0u) - 1u);
     if ((r_u16(0x80065520u) & 0x20u) && (sint32)r_u32(0x80064BF0u) < 24)
@@ -52,10 +53,13 @@ void pres_80096608(uint32 object)
 static void pres_option_volume_bar(uint32 base, uint32 index, sint32 volume)
 {
     uint32 offset = (base + index) * 68u;
-    if ((sint32)index < volume) {
+    if ((sint32)index < volume)
+    {
         w_u16(0x800AD894u + offset, (uint16)index);
         w_u16(0x800AD892u + offset, 1u);
-    } else {
+    }
+    else
+    {
         w_u16(0x800AD894u + offset, 0u);
         w_u16(0x800AD892u + offset, 0u);
     }
@@ -69,7 +73,8 @@ void pres_8009686C(void)
     uint32 index;
     w_u32(0x8005974Cu, (uint32)((sint32)r_u32(0x80064BFCu) / 256));
     w_u32(0x80059754u, (uint32)((sint32)r_u32(0x80064BF8u) / 256));
-    for (index = 0u; index < 16u; ++index) {
+    for (index = 0u; index < 16u; ++index)
+    {
         pres_option_volume_bar(r_u32(0x800AD6B8u), index, (sint32)r_u32(0x8005974Cu));
         pres_option_volume_bar(r_u32(0x800AD7A8u), index, (sint32)r_u32(0x80059754u));
     }
@@ -78,7 +83,8 @@ void pres_8009686C(void)
 static void pres_option_volume_raise(uint32 count_address, uint32 group_address)
 {
     sint32 count = (sint32)r_u32(count_address);
-    if (count < 16) {
+    if (count < 16)
+    {
         uint32 index = r_u32(group_address) + (uint32)count;
         w_u16(0x800AD892u + index * 68u, 1u);
         w_u32(count_address, r_u32(count_address) + 1u);
@@ -88,7 +94,8 @@ static void pres_option_volume_raise(uint32 count_address, uint32 group_address)
 static void pres_option_volume_lower(uint32 count_address, uint32 group_address)
 {
     sint32 count = (sint32)r_u32(count_address);
-    if (count > 0) {
+    if (count > 0)
+    {
         uint32 index = r_u32(group_address) + (uint32)count - 1u;
         w_u16(0x800AD892u + index * 68u, 0xffffu);
         w_u32(count_address, r_u32(count_address) - 1u);
@@ -98,12 +105,14 @@ static void pres_option_volume_lower(uint32 count_address, uint32 group_address)
 void pres_80096AD4(uint32 object)
 {
     uint32 track;
-    if (r_u16(0x80065524u) & 0x1000u) {
+    if (r_u16(0x80065524u) & 0x1000u)
+    {
         sub_8001D01C(3u);
         w_u32(0x800ABB20u, 3u);
         w_u32(0x800ABB30u, 2u);
     }
-    if (r_u16(0x80065524u) & 0x20u) {
+    if (r_u16(0x80065524u) & 0x20u)
+    {
         sub_8001D01C(2u);
         if (object == 0x800A4A2Cu && (sint32)r_u32(0x8005974Cu) < 16)
             pres_option_volume_raise(0x8005974Cu, 0x800AD6B8u);
@@ -112,7 +121,8 @@ void pres_80096AD4(uint32 object)
         else if (object == 0x800A4B34u && (sint32)r_u32(0x80059758u) < (sint32)(r_u32(0x80064D4Cu) - 1u))
             w_u32(0x80059758u, r_u32(0x80059758u) + 1u);
     }
-    if (r_u16(0x80065524u) & 0x80u) {
+    if (r_u16(0x80065524u) & 0x80u)
+    {
         sub_8001D01C(2u);
         if (object == 0x800A4A2Cu && (sint32)r_u32(0x8005974Cu) > 0)
             pres_option_volume_lower(0x8005974Cu, 0x800AD6B8u);
@@ -121,7 +131,8 @@ void pres_80096AD4(uint32 object)
         else if (object == 0x800A4B34u && (sint32)r_u32(0x80059758u) > 0)
             w_u32(0x80059758u, r_u32(0x80059758u) - 1u);
     }
-    if (r_u16(0x80065524u) & 0x4000u) {
+    if (r_u16(0x80065524u) & 0x4000u)
+    {
         sub_8001D01C(0u);
         if (object == 0x800A4B34u && r_u32(0x80059758u) != r_u32(0x800652CCu))
             sub_80020430(r_u32(0x80059758u));

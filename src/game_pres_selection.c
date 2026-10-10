@@ -41,14 +41,18 @@ void pres_80094BF4(void)
 {
     uint32 mode, table, category, index;
     /* Original 75-byte local copy is never read */
-    if ((sint32)S32(0x80059740u) >= 15) S32(0x80059740u) -= 15u;
+    if ((sint32)S32(0x80059740u) >= 15)
+        S32(0x80059740u) -= 15u;
     selection_projection(120u);
     mode = S32(0x800AD670u);
     S32(0x800AD850u) = 0u;
     S32(0x800AD858u) = 0u;
-    if (mode == 2u) table = 0x800A3AD4u;
-    else if (mode == 1u) table = 0x800A3B44u;
-    else table = 0x800A3BC0u;
+    if (mode == 2u)
+        table = 0x800A3AD4u;
+    else if (mode == 1u)
+        table = 0x800A3B44u;
+    else
+        table = 0x800A3BC0u;
     S32(0x800A3A4Cu) = S32(table + S32(0x80064B8Cu) * 4u);
     S32(0x800A3A40u) = S32(0x80059738u) == 3u ? 1u : 0u;
     category = S32(0x800A3A40u);
@@ -63,7 +67,8 @@ static void selection_texture_packets(uint32 texture)
 {
     uint32 index, packet;
     S32(0x8006532Cu) = texture;
-    for (index = 0u; index < 2u; ++index) {
+    for (index = 0u; index < 2u; ++index)
+    {
         packet = 0x800789D8u + index * 40u;
         S8(packet + 3u) = 9u;
         S8(packet + 7u) = 0x2Du;
@@ -92,10 +97,14 @@ static void selection_texture_packets(uint32 texture)
 void pres_80095484(void)
 {
     uint32 mode = S32(0x80059738u), index, packet, texture;
-    if ((sint32)mode >= 5 && mode != 7u && mode != 11u) {
-        if (mode == 8u) S32(0x80059744u) = 0u;
-        else if (mode == 9u) S32(0x80059744u) = 4u;
-        else if (mode == 10u) S32(0x80059744u) = 3u;
+    if ((sint32)mode >= 5 && mode != 7u && mode != 11u)
+    {
+        if (mode == 8u)
+            S32(0x80059744u) = 0u;
+        else if (mode == 9u)
+            S32(0x80059744u) = 4u;
+        else if (mode == 10u)
+            S32(0x80059744u) = 3u;
     }
     selection_projection(80u);
     pres_80090730(S32(0x80059744u), 0u);
@@ -103,7 +112,8 @@ void pres_80095484(void)
     sub_80019D80(0u, 0x800594CCu + index, 0x800594D0u + index);
     texture = sub_80039ADC(S32(0x8005A9D8u + S32(0x80059744u) * 4u));
     selection_texture_packets(texture);
-    for (index = 0u; index < 2u; ++index) {
+    for (index = 0u; index < 2u; ++index)
+    {
         packet = 0x80078A98u + index * 24u;
         S8(packet + 3u) = 5u;
         S8(packet + 7u) = 42u;
@@ -116,7 +126,8 @@ void pres_80095484(void)
         S16(packet + 20u) = 238u;
         S16(packet + 22u) = 196u;
     }
-    for (index = 0u; index < 8u; ++index) {
+    for (index = 0u; index < 8u; ++index)
+    {
         packet = 0x80078B38u + index * 36u;
         S8(packet + 3u) = 8u;
         S8(packet + 7u) = 57u;
@@ -128,33 +139,45 @@ void pres_80094E4C(uint32 object)
     uint32 selected = S32(0x80059740u), category, mode, index, flag;
     const uint8 *warnings = (const uint8 *)psx_addr(0x8008B58Cu, 15u);
     S32(0x800A3D60u) = S32(0x800A1D98u + selected * 4u);
-    if (S16(0x80065524u) & 0x1000u) {
+    if (S16(0x80065524u) & 0x1000u)
+    {
         sub_8001D01C(3u);
-        if (S32(0x80059738u) != 2u && S32(0x8005973Cu) != 2u &&
-            S32(0x800AD858u) == 1u && S8(0x800596DCu + S32(0x80059740u)) == 0u) {
+        if (S32(0x80059738u) != 2u && S32(0x8005973Cu) != 2u && S32(0x800AD858u) == 1u && S8(0x800596DCu + S32(0x80059740u)) == 0u)
+        {
             S32(0x800AD858u) = 0u;
             S32(0x800AD850u) = 0u;
             selection_entry_flags(16, 2u);
             selection_entry_flags(16, 3u);
-        } else {
+        }
+        else
+        {
             S32(0x800ABB20u) = 3u;
             selection_free_track();
             S32(0x800ABB30u) = 7u;
         }
-    } else if ((S16(0x80065524u) & 0x4008u) && S8(0x800596CCu + selected) != 1u) {
+    }
+    else if ((S16(0x80065524u) & 0x4008u) && S8(0x800596CCu + selected) != 1u)
+    {
         S32(0x800ABB20u) = 1u;
         sub_8001D01C(0u);
-        if (S32(0x80059738u) == 2u || S32(0x8005973Cu) == 2u) {
+        if (S32(0x80059738u) == 2u || S32(0x8005973Cu) == 2u)
+        {
             selection_free_track();
             S32(0x800ABB30u) = 4u;
-        } else {
+        }
+        else
+        {
             selected = S32(0x80059740u);
             flag = S8(0x800596DCu + selected);
-            if (flag == 1u || (S32(0x800AD858u) == 1u && flag == 0u) || warnings[selected] == 0u) {
+            if (flag == 1u || (S32(0x800AD858u) == 1u && flag == 0u) || warnings[selected] == 0u)
+            {
                 selection_free_track();
                 S32(0x800ABB30u) = 4u;
-                if (object == 0x800A3C8Cu) S32(0x80059740u) += 15u;
-            } else {
+                if (object == 0x800A3C8Cu)
+                    S32(0x80059740u) += 15u;
+            }
+            else
+            {
                 S32(0x800AD858u) = 1u;
                 S32(0x800AD850u) = 1u;
                 selection_entry_flags(512, 2u);
@@ -162,15 +185,17 @@ void pres_80094E4C(uint32 object)
             }
         }
     }
-    if ((S16(0x80065524u) & 128u) && (sint32)S32(0x800A3A40u) > 0 && S32(0x800AD858u) == 0u) {
+    if ((S16(0x80065524u) & 128u) && (sint32)S32(0x800A3A40u) > 0 && S32(0x800AD858u) == 0u)
+    {
         sub_8001D01C(2u);
         category = S32(0x800A3A40u) - 1u;
         mode = S32(0x800AD670u);
         S32(0x800A3A40u) = category;
         S32(0x80059740u) = S8(0x8005A7D0u + mode * 16u + category);
         pres_80090C08(S32(0x80059740u));
-    } else if ((S16(0x80065524u) & 32u) &&
-        S8(0x8005A7D1u + S32(0x800AD670u) * 16u + S32(0x800A3A40u)) != 255u && S32(0x800AD858u) == 0u) {
+    }
+    else if ((S16(0x80065524u) & 32u) && S8(0x8005A7D1u + S32(0x800AD670u) * 16u + S32(0x800A3A40u)) != 255u && S32(0x800AD858u) == 0u)
+    {
         sub_8001D01C(2u);
         category = S32(0x800A3A40u) + 1u;
         mode = S32(0x800AD670u);
@@ -179,13 +204,18 @@ void pres_80094E4C(uint32 object)
         pres_80090C08(S32(0x80059740u));
     }
     category = S32(0x800A3A40u);
-    if (category == 0u) {
+    if (category == 0u)
+    {
         selection_entry_flags(16, 0u);
         selection_entry_flags(8, 1u);
-    } else if (S8(0x8005A7D1u + S32(0x800AD670u) * 16u + category) == 255u) {
+    }
+    else if (S8(0x8005A7D1u + S32(0x800AD670u) * 16u + category) == 255u)
+    {
         selection_entry_flags(8, 0u);
         selection_entry_flags(16, 1u);
-    } else {
+    }
+    else
+    {
         selection_entry_flags(512, 0u);
         selection_entry_flags(512, 1u);
     }
@@ -213,15 +243,19 @@ void pres_800957C0(uint32 object)
 {
     const uint8 *locks;
     uint32 mode, selected, flags, index, packet, value, x, y, slot;
-    (void)object;
     selected = S32(0x80059744u);
     S32(0x800A40D4u) = S32(0x800A1EB8u + selected * 4u);
     mode = S32(0x80059738u);
-    if ((sint32)mode < 5 || mode == 7u || mode == 11u) locks = (const uint8 *)psx_addr(0x800596ECu, 8u);
-    else if (mode == 8u) locks = (const uint8 *)psx_addr(0x8008B59Cu, 8u);
-    else if (mode == 9u) locks = (const uint8 *)psx_addr(0x8008B5A4u, 8u);
-    else if (mode == 10u) locks = (const uint8 *)psx_addr(0x8008B5ACu, 8u);
-    else {
+    if ((sint32)mode < 5 || mode == 7u || mode == 11u)
+        locks = (const uint8 *)psx_addr(0x800596ECu, 8u);
+    else if (mode == 8u)
+        locks = (const uint8 *)psx_addr(0x8008B59Cu, 8u);
+    else if (mode == 9u)
+        locks = (const uint8 *)psx_addr(0x8008B5A4u, 8u);
+    else if (mode == 10u)
+        locks = (const uint8 *)psx_addr(0x8008B5ACu, 8u);
+    else
+    {
         /* Original S2 is undefined for an unsupported game mode */
         fprintf(stderr, "Unsupported original vehicle selection mode %u\n", mode);
         abort();
@@ -230,51 +264,67 @@ void pres_800957C0(uint32 object)
     S16(0x80066D58u) += 64u;
     S16(0x80066D5Au) += 64u;
     flags = S16(0x80065524u);
-    if (flags & 0x1000u) {
+    if (flags & 0x1000u)
+    {
         sub_8001D01C(3u);
         S32(0x800ABB20u) = 3u;
         sub_8004261C(S32(0x800ABB10u));
         S32(0x800ABB30u) = 3u;
-    } else if ((flags & 0x8000u) && locks[S32(0x80059744u)] != 1u) {
+    }
+    else if ((flags & 0x8000u) && locks[S32(0x80059744u)] != 1u)
+    {
         sub_8001D01C(2u);
         S32(0x800ABB20u) = 2u;
         sub_8004261C(S32(0x800ABB10u));
         pres_8009CD44();
         S32(0x800ABB48u) = 1u;
         S32(0x800ABB30u) = 9u;
-    } else if ((S16(0x80065524u) & 0x4008u) && locks[S32(0x80059744u)] != 1u) {
+    }
+    else if ((S16(0x80065524u) & 0x4008u) && locks[S32(0x80059744u)] != 1u)
+    {
         sub_8001D01C(0u);
         S32(0x800ABB20u) = 1u;
         sub_8004261C(S32(0x800ABB10u));
         pres_8009CD44();
         S32(0x800ABB48u) = 1u;
         S32(0x800ABB20u) = 7u;
-    } else if (S32(0x800AD880u + (S32(0x800AD6B8u) + 2u) * 68u) == 4096u) {
-        if ((S16(0x80065524u) & 128u) && (sint32)S32(0x80059744u) > 0) {
+    }
+    else if (S32(0x800AD880u + (S32(0x800AD6B8u) + 2u) * 68u) == 4096u)
+    {
+        if ((S16(0x80065524u) & 128u) && (sint32)S32(0x80059744u) > 0)
+        {
             sub_8001D01C(2u);
             --S32(0x80059744u);
             selection_reload_vehicle();
-        } else if ((S16(0x80065524u) & 32u) && (sint32)S32(0x80059744u) < (sint32)(S32(0x800A1F28u) - 1u)) {
+        }
+        else if ((S16(0x80065524u) & 32u) && (sint32)S32(0x80059744u) < (sint32)(S32(0x800A1F28u) - 1u))
+        {
             sub_8001D01C(2u);
             ++S32(0x80059744u);
             selection_reload_vehicle();
         }
     }
     selected = S32(0x80059744u);
-    if (selected == 0u) {
+    if (selected == 0u)
+    {
         selection_entry_flags(16, 0u);
         selection_entry_flags(8, 1u);
-    } else if (selected == S32(0x800A1F28u) - 1u) {
+    }
+    else if (selected == S32(0x800A1F28u) - 1u)
+    {
         selection_entry_flags(8, 0u);
         selection_entry_flags(16, 1u);
-    } else {
+    }
+    else
+    {
         selection_entry_flags(512, 0u);
         selection_entry_flags(512, 1u);
     }
     pres_800A0240(locks[S32(0x80059744u)] == 0u ? 16 : 8, 0x800AD860u + S32(0x800AD7A8u) * 68u);
     packet = 0x800789D8u + S32(0x80065128u) * 40u;
     selection_link(packet, S32(S32(0x80065118u) + 112u) + 1024u);
-    for (index = 0u; index < 4u; ++index) {
+    for (index = 0u; index < 4u; ++index)
+    {
         packet = 0x80078B38u + index * 72u + S32(0x80065128u) * 36u;
         y = 149u + index * 12u;
         S16(packet + 8u) = 136u;
@@ -287,17 +337,23 @@ void pres_800957C0(uint32 object)
         value = S8(0x8005A9F8u + S32(0x80059744u) * 4u + index);
         S16(packet + 32u) = (uint16)(value * 10u + 146u);
         S16(packet + 34u) = (uint16)(y + 8u);
-        S8(packet + 4u) = 240u; S8(packet + 5u) = 96u; S8(packet + 6u) = 16u;
-        S8(packet + 20u) = 240u; S8(packet + 21u) = 96u; S8(packet + 22u) = 16u;
+        S8(packet + 4u) = 240u;
+        S8(packet + 5u) = 96u;
+        S8(packet + 6u) = 16u;
+        S8(packet + 20u) = 240u;
+        S8(packet + 21u) = 96u;
+        S8(packet + 22u) = 16u;
         value = S8(0x8005A9F8u + S32(0x80059744u) * 4u + index);
         x = 240u - (value << 4);
         S8(packet + 12u) = (uint8)x;
         value = S8(0x8005A9F8u + S32(0x80059744u) * 4u + index);
-        S8(packet + 13u) = (uint8)(96u + (value << 4)); S8(packet + 14u) = 16u;
+        S8(packet + 13u) = (uint8)(96u + (value << 4));
+        S8(packet + 14u) = 16u;
         value = S8(0x8005A9F8u + S32(0x80059744u) * 4u + index);
         S8(packet + 28u) = (uint8)(240u - (value << 4));
         value = S8(0x8005A9F8u + S32(0x80059744u) * 4u + index);
-        S8(packet + 29u) = (uint8)(96u + (value << 4)); S8(packet + 30u) = 16u;
+        S8(packet + 29u) = (uint8)(96u + (value << 4));
+        S8(packet + 30u) = 16u;
         slot = S32(S32(0x80065118u) + 112u);
         selection_link(packet, slot);
     }
@@ -308,7 +364,8 @@ void pres_800957C0(uint32 object)
 static void selection_copy_geometry(uint32 source)
 {
     uint32 index;
-    for (index = 0u; index < 13u; ++index) {
+    for (index = 0u; index < 13u; ++index)
+    {
         uint32 words[4];
         memcpy(words, psx_addr(source + index * 16u, 16u), 16u);
         memcpy(psx_addr(0x80066BB0u + index * 16u, 16u), words, 16u);
@@ -333,9 +390,11 @@ void pres_80090730(uint32 model, uint32 mode)
     buffer = sub_80042544(size);
     sub_80015074(S32(0x800ABAF8u) + S32(table), buffer, (sint32)size);
     index = 1u;
-    if (S32(buffer) != 0u) {
+    if (S32(buffer) != 0u)
+    {
         cursor = buffer + 4u;
-        do {
+        do
+        {
             S32(cursor) += buffer;
             ++index;
             cursor += 4u;
@@ -365,7 +424,8 @@ void pres_80090730(uint32 model, uint32 mode)
     S32(0x80066D14u) = 0x80066BB0u;
     S32(0x80066D30u) = 0u;
     S32(0x80066D2Cu) = S32(0x800ABB10u + mode * 4u);
-    for (index = 0u; index < 4u; ++index) {
+    for (index = 0u; index < 4u; ++index)
+    {
         uint32 words[2];
         memcpy(words, psx_addr(S32(0x80066D14u) + 64u + index * 8u, 8u), 8u);
         memcpy(psx_addr(0x80066F84u + index * 8u, 8u), words, 8u);
@@ -422,23 +482,28 @@ void pres_80094394(void)
 {
     uint32 index, size, texture, u, v, bank, column, row, packet;
     S32(0x800AD788u) = sub_80042544(3120u);
-    for (index = 0u; index < 4u; ++index) {
+    for (index = 0u; index < 4u; ++index)
+    {
         size = S32(0x800A3FE0u + index * 4u) * S32(0x800A3FF0u + index * 4u);
         S32(0x800AD798u + index * 4u) = sub_80042544(size << 1);
     }
     texture = sub_80039ADC(0x800A4020u);
     u = S8(texture + 24u);
     v = S8(texture + 25u);
-    for (bank = 0u; bank < 2u; ++bank) {
-        for (index = 0u; index < 30u; ++index) {
+    for (bank = 0u; bank < 2u; ++bank)
+    {
+        for (index = 0u; index < 30u; ++index)
+        {
             packet = S32(0x800AD788u) + (bank * 30u + index) * 52u;
             S16(packet + 26u) = S16(texture + 8u);
             S8(packet + 3u) = 12u;
             S8(packet + 7u) = 60u;
             S16(packet + 14u) = S16(texture + 10u);
         }
-        for (row = 0u; row < 5u; ++row) {
-            for (column = 0u; column < 6u; ++column) {
+        for (row = 0u; row < 5u; ++row)
+        {
+            for (column = 0u; column < 6u; ++column)
+            {
                 uint32 left = u + column * 256u / 6u;
                 uint32 right = u + (column + 1u) * 256u / 6u - 1u;
                 uint32 top = v + row * 24u;

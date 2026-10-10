@@ -36,7 +36,8 @@ void pres_80092410(void)
     sint16 rectangle[4];
 
     sub_8004250C(heap, 0x801FF400u - heap);
-    if (PRES32(0x80064C24u) == 0u) {
+    if (PRES32(0x80064C24u) == 0u)
+    {
         sub_800237D8();
         PRES32(0x80064C24u) = 1u;
     }
@@ -97,7 +98,8 @@ void pres_80092410(void)
     random = randPSX();
     divisor = PRES32(0x80064D4Cu);
     /* Preserve the original BREAK faults rather than invoking undefined C division */
-    if (divisor == 0u || (random == 0x80000000u && divisor == 0xFFFFFFFFu)) abort();
+    if (divisor == 0u || (random == 0x80000000u && divisor == 0xFFFFFFFFu))
+        abort();
     PRES32(0x80059758u) = (uint32)((int32_t)random % (int32_t)divisor);
 }
 
@@ -110,25 +112,30 @@ uint32 pres_80092A50(uint32 font, uint32 character, uint32 pixels)
     int32_t column;
     uint32 result;
     uint32 start;
-    if (columns == 0u) abort();
+    if (columns == 0u)
+        abort();
     texture = PRES32(descriptor + 12u);
     stride = ((r_u8(texture + 22u) + 3u) & 0x1FCu) >> 1;
     height = r_u8(descriptor + 5u);
     width = r_u8(descriptor + 4u);
-    start = pixels + (uint32)((int32_t)character % (int32_t)columns) * (width >> 1)
-        + (uint32)((int32_t)character / (int32_t)columns) * height * stride;
+    start = pixels + (uint32)((int32_t)character % (int32_t)columns) * (width >> 1) + (uint32)((int32_t)character / (int32_t)columns) * height * stride;
     result = width - 1u;
     column = (int32_t)result;
-    while (column > 0) {
+    while (column > 0)
+    {
         uint32 row, nonzero = 0u;
-        for (row = 0u; row < height; ++row) {
+        for (row = 0u; row < height; ++row)
+        {
             pixel = r_u8(start + (uint32)(column / 2) + row * stride);
             pixel = (column & 1) ? pixel & 15u : pixel >> 4;
-            if (pixel != 0u) ++nonzero;
+            if (pixel != 0u)
+                ++nonzero;
         }
-        if (nonzero == 0u) --result;
+        if (nonzero == 0u)
+            --result;
         --column;
-        if (nonzero != 0u) break;
+        if (nonzero != 0u)
+            break;
     }
     return result;
 }
@@ -136,7 +143,8 @@ uint32 pres_80092A50(uint32 font, uint32 character, uint32 pixels)
 void pres_80092BD4(void)
 {
     uint32 font;
-    for (font = 0u; font < 3u; ++font) {
+    for (font = 0u; font < 3u; ++font)
+    {
         uint32 descriptor = 0x800A21D0u + font * 144u;
         uint32 texture = sub_80039ADC(PRES32(descriptor));
         uint32 width, height, pixels, character;
@@ -155,7 +163,8 @@ void pres_80092BD4(void)
         rectangle[3] = (sint16)height;
         StoreImage((PSX_RECT *)rectangle, (uint32 *)psx_addr(pixels, 1u));
         draft_agent3_missing_8003D9AC(0u);
-        for (character = 0u; character < 128u; ++character) {
+        for (character = 0u; character < 128u; ++character)
+        {
             uint32 measured = pres_80092A50(font, character, pixels);
             w_u8(descriptor + 16u + character, (uint8)(measured - r_u8(descriptor + 7u)));
         }
@@ -170,7 +179,8 @@ void pres_80092D7C(void)
     pres_80092BD4();
     packets = sub_80042544(0xCB20u);
     PRES32(0x800ABBE8u) = packets;
-    for (index = 0u; index < 1000u; ++index) {
+    for (index = 0u; index < 1000u; ++index)
+    {
         w_u8(packets + index * 52u + 3u, 12u);
         w_u8(packets + index * 52u + 7u, 0x3Eu);
     }
@@ -180,11 +190,16 @@ void pres_8009279C(void)
 {
     uint32 buttons = r_u16(0x80065524u);
     uint32 command = 0u;
-    if (buttons & 0x4000u) command = 1u;
-    else if (buttons & 0x1000u) command = 4u;
-    else if (buttons & 0x8000u) command = 2u;
-    else if (buttons & 0x2000u) command = 3u;
-    if (command != 0u) {
+    if (buttons & 0x4000u)
+        command = 1u;
+    else if (buttons & 0x1000u)
+        command = 4u;
+    else if (buttons & 0x8000u)
+        command = 2u;
+    else if (buttons & 0x2000u)
+        command = 3u;
+    if (command != 0u)
+    {
         w_u8(0x800ABB00u + PRES32(0x800ABBA0u), (uint8)command);
         PRES32(0x800ABBA0u) = PRES32(0x800ABBA0u) + 1u;
     }
@@ -201,7 +216,8 @@ extern uint32 draft_agent3_missing_8003DC58(uint32 rectangle, const void *pixels
 
 static uint32 pres_signed_remainder(uint32 numerator, uint32 denominator)
 {
-    if (denominator == 0u || (numerator == 0x80000000u && denominator == 0xFFFFFFFFu)) abort();
+    if (denominator == 0u || (numerator == 0x80000000u && denominator == 0xFFFFFFFFu))
+        abort();
     return (uint32)((int32_t)numerator % (int32_t)denominator);
 }
 
@@ -209,7 +225,8 @@ static uint32 pres_signed_remainder(uint32 numerator, uint32 denominator)
 static void pres_copy_record(uint32 destination, uint32 source)
 {
     uint32 block;
-    for (block = 0u; block < 32u; block += 16u) {
+    for (block = 0u; block < 32u; block += 16u)
+    {
         uint32 a = r_u32(source + block);
         uint32 b = r_u32(source + block + 4u);
         uint32 c = r_u32(source + block + 8u);
@@ -244,15 +261,20 @@ void pres_80091CA8(void)
     pres_80091040();
     columns = PRES32(0x800A20C4u);
     rows = PRES32(0x800A20C8u);
-    if ((int32_t)(columns * rows) > 0) {
-        do {
+    if ((int32_t)(columns * rows) > 0)
+    {
+        do
+        {
             uint32 column = pres_signed_remainder(index, columns);
-            if (r_u8(PRES32(0x800A20B8u) + column) != 0u) {
+            if (r_u8(PRES32(0x800A20B8u) + column) != 0u)
+            {
                 uint32 horizontal = pres_signed_remainder(index, PRES32(0x800A20BCu));
                 uint32 row = PRES32(0x800A20C0u) - 1u;
-                while ((int32_t)row >= 0) {
+                while ((int32_t)row >= 0)
+                {
                     uint32 address = PRES32(0x800A20B4u) + horizontal + row * PRES32(0x800A20BCu);
-                    if (r_u8(address) == 0u) {
+                    if (r_u8(address) == 0u)
+                    {
                         w_u8(address, (uint8)(column + 1u));
                         break;
                     }
@@ -268,7 +290,8 @@ void pres_80091CA8(void)
             ++index;
         } while ((int32_t)index < (int32_t)(columns * rows));
     }
-    while (PRES32(0x800ABBB0u) == 0u) {
+    while (PRES32(0x800ABBB0u) == 0u)
+    {
         sint16 rectangle[4];
         uint32 now;
         sub_8003A578();
@@ -285,18 +308,26 @@ void pres_80091CA8(void)
         PRES32(0x800ABB28u) += 1u;
         pres_8009279C();
         pres_80092854();
-        if (PRES32(0x800ABB80u) == 0u) {
+        if (PRES32(0x800ABB80u) == 0u)
+        {
             uint32 countdown = PRES32(0x80064B60u);
-            if (countdown == 0u) {
+            if (countdown == 0u)
+            {
                 PRES32(0x80064B5Cu) = 1u;
                 PRES32(0x800ABBB0u) = 1u;
                 PRES32(0x80064B60u) = 1800u;
-            } else PRES32(0x80064B60u) = countdown - 1u;
+            }
+            else
+                PRES32(0x80064B60u) = countdown - 1u;
         }
-        if (r_u16(0x80065524u) != 0u) PRES32(0x80064B60u) = 1800u;
+        if (r_u16(0x80065524u) != 0u)
+            PRES32(0x80064B60u) = 1800u;
         sub_800200E0();
         draft_agent3_missing_8003D9AC(0u);
-        do { now = (uint32)VSync(-1); } while ((int32_t)(now - previous_tick) <= 0);
+        do
+        {
+            now = (uint32)VSync(-1);
+        } while ((int32_t)(now - previous_tick) <= 0);
         previous_tick = (uint32)VSync(-1);
         sub_80042E98(1u);
         sub_80039934();
@@ -326,7 +357,8 @@ void pres_80091CA8(void)
         pres_copy_record(0x800661BCu, 0x800A9BB0u);
         PRES32(0x800661D8u) = PRES32(0x8005978Cu);
     }
-    if (PRES32(0x8005973Cu) == 2u) {
+    if (PRES32(0x8005973Cu) == 2u)
+    {
         uint32 selected_player = PRES32(0x80059744u);
         uint32 source = 0x800595CCu + selected_player * 32u;
         memcpy(psx_addr(0x800A9BF0u, 4u), psx_addr(source, 4u), 4u);
@@ -338,23 +370,57 @@ void pres_80091CA8(void)
     }
     mode = PRES32(0x80059738u);
     selected = PRES32(0x80059744u);
-    switch (mode) {
-        case 0u: case 8u: case 9u: case 10u: case 11u:
-            switch (selected) {
-                case 0u: selection_base = 0u; break;
-                case 1u: selection_base = 16u; break;
-                case 2u: selection_base = 32u; break;
-                case 3u: case 4u: case 5u: selection_base = 48u; break;
-                case 6u: case 7u: selection_base = 64u; break;
-                default: break;
+    switch (mode)
+    {
+        case 0u:
+        case 8u:
+        case 9u:
+        case 10u:
+        case 11u:
+            switch (selected)
+            {
+                case 0u:
+                    selection_base = 0u;
+                    break;
+                case 1u:
+                    selection_base = 16u;
+                    break;
+                case 2u:
+                    selection_base = 32u;
+                    break;
+                case 3u:
+                case 4u:
+                case 5u:
+                    selection_base = 48u;
+                    break;
+                case 6u:
+                case 7u:
+                    selection_base = 64u;
+                    break;
+                default:
+                    break;
             }
             break;
-        case 1u: selection_base = 80u; break;
-        case 2u: selection_base = 96u; break;
-        case 3u: case 7u: selection_base = 112u; break;
-        case 4u: selection_base = 128u; break;
-        case 5u: case 6u: selection_base = 144u; break;
-        default: selection_base = 0u; break;
+        case 1u:
+            selection_base = 80u;
+            break;
+        case 2u:
+            selection_base = 96u;
+            break;
+        case 3u:
+        case 7u:
+            selection_base = 112u;
+            break;
+        case 4u:
+            selection_base = 128u;
+            break;
+        case 5u:
+        case 6u:
+            selection_base = 144u;
+            break;
+        default:
+            selection_base = 0u;
+            break;
     }
     for (index = selection_base + players; (int32_t)index < (int32_t)(selection_base + 16u); ++index)
         pres_copy_record(0x800661BCu + (index - selection_base) * 44u, 0x800A9BB0u + index * 44u);

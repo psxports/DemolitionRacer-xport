@@ -6,6 +6,7 @@ static void gt_vertex_load(uint32 index, const SceneSubdivisionVertex *vertex)
     xport_gte_write_data(index * 2u, (uint16)vertex->x | ((uint32)(uint16)vertex->y << 16));
     xport_gte_write_data(index * 2u + 1u, (uint32)(sint32)vertex->z);
 }
+
 static uint32 gt_link(uint32 packet, uint32 ordering, uint32 depth, uint32 words, uint32 size)
 {
     uint32 slot = ordering + depth * 4u;
@@ -16,10 +17,13 @@ static uint32 gt_link(uint32 packet, uint32 ordering, uint32 depth, uint32 words
     w_u32(0x80065570u, packet + size);
     return result;
 }
+
 uint32 scene_80051D7C(const SceneSubdivisionHeader *header, SceneSubdivisionVertex *const *vertices)
 {
     uint32 packet, depth;
-    gt_vertex_load(1u, vertices[1]); gt_vertex_load(2u, vertices[2]); gt_vertex_load(0u, vertices[0]);
+    gt_vertex_load(1u, vertices[1]);
+    gt_vertex_load(2u, vertices[2]);
+    gt_vertex_load(0u, vertices[0]);
     packet = r_u32(0x80065570u);
     xport_gte_execute(0x280030u);
     w_u16(packet + 24u, (uint16)vertices[1]->uv);
@@ -35,13 +39,17 @@ uint32 scene_80051D7C(const SceneSubdivisionHeader *header, SceneSubdivisionVert
     xport_gte_execute(0x158002Du);
     w_u16(packet + 36u, (uint16)vertices[2]->uv);
     depth = xport_gte_read_data(7u);
-    if ((sint32)depth <= 0) return header->ordering;
+    if ((sint32)depth <= 0)
+        return header->ordering;
     return gt_link(packet, header->ordering, depth, 9u, 40u);
 }
+
 uint32 scene_80051E5C(const SceneSubdivisionHeader *header, SceneSubdivisionVertex *const *vertices)
 {
     uint32 packet, depth;
-    gt_vertex_load(1u, vertices[1]); gt_vertex_load(2u, vertices[2]); gt_vertex_load(0u, vertices[0]);
+    gt_vertex_load(1u, vertices[1]);
+    gt_vertex_load(2u, vertices[2]);
+    gt_vertex_load(0u, vertices[0]);
     packet = r_u32(0x80065570u);
     xport_gte_execute(0x280030u);
     w_u16(packet + 24u, (uint16)vertices[1]->uv);
@@ -61,12 +69,13 @@ uint32 scene_80051E5C(const SceneSubdivisionHeader *header, SceneSubdivisionVert
     w_u16(packet + 48u, (uint16)vertices[3]->uv);
     xport_gte_execute(0x168002Eu);
     depth = xport_gte_read_data(7u);
-    if ((sint32)depth <= 0) return header->ordering;
+    if ((sint32)depth <= 0)
+        return header->ordering;
     w_u32(packet + 44u, xport_gte_read_data(14u));
     return gt_link(packet, header->ordering, depth, 12u, 52u);
 }
-uint32 scene_8005203C(SceneSubdivisionVertex *output, const SceneSubdivisionVertex *left,
-    const SceneSubdivisionVertex *right)
+
+uint32 scene_8005203C(SceneSubdivisionVertex *output, const SceneSubdivisionVertex *left, const SceneSubdivisionVertex *right)
 {
     uint8 *destination = (uint8 *)&output->color;
     const uint8 *a = (const uint8 *)&left->color;

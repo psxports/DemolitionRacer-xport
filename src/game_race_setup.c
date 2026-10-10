@@ -92,121 +92,243 @@ static uint32 race_pending(uint32 target, uint32 argument_count, const uint32 *a
 {
     uint32 index;
     fprintf(stderr, "Untranslated race dependency %08X (%u arguments)", target, argument_count);
-    for (index = 0u; index < argument_count; ++index) fprintf(stderr, " %08X", arguments[index]);
+    for (index = 0u; index < argument_count; ++index)
+        fprintf(stderr, " %08X", arguments[index]);
     fprintf(stderr, "\n");
     abort();
 }
 
 static uint32 race_call0(uint32 target)
 {
-    switch (target) {
-    /* The complete original BD530 consists of JR RA and its NOP delay slot */
-    case 0x800AA78Cu: game_800AA78C(); return 0u;
-    case 0x800AA544u: game_800AA544(); return 0u;
-    case 0x800A9A68u: game_800A9A68(); return 0u;
-    case 0x800BC0B4u: game_800BC0B4(); return 0u;
-    case 0x800BB558u: game_800BB558(); return 0u;
-    case 0x800B3810u: game_800B3810(); return 0u;
-    case 0x8001372Cu: return sub_8001372C();
-    case 0x80013364u: sub_80013364(); return 0u;
-    case 0x800BA7B4u: game_800BA7B4(); return 0u;
-    case 0x8001E328u: return sub_8001E328();
-    case 0x800BD538u: return 0u;
-    case 0x800BD540u: return 0u;
-    case 0x800BD530u: return 0u;
-    case 0x80016C68u: return sub_80016C68();
-    case 0x8003BC1Cu: return sub_8003BC1C();
-    case 0x8003A578u: return sub_8003A578();
-    case 0x800399D4u: return sub_800399D4();
-    case 0x80039908u: return sub_80039908();
-    case 0x80039934u: return sub_80039934();
-    case 0x80039A10u: return sub_80039A10();
-    case 0x800200E0u: return (uint32)sub_800200E0();
-    case 0x80017D38u: return sub_80017D38();
-    case 0x80019F54u: return sub_80019F54();
-    case 0x800BD4B8u: game_800BD4B8(); return 0u;
-    case 0x80012C3Cu: sub_80012C3C(); return 0u;
-    case 0x800208E4u: return sub_800208E4();
-    case 0x8001697Cu: return sub_8001697C();
-    case 0x80015664u: return sub_80015664();
-    case 0x8001D1DCu: return sub_8001D1DC();
-    case 0x8001EE94u: return sub_8001EE94();
-    case 0x800AE17Cu: game_800AE17C(); return 0u;
-    case 0x800AEB4Cu: game_800AEB4C(); return 0u;
-    case 0x800B77CCu: game_800B77CC(); return 0u;
-    case 0x8009564Cu: game_8009564C(); return 0u;
-    case 0x80042754u: return sub_80042754();
-    case 0x800B053Cu: game_800B053C(); return 0u;
-    case 0x800B13A8u: game_800B13A8(); return 0u;
-    case 0x80042784u: return sub_80042784();
-    case 0x80017E68u: return sub_80017E68();
-    case 0x80017C9Cu: return sub_80017C9C();
-    case 0x80017D80u: return sub_80017D80();
-    case 0x8003408Cu: sub_8003408C(); return 0u;
-    case 0x8008F6F8u: game_8008F6F8(); return 0u;
-    case 0x800B3924u: game_800B3924(); return 0u;
-    default: return race_pending(target, 0u, NULL);
+    switch (target)
+    {
+        /* The complete original BD530 consists of JR RA and its NOP delay slot */
+        case 0x800AA78Cu:
+            game_800AA78C();
+            return 0u;
+        case 0x800AA544u:
+            game_800AA544();
+            return 0u;
+        case 0x800A9A68u:
+            game_800A9A68();
+            return 0u;
+        case 0x800BC0B4u:
+            game_800BC0B4();
+            return 0u;
+        case 0x800BB558u:
+            game_800BB558();
+            return 0u;
+        case 0x800B3810u:
+            game_800B3810();
+            return 0u;
+        case 0x8001372Cu:
+            return sub_8001372C();
+        case 0x80013364u:
+            sub_80013364();
+            return 0u;
+        case 0x800BA7B4u:
+            game_800BA7B4();
+            return 0u;
+        case 0x8001E328u:
+            return sub_8001E328();
+        case 0x800BD538u:
+            return 0u;
+        case 0x800BD540u:
+            return 0u;
+        case 0x800BD530u:
+            return 0u;
+        case 0x80016C68u:
+            return sub_80016C68();
+        case 0x8003BC1Cu:
+            return sub_8003BC1C();
+        case 0x8003A578u:
+            return sub_8003A578();
+        case 0x800399D4u:
+            return sub_800399D4();
+        case 0x80039908u:
+            return sub_80039908();
+        case 0x80039934u:
+            return sub_80039934();
+        case 0x80039A10u:
+            return sub_80039A10();
+        case 0x800200E0u:
+            return (uint32)sub_800200E0();
+        case 0x80017D38u:
+            return sub_80017D38();
+        case 0x80019F54u:
+            return sub_80019F54();
+        case 0x800BD4B8u:
+            game_800BD4B8();
+            return 0u;
+        case 0x80012C3Cu:
+            sub_80012C3C();
+            return 0u;
+        case 0x800208E4u:
+            return sub_800208E4();
+        case 0x8001697Cu:
+            return sub_8001697C();
+        case 0x80015664u:
+            return sub_80015664();
+        case 0x8001D1DCu:
+            return sub_8001D1DC();
+        case 0x8001EE94u:
+            return sub_8001EE94();
+        case 0x800AE17Cu:
+            game_800AE17C();
+            return 0u;
+        case 0x800AEB4Cu:
+            game_800AEB4C();
+            return 0u;
+        case 0x800B77CCu:
+            game_800B77CC();
+            return 0u;
+        case 0x8009564Cu:
+            game_8009564C();
+            return 0u;
+        case 0x80042754u:
+            return sub_80042754();
+        case 0x800B053Cu:
+            game_800B053C();
+            return 0u;
+        case 0x800B13A8u:
+            game_800B13A8();
+            return 0u;
+        case 0x80042784u:
+            return sub_80042784();
+        case 0x80017E68u:
+            return sub_80017E68();
+        case 0x80017C9Cu:
+            return sub_80017C9C();
+        case 0x80017D80u:
+            return sub_80017D80();
+        case 0x8003408Cu:
+            sub_8003408C();
+            return 0u;
+        case 0x8008F6F8u:
+            game_8008F6F8();
+            return 0u;
+        case 0x800B3924u:
+            game_800B3924();
+            return 0u;
+        default:
+            return race_pending(target, 0u, NULL);
     }
 }
 
 static uint32 race_call1(uint32 target, uint32 argument)
 {
-    switch (target) {
-    case 0x8008F784u: game_8008F784(argument); return 0u;
-    case 0x8003D9ACu: return (uint32)DrawSync((sint32)argument);
-    case 0x80047044u: return (uint32)VSync((sint32)argument);
-    case 0x80020430u: return sub_80020430(argument);
-    case 0x8004261Cu: return sub_8004261C(argument);
-    case 0x80021430u: return sub_80021430(argument);
-    case 0x8001DEDCu: return sub_8001DEDC(argument);
-    case 0x8001DFBCu: return sub_8001DFBC(argument);
-    case 0x80012E90u: return sub_80012E90(argument);
-    case 0x8008FCA4u: game_8008FCA4(argument); return 0u;
-    case 0x800A7794u: game_800A7794(argument); return 0u;
-    case 0x800B3638u: game_800B3638(argument); return 0u;
-    case 0x800B9374u: game_800B9374(argument); return 0u;
-    case 0x800A7098u: game_800A7098(argument); return 0u;
-    case 0x800A23CCu: game_800A23CC(argument); return 0u;
-    default: return race_pending(target, 1u, &argument);
+    switch (target)
+    {
+        case 0x8008F784u:
+            game_8008F784(argument);
+            return 0u;
+        case 0x8003D9ACu:
+            return (uint32)DrawSync((sint32)argument);
+        case 0x80047044u:
+            return (uint32)VSync((sint32)argument);
+        case 0x80020430u:
+            return sub_80020430(argument);
+        case 0x8004261Cu:
+            return sub_8004261C(argument);
+        case 0x80021430u:
+            return sub_80021430(argument);
+        case 0x8001DEDCu:
+            return sub_8001DEDC(argument);
+        case 0x8001DFBCu:
+            return sub_8001DFBC(argument);
+        case 0x80012E90u:
+            return sub_80012E90(argument);
+        case 0x8008FCA4u:
+            game_8008FCA4(argument);
+            return 0u;
+        case 0x800A7794u:
+            game_800A7794(argument);
+            return 0u;
+        case 0x800B3638u:
+            game_800B3638(argument);
+            return 0u;
+        case 0x800B9374u:
+            game_800B9374(argument);
+            return 0u;
+        case 0x800A7098u:
+            game_800A7098(argument);
+            return 0u;
+        case 0x800A23CCu:
+            game_800A23CC(argument);
+            return 0u;
+        default:
+            return race_pending(target, 1u, &argument);
     }
 }
 
 static uint32 race_call2(uint32 target, uint32 first, uint32 second)
 {
     uint32 arguments[2] = {first, second};
-    if (target == 0x80020A14u) return sub_80020A14(first, second);
-    if (target == 0x80037DC8u) return sub_80037DC8(first, second);
-    if (target == 0x80090C50u) { game_80090C50(first, second); return 0u; }
-    if (target == 0x80090858u) { game_80090858(first, second); return 0u; }
-    if (target == 0x80090040u) { game_80090040(first, second); return 0u; }
+    if (target == 0x80020A14u)
+        return sub_80020A14(first, second);
+    if (target == 0x80037DC8u)
+        return sub_80037DC8(first, second);
+    if (target == 0x80090C50u)
+    {
+        game_80090C50(first, second);
+        return 0u;
+    }
+    if (target == 0x80090858u)
+    {
+        game_80090858(first, second);
+        return 0u;
+    }
+    if (target == 0x80090040u)
+    {
+        game_80090040(first, second);
+        return 0u;
+    }
     return race_pending(target, 2u, arguments);
 }
 
 static uint32 race_call3(uint32 target, uint32 first, uint32 second, uint32 third)
 {
     uint32 arguments[3] = {first, second, third};
-    if (target == 0x800B8DB8u) { game_800B8DB8(first, (sint32)second, (sint32)third); return 0u; }
-    if (target == 0x8001CDBCu) return sub_8001CDBC(first, second, third);
-    if (target == 0x80036914u) return sub_80036914(first, second, third);
+    if (target == 0x800B8DB8u)
+    {
+        game_800B8DB8(first, (sint32)second, (sint32)third);
+        return 0u;
+    }
+    if (target == 0x8001CDBCu)
+        return sub_8001CDBC(first, second, third);
+    if (target == 0x80036914u)
+        return sub_80036914(first, second, third);
     return race_pending(target, 3u, arguments);
 }
 
-static void race_empty1E310(uint32 argument) { (void)argument; }
-static void race_empty1E318(uint32 argument) { (void)argument; }
-static void race_empty42C44(void) {}
+static void race_empty1E310(uint32 argument)
+{
+}
+
+static void race_empty1E318(uint32 argument)
+{
+}
+
+static void race_empty42C44(void)
+{
+}
 
 uint32 sub_8003AAC8(uint32 player, uint32 first, uint32 second)
 {
     uint32 address = 0x800654F8u + (player << 2);
-    if (first != ~0u) R8(address) = (uint8)first;
-    if (second != ~0u) R8(address + 1u) = (uint8)second;
+    if (first != ~0u)
+        R8(address) = (uint8)first;
+    if (second != ~0u)
+        R8(address + 1u) = (uint8)second;
     return ~0u;
 }
 
 uint32 sub_800151DC(void)
 {
-    if (R32(0x800593A8u)) sub_8001BCAC();
-    else sub_80013A9C();
+    if (R32(0x800593A8u))
+        sub_8001BCAC();
+    else
+        sub_80013A9C();
     sub_8003AAC8(0u, 0u, 0u);
     return sub_8003AAC8(1u, 0u, 0u);
 }
@@ -220,7 +342,8 @@ static void race_dispatch_slot(uint32 slot)
 static void race_copy_camera(uint32 destination)
 {
     uint32 offset, first, second;
-    for (offset = 0u; offset < 32u; offset += 8u) {
+    for (offset = 0u; offset < 32u; offset += 8u)
+    {
         first = R32(0x80081BA4u + offset);
         second = R32(0x80081BA8u + offset);
         R32(destination + offset) = first;
@@ -233,119 +356,225 @@ static void race_message(uint32 messages, uint32 width)
     uint32 measured = race_call2(0x80020A14u, 5u, R32(messages + R32(0x80064B8Cu) * 4u));
     uint32 remaining = width - measured;
     uint32 text = R32(messages + R32(0x80064B8Cu) * 4u);
-    sub_80020AB8(5u, (sint32)(remaining + (remaining >> 31)) >> 1, 24,
-        (const char *)psx_addr(text, 1u));
+    sub_80020AB8(5u, (sint32)(remaining + (remaining >> 31)) >> 1, 24, (const char *)psx_addr(text, 1u));
 }
 
 uint32 sub_80013A9C(void)
 {
     uint32 players, index, count, result, argument, value, pointer;
     /* Native C uses the host stack instead of the original 46FF4 stack swap */
-    R32(0x800651B0u) = 0u; R32(0x800655A4u) = 0u;
-    R32(0x800651D0u) = 0u; R32(0x800651D8u) = 0u; R32(0x800651DCu) = 1u;
-    R32(0x800651ACu) = 0u; R32(0x80064A30u) = 0u; R32(0x80064A38u) = 0u; R32(0x800651B8u) = 0u;
+    R32(0x800651B0u) = 0u;
+    R32(0x800655A4u) = 0u;
+    R32(0x800651D0u) = 0u;
+    R32(0x800651D8u) = 0u;
+    R32(0x800651DCu) = 1u;
+    R32(0x800651ACu) = 0u;
+    R32(0x80064A30u) = 0u;
+    R32(0x80064A38u) = 0u;
+    R32(0x800651B8u) = 0u;
     race_empty1E318(0x80066D78u);
     race_empty1E310(0x80066D84u + R32(0x800651D8u) * 952u);
     race_call0(0x80016C68u);
-    value = R32(0x8006511Cu); pointer = R32(0x80065120u);
-    R32(0x8006522Cu) = 0u; R32(0x80065230u) = 0u;
-    R32(0x80065240u) = value; R32(0x8006524Cu) = pointer;
+    value = R32(0x8006511Cu);
+    pointer = R32(0x80065120u);
+    R32(0x8006522Cu) = 0u;
+    R32(0x80065230u) = 0u;
+    R32(0x80065240u) = value;
+    R32(0x8006524Cu) = pointer;
     R32(0x80065198u) = race_call1(0x80047044u, ~0u);
     race_dispatch_slot(0u);
-    players = R32(0x80065254u); R32(0x800651A0u) = 0u;
-    if ((sint32)players > 0) {
-        do {
+    players = R32(0x80065254u);
+    R32(0x800651A0u) = 0u;
+    if ((sint32)players > 0)
+    {
+        do
+        {
             game_8009A114(0x80066D14u + R32(0x800651A0u) * 952u);
-            index = R32(0x800651A0u) + 1u; count = R32(0x80065254u);
+            index = R32(0x800651A0u) + 1u;
+            count = R32(0x80065254u);
             R32(0x800651A0u) = index;
         } while ((sint32)index < (sint32)count);
     }
-    race_call1(0x8001DEDCu, 0u); sub_800131C8();
-    R32(0x80064A58u) = 0u; R32(0x80064A2Cu) = 0u;
+    race_call1(0x8001DEDCu, 0u);
+    sub_800131C8();
+    R32(0x80064A58u) = 0u;
+    R32(0x80064A2Cu) = 0u;
     sub_80037B18();
     race_call1(0x80020430u, R8(0x800593ABu + R32(0x80064C08u)));
-    value = R32(0x80065338u); result = R32(0x80064A58u); R32(0x800651A4u) = value;
-    while (!result) {
-        if (R32(0x800651D0u) || R32(0x800651ACu)) R32(0x80064A40u) = 1u;
-        race_empty42C44(); race_call0(0x80017D38u); race_call0(0x80019F54u); race_call0(0x800BD4B8u);
-        players = R32(0x80065254u); R32(0x80064A34u) = 0u; R32(0x800651A0u) = 0u;
-        if ((sint32)players > 0) {
-            do {
+    value = R32(0x80065338u);
+    result = R32(0x80064A58u);
+    R32(0x800651A4u) = value;
+    while (!result)
+    {
+        if (R32(0x800651D0u) || R32(0x800651ACu))
+            R32(0x80064A40u) = 1u;
+        race_empty42C44();
+        race_call0(0x80017D38u);
+        race_call0(0x80019F54u);
+        race_call0(0x800BD4B8u);
+        players = R32(0x80065254u);
+        R32(0x80064A34u) = 0u;
+        R32(0x800651A0u) = 0u;
+        if ((sint32)players > 0)
+        {
+            do
+            {
                 index = R32(0x800651A0u);
-                if (R8(0x80066E8Eu + index * 952u) & 1u) R32(0x80064A34u) += 1u;
+                if (R8(0x80066E8Eu + index * 952u) & 1u)
+                    R32(0x80064A34u) += 1u;
                 R32(0x800651A0u) = index + 1u;
             } while ((sint32)(index + 1u) < (sint32)players);
         }
         sub_8003A578();
         value = R32(0x80065538u);
-        if (R32(0x800651A4u) != value) { game_8008F9A8(0u); value = R32(0x80065538u); }
-        pointer = R32(0x80064B5Cu); R32(0x800651A4u) = value;
-        if ((pointer || R32(0x80065110u) == 1u) && (R16(0x80065524u) || R16(0x80065526u))) R32(0x80064A40u) = 1u;
-        if (R32(0x80064B5Cu) && (R32(0x80064A30u) & 15u) < 8u) {
-            race_call1(0x80021430u, 3u); race_message(0x80059378u, 320u);
-        } else if (R32(0x80065110u) == 1u && (R32(0x80064A30u) & 15u) < 8u) {
-            race_call1(0x80021430u, 3u); race_message(0x8005938Cu, 320u);
+        if (R32(0x800651A4u) != value)
+        {
+            game_8008F9A8(0u);
+            value = R32(0x80065538u);
         }
-        race_call0(0x80012C3Cu); race_call0(0x800208E4u); race_call1(0x8008FCA4u, 0u);
-        if (!R32(0x80064B5Cu)) {
-            if (R8(0x80065538u) == 255u) {
+        pointer = R32(0x80064B5Cu);
+        R32(0x800651A4u) = value;
+        if ((pointer || R32(0x80065110u) == 1u) && (R16(0x80065524u) || R16(0x80065526u)))
+            R32(0x80064A40u) = 1u;
+        if (R32(0x80064B5Cu) && (R32(0x80064A30u) & 15u) < 8u)
+        {
+            race_call1(0x80021430u, 3u);
+            race_message(0x80059378u, 320u);
+        }
+        else if (R32(0x80065110u) == 1u && (R32(0x80064A30u) & 15u) < 8u)
+        {
+            race_call1(0x80021430u, 3u);
+            race_message(0x8005938Cu, 320u);
+        }
+        race_call0(0x80012C3Cu);
+        race_call0(0x800208E4u);
+        race_call1(0x8008FCA4u, 0u);
+        if (!R32(0x80064B5Cu))
+        {
+            if (R8(0x80065538u) == 255u)
+            {
                 R32(0x80064A80u) += 1u;
-                if ((sint32)R32(0x80064A80u) >= 31) R32(0x80064A80u) = 0u;
-            } else { R32(0x80064A80u) = 0u; R32(0x8006519Cu) = 0u; }
+                if ((sint32)R32(0x80064A80u) >= 31)
+                    R32(0x80064A80u) = 0u;
+            }
+            else
+            {
+                R32(0x80064A80u) = 0u;
+                R32(0x8006519Cu) = 0u;
+            }
         }
-        sub_800399D4(); sub_80039908(); race_call0(0x80042754u); race_call2(0x80090040u, 0u, 0u);
-        if (R32(0x800593A0u)) { race_call0(0x800B8704u); race_call0(0x8009545Cu); }
-        else { race_call0(0x800B77CCu); race_call0(0x8009564Cu); }
+        sub_800399D4();
+        sub_80039908();
+        race_call0(0x80042754u);
+        race_call2(0x80090040u, 0u, 0u);
+        if (R32(0x800593A0u))
+        {
+            race_call0(0x800B8704u);
+            race_call0(0x8009545Cu);
+        }
+        else
+        {
+            race_call0(0x800B77CCu);
+            race_call0(0x8009564Cu);
+        }
         value = R32(0x80064A54u);
-        if (value) { race_call3(0x80015780u, 0u, value, 0x80066D78u); R32(0x80064A54u) = 0u; }
-        race_call0(0x8001697Cu); race_call1(0x8001DFBCu, 0u); race_call0(0x8001D1DCu);
-        race_call0(0x8001EE94u); race_call0(0x80015664u); race_call0(0x800AE17Cu);
+        if (value)
+        {
+            race_call3(0x80015780u, 0u, value, 0x80066D78u);
+            R32(0x80064A54u) = 0u;
+        }
+        race_call0(0x8001697Cu);
+        race_call1(0x8001DFBCu, 0u);
+        race_call0(0x8001D1DCu);
+        race_call0(0x8001EE94u);
+        race_call0(0x80015664u);
+        race_call0(0x800AE17Cu);
         R32(0x80064A58u) = race_call1(0x80012E90u, 0u);
-        race_call0(0x800AEB4Cu); race_call0(0x80016C68u); race_call0(0x8003408Cu);
+        race_call0(0x800AEB4Cu);
+        race_call0(0x80016C68u);
+        race_call0(0x8003408Cu);
         race_call2(0x80037DC8u, 0x80066D14u + R32(0x800651D8u) * 952u, 0u);
         race_call2(0x80090C50u, 0x80066D14u, R8(0x800670B8u));
         race_call3(0x8001CDBCu, 0u, 0x80066D14u, R8(0x800670B8u));
-        race_call0(0x8008F6F8u); race_call0(0x800B3924u);
+        race_call0(0x8008F6F8u);
+        race_call0(0x800B3924u);
         race_call1(0x800A7098u, 0x80066D14u + R32(0x800651D8u) * 952u);
-        if (R32(0x80064B5Cu) || R32(0x80065110u) == 1u || !R32(0x80059764u)) sub_8003AAC8(0u, 0u, 0u);
-        else race_call2(0x80090858u, 0u, 0u);
+        if (R32(0x80064B5Cu) || R32(0x80065110u) == 1u || !R32(0x80059764u))
+            sub_8003AAC8(0u, 0u, 0u);
+        else
+            race_call2(0x80090858u, 0u, 0u);
         argument = ~0u;
-        if (!R8(0x800670C2u) && R32(0x80065110u) != 1u && !R32(0x80064B5Cu)) argument = 0u;
-        race_call1(0x800A7794u, argument); race_call0(0x800B053Cu); race_call0(0x800B13A8u);
+        if (!R8(0x800670C2u) && R32(0x80065110u) != 1u && !R32(0x80064B5Cu))
+            argument = 0u;
+        race_call1(0x800A7794u, argument);
+        race_call0(0x800B053Cu);
+        race_call0(0x800B13A8u);
         race_call1(0x800B3638u, 0x80066D14u + R32(0x800651D8u) * 952u);
-        if (R32(0x800593A0u)) race_call0(0x800B9518u);
-        else {
+        if (R32(0x800593A0u))
+            race_call0(0x800B9518u);
+        else
+        {
             race_call3(0x800B8DB8u, 0u, (uint32)(sint32)(sint16)R16(0x80066D6Eu), (uint32)(sint32)(sint16)R16(0x80066D70u));
             race_call1(0x800B9374u, 0u);
         }
-        race_dispatch_slot(4u); race_dispatch_slot(8u);
-        race_call0(0x80017E68u); race_call0(0x80017C9Cu); race_call0(0x80017D80u);
-        race_call0(0x800AA78Cu); race_call0(0x800AA544u); race_call1(0x8008F784u, 0u);
-        race_call0(0x800A9A68u); race_call0(0x800BC0B4u); race_call0(0x800BB558u);
-        race_call0(0x80042784u); race_call1(0x8003D9ACu, 0u); race_call0(0x800B3810u); race_call1(0x8003D9ACu, 0u);
-        do { value = race_call1(0x80047044u, ~0u); } while ((sint32)(value - R32(0x80065198u)) < 2);
+        race_dispatch_slot(4u);
+        race_dispatch_slot(8u);
+        race_call0(0x80017E68u);
+        race_call0(0x80017C9Cu);
+        race_call0(0x80017D80u);
+        race_call0(0x800AA78Cu);
+        race_call0(0x800AA544u);
+        race_call1(0x8008F784u, 0u);
+        race_call0(0x800A9A68u);
+        race_call0(0x800BC0B4u);
+        race_call0(0x800BB558u);
+        race_call0(0x80042784u);
+        race_call1(0x8003D9ACu, 0u);
+        race_call0(0x800B3810u);
+        race_call1(0x8003D9ACu, 0u);
+        do
+        {
+            value = race_call1(0x80047044u, ~0u);
+        } while ((sint32)(value - R32(0x80065198u)) < 2);
         R32(0x80065198u) = race_call1(0x80047044u, ~0u);
-        sub_800200E0(); sub_80039934(); sub_80039A10(); R32(0x80064A30u) += 1u;
+        sub_800200E0();
+        sub_80039934();
+        sub_80039A10();
+        R32(0x80064A30u) += 1u;
         race_call0(0x8001372Cu);
-        if (R32(0x80064B5Cu) || R32(0x80065110u) == 1u) {
-            if (R16(0x80065520u)) R32(0x800651ACu) = 1u;
-            if (R16(0x80065522u)) R32(0x800651ACu) = 1u;
-            if (R32(0x80064B5Cu)) {
+        if (R32(0x80064B5Cu) || R32(0x80065110u) == 1u)
+        {
+            if (R16(0x80065520u))
+                R32(0x800651ACu) = 1u;
+            if (R16(0x80065522u))
+                R32(0x800651ACu) = 1u;
+            if (R32(0x80064B5Cu))
+            {
                 R32(0x800651B8u) += 1u;
-                if ((sint32)R32(0x800651B8u) >= 901) R32(0x800651ACu) = 1u;
+                if ((sint32)R32(0x800651B8u) >= 901)
+                    R32(0x800651ACu) = 1u;
             }
-        } else if (!R32(0x80064A44u)) {
+        }
+        else if (!R32(0x80064A44u))
+        {
             race_call0(0x800BA7B4u);
-            if (R32(0x80064A30u) >= 0x4651u) R32(0x800651ACu) = 1u;
+            if (R32(0x80064A30u) >= 0x4651u)
+                R32(0x800651ACu) = 1u;
         }
         race_call0(0x80013364u);
-        if (R32(0x80064A84u) == 2u) race_call0(0x8001CBACu);
+        if (R32(0x80064A84u) == 2u)
+            race_call0(0x8001CBACu);
         result = R32(0x80064A58u);
     }
-    race_call0(0x8001CD48u); race_call0(0x8001E328u); sub_8003AAC8(0u, 0u, 0u);
+    race_call0(0x8001CD48u);
+    race_call0(0x8001E328u);
+    sub_8003AAC8(0u, 0u, 0u);
     race_call1(0x8004261Cu, R32(0x800651BCu));
-    if (!R32(0x80064A2Cu) && !R32(0x80064B5Cu) && !R8(0x80064EA1u)) race_call0(0x8002AD28u);
-    race_call1(0x8003D9ACu, 0u); race_call1(0x80047044u, 0u); race_call0(0x8001E328u);
+    if (!R32(0x80064A2Cu) && !R32(0x80064B5Cu) && !R8(0x80064EA1u))
+        race_call0(0x8002AD28u);
+    race_call1(0x8003D9ACu, 0u);
+    race_call1(0x80047044u, 0u);
+    race_call0(0x8001E328u);
     return race_call0(0x8001CD48u);
 }
 
@@ -354,8 +583,10 @@ static void race_render_screen(uint32 player)
     uint32 object = player ? 0x800670CCu : 0x80066D14u;
     uint32 argument;
     race_call1(player ? 0x8001BBB4u : 0x8001BAC0u, R32(0x8006527Cu));
-    sub_800399D4(); sub_80039908();
-    if (!player) {
+    sub_800399D4();
+    sub_80039908();
+    if (!player)
+    {
         uint32 ordering_table = R32(0x80065118u);
         uint32 slot = R32(ordering_table + 112u);
         R32(0x80073D70u) = (R32(0x80073D70u) & 0xFF000000u) | (R32(slot) & 0xFFFFFFu);
@@ -363,30 +594,44 @@ static void race_render_screen(uint32 player)
         R32(slot) = (R32(slot) & 0xFF000000u) | 0x00073D70u;
     }
     race_call0(0x80042754u);
-    if (!player) race_call0(0x800208E4u);
+    if (!player)
+        race_call0(0x800208E4u);
     race_call2(0x80037DC8u, object, player);
     race_copy_camera(player ? 0x80073DD0u : 0x80073DB0u);
-    if (player) R32(0x80064D18u) = 1u;
-    race_call2(0x800A730Cu, object, player); race_call1(0x800A23CCu, player);
-    if (R32(0x800593A0u)) race_call0(0x800B9518u);
-    else {
+    if (player)
+        R32(0x80064D18u) = 1u;
+    race_call2(0x800A730Cu, object, player);
+    race_call1(0x800A23CCu, player);
+    if (R32(0x800593A0u))
+        race_call0(0x800B9518u);
+    else
+    {
         race_call3(0x800B8DB8u, player, (uint32)(sint32)(sint16)R16(object + 90u), (uint32)(sint32)(sint16)R16(object + 92u));
         race_call1(0x800B9374u, player);
     }
-    race_call0(0x80017C9Cu); race_call0(0x80042784u); race_dispatch_slot(8u);
-    race_call0(0x800BC0B4u); race_call0(player ? 0x800A9E24u : 0x800A9A68u);
+    race_call0(0x80017C9Cu);
+    race_call0(0x80042784u);
+    race_dispatch_slot(8u);
+    race_call0(0x800BC0B4u);
+    race_call0(player ? 0x800A9E24u : 0x800A9A68u);
     race_call1(0x8008F784u, player);
     argument = 0u;
-    if (R8(object + 942u) || R32(0x80065110u) == 1u || R32(0x80064B5Cu)) argument = ~0u;
+    if (R8(object + 942u) || R32(0x80065110u) == 1u || R32(0x80064B5Cu))
+        argument = ~0u;
     race_call1(0x800A7794u, argument);
-    if (R32(0x80065110u) == 1u && (R32(0x80064A30u) & 15u) < 8u) {
-        if (!player) race_call1(0x80021430u, 3u);
+    if (R32(0x80065110u) == 1u && (R32(0x80064A30u) & 15u) < 8u)
+    {
+        if (!player)
+            race_call1(0x80021430u, 3u);
         race_message(0x8005938Cu, R32(0x80064B68u) ? 160u : 320u);
     }
-    if (player) race_call0(0x80017D80u);
-    else sub_800200E0();
+    if (player)
+        race_call0(0x80017D80u);
+    else
+        sub_800200E0();
     R32(0x80064D0Cu) = race_call1(0x80012E90u, player);
-    race_call1(0x8003997Cu, R32(0x8006527Cu)); sub_80039A10();
+    race_call1(0x8003997Cu, R32(0x8006527Cu));
+    sub_80039A10();
 }
 
 uint32 sub_8001BCAC(void)
@@ -394,30 +639,56 @@ uint32 sub_8001BCAC(void)
     uint32 viewport, players, index, count, first, second, result;
     /* Native C uses the host stack instead of the original 46FF4 stack swap */
     viewport = R32(0x80064B68u);
-    R32(0x800655A4u) = 0u; R32(0x800651D0u) = 0u; R32(0x800651D8u) = 0u;
-    R32(0x800651DCu) = 1u; R32(0x8006528Cu) = 0u; R32(0x80064A30u) = 0u;
+    R32(0x800655A4u) = 0u;
+    R32(0x800651D0u) = 0u;
+    R32(0x800651D8u) = 0u;
+    R32(0x800651DCu) = 1u;
+    R32(0x8006528Cu) = 0u;
+    R32(0x80064A30u) = 0u;
     R32(0x80064B68u) = viewport;
-    if (viewport) {
-        R32(0x8006511Cu) = 160u; R32(0x80065120u) = 240u; sub_8003BC1C();
-        R8(0x80073D73u) = 3u; R8(0x80073D77u) = 64u;
-        R16(0x80073D78u) = 159u; R16(0x80073D7Cu) = 159u;
-        R8(0x80073D74u) = 0u; R8(0x80073D75u) = 0u; R8(0x80073D76u) = 0u;
-        R16(0x80073D7Au) = 0u; R16(0x80073D7Eu) = 256u;
-    } else {
-        R32(0x8006511Cu) = 320u; R32(0x80065120u) = 120u; sub_8003BC1C();
-        R8(0x80073D73u) = 3u; R8(0x80073D77u) = 64u;
-        R8(0x80073D74u) = 0u; R8(0x80073D75u) = 0u; R8(0x80073D76u) = 0u;
-        R16(0x80073D78u) = 0u; R16(0x80073D7Au) = 119u;
-        R16(0x80073D7Cu) = 320u; R16(0x80073D7Eu) = 119u;
+    if (viewport)
+    {
+        R32(0x8006511Cu) = 160u;
+        R32(0x80065120u) = 240u;
+        sub_8003BC1C();
+        R8(0x80073D73u) = 3u;
+        R8(0x80073D77u) = 64u;
+        R16(0x80073D78u) = 159u;
+        R16(0x80073D7Cu) = 159u;
+        R8(0x80073D74u) = 0u;
+        R8(0x80073D75u) = 0u;
+        R8(0x80073D76u) = 0u;
+        R16(0x80073D7Au) = 0u;
+        R16(0x80073D7Eu) = 256u;
+    }
+    else
+    {
+        R32(0x8006511Cu) = 320u;
+        R32(0x80065120u) = 120u;
+        sub_8003BC1C();
+        R8(0x80073D73u) = 3u;
+        R8(0x80073D77u) = 64u;
+        R8(0x80073D74u) = 0u;
+        R8(0x80073D75u) = 0u;
+        R8(0x80073D76u) = 0u;
+        R16(0x80073D78u) = 0u;
+        R16(0x80073D7Au) = 119u;
+        R16(0x80073D7Cu) = 320u;
+        R16(0x80073D7Eu) = 119u;
     }
     R32(0x8006527Cu) = R32(0x80065128u);
     R32(0x8006526Cu) = (uint32)VSync(-1);
-    R32(0x800651D0u) = 0u; race_dispatch_slot(0u);
-    players = R32(0x80065254u); R32(0x80065274u) = 0u;
-    if ((sint32)players > 0) {
-        do {
+    R32(0x800651D0u) = 0u;
+    race_dispatch_slot(0u);
+    players = R32(0x80065254u);
+    R32(0x80065274u) = 0u;
+    if ((sint32)players > 0)
+    {
+        do
+        {
             game_8009A114(0x80066D14u + R32(0x80065274u) * 952u);
-            count = R32(0x80065254u); index = R32(0x80065274u) + 1u;
+            count = R32(0x80065254u);
+            index = R32(0x80065274u) + 1u;
             R32(0x80065274u) = index;
         } while ((sint32)index < (sint32)count);
     }
@@ -425,58 +696,114 @@ uint32 sub_8001BCAC(void)
     race_call3(0x80036914u, 0x800670F4u, 1u, 1u);
     race_empty1E318(0x80066D78u + R32(0x800651D8u) * 952u);
     race_empty1E310(0x80066D84u + R32(0x800651D8u) * 952u);
-    race_call1(0x8001DEDCu, 0u); sub_800131C8();
-    R32(0x80064D0Cu) = 0u; R32(0x80064A2Cu) = 0u;
-    sub_80037B18(); race_call1(0x80020430u, R8(0x800593ABu + R32(0x80064C08u)));
-    first = R32(0x80065338u); second = R32(0x8006533Cu); result = R32(0x80064D0Cu);
-    R32(0x80065280u) = first; R32(0x80065284u) = second;
-    while (!result) {
-        if (R32(0x800651D0u) || R32(0x8006528Cu)) R32(0x80064A40u) = 1u;
-        race_call0(0x80019F54u); race_call0(0x800BD4B8u);
-        players = R32(0x80065254u); R32(0x80064A34u) = 0u; R32(0x80065274u) = 0u;
-        if ((sint32)players > 0) {
-            do {
+    race_call1(0x8001DEDCu, 0u);
+    sub_800131C8();
+    R32(0x80064D0Cu) = 0u;
+    R32(0x80064A2Cu) = 0u;
+    sub_80037B18();
+    race_call1(0x80020430u, R8(0x800593ABu + R32(0x80064C08u)));
+    first = R32(0x80065338u);
+    second = R32(0x8006533Cu);
+    result = R32(0x80064D0Cu);
+    R32(0x80065280u) = first;
+    R32(0x80065284u) = second;
+    while (!result)
+    {
+        if (R32(0x800651D0u) || R32(0x8006528Cu))
+            R32(0x80064A40u) = 1u;
+        race_call0(0x80019F54u);
+        race_call0(0x800BD4B8u);
+        players = R32(0x80065254u);
+        R32(0x80064A34u) = 0u;
+        R32(0x80065274u) = 0u;
+        if ((sint32)players > 0)
+        {
+            do
+            {
                 index = R32(0x80065274u);
-                if (R8(0x80066E8Eu + index * 952u) & 1u) R32(0x80064A34u) += 1u;
+                if (R8(0x80066E8Eu + index * 952u) & 1u)
+                    R32(0x80064A34u) += 1u;
                 R32(0x80065274u) = index + 1u;
             } while ((sint32)(index + 1u) < (sint32)players);
         }
         sub_8003A578();
-        if (R32(0x80065280u) != R32(0x80065538u)) game_8008F9A8(0u);
-        if (R32(0x80065284u) != R32(0x8006553Cu)) game_8008F9A8(1u);
-        first = R32(0x80065538u); second = R32(0x8006553Cu);
-        R32(0x80065280u) = first; R32(0x80065284u) = second;
-        race_call1(0x8008FCA4u, 0u); race_call1(0x8008FCA4u, 1u);
-        race_call2(0x80090040u, 0u, 0u); race_call2(0x80090040u, 1u, 1u);
-        race_call0(0x8009076Cu); race_call0(0x80012C3Cu);
-        first = R32(0x800593A0u); R32(0x8006527Cu) ^= 1u;
-        if (first) { race_call0(0x800B8704u); race_call0(0x8009545Cu); }
-        else { race_call0(0x800B77CCu); race_call0(0x8009564Cu); }
-        race_call0(0x8001697Cu); race_call1(0x8001DFBCu, 0u); race_call0(0x8001D1DCu);
-        race_call0(0x8001F354u); race_call0(0x80015664u); race_call0(0x800AE17Cu); race_call0(0x8001372Cu);
-        if (R32(0x80065110u) == 1u) {
-            if (R16(0x80065520u)) R32(0x8006528Cu) = 1u;
-            if (R16(0x80065522u)) R32(0x8006528Cu) = 1u;
-        } else {
+        if (R32(0x80065280u) != R32(0x80065538u))
+            game_8008F9A8(0u);
+        if (R32(0x80065284u) != R32(0x8006553Cu))
+            game_8008F9A8(1u);
+        first = R32(0x80065538u);
+        second = R32(0x8006553Cu);
+        R32(0x80065280u) = first;
+        R32(0x80065284u) = second;
+        race_call1(0x8008FCA4u, 0u);
+        race_call1(0x8008FCA4u, 1u);
+        race_call2(0x80090040u, 0u, 0u);
+        race_call2(0x80090040u, 1u, 1u);
+        race_call0(0x8009076Cu);
+        race_call0(0x80012C3Cu);
+        first = R32(0x800593A0u);
+        R32(0x8006527Cu) ^= 1u;
+        if (first)
+        {
+            race_call0(0x800B8704u);
+            race_call0(0x8009545Cu);
+        }
+        else
+        {
+            race_call0(0x800B77CCu);
+            race_call0(0x8009564Cu);
+        }
+        race_call0(0x8001697Cu);
+        race_call1(0x8001DFBCu, 0u);
+        race_call0(0x8001D1DCu);
+        race_call0(0x8001F354u);
+        race_call0(0x80015664u);
+        race_call0(0x800AE17Cu);
+        race_call0(0x8001372Cu);
+        if (R32(0x80065110u) == 1u)
+        {
+            if (R16(0x80065520u))
+                R32(0x8006528Cu) = 1u;
+            if (R16(0x80065522u))
+                R32(0x8006528Cu) = 1u;
+        }
+        else
+        {
             race_call0(0x800BA7B4u);
-            if (R32(0x80064A30u) >= 0x4651u) R32(0x8006528Cu) = 1u;
+            if (R32(0x80064A30u) >= 0x4651u)
+                R32(0x8006528Cu) = 1u;
         }
         R32(0x80065128u) = 1u;
         /* TODO: Review the full 16C68 ABI before replacing its pending boundary */
-        race_call0(0x80016C68u); race_call0(0x8003408Cu); race_call0(0x8008F6F8u); race_call0(0x800AEB4Cu);
-        if (R32(0x80064B5Cu) || R32(0x80065110u) == 1u || !R32(0x80059764u)) sub_8003AAC8(0u, 0u, 0u);
-        else race_call2(0x80090858u, 0u, 0u);
-        if (R32(0x80064B5Cu) || R32(0x80065110u) == 1u || !R32(0x80059768u)) sub_8003AAC8(1u, 0u, 0u);
-        else race_call2(0x80090858u, 1u, 1u);
-        race_dispatch_slot(4u); R32(0x80064A30u) += 1u;
-        race_empty42C44(); race_call1(0x8003D9ACu, 0u); race_call0(0x80017D38u);
-        race_render_screen(0u); race_render_screen(1u); race_call0(0x80013364u);
+        race_call0(0x80016C68u);
+        race_call0(0x8003408Cu);
+        race_call0(0x8008F6F8u);
+        race_call0(0x800AEB4Cu);
+        if (R32(0x80064B5Cu) || R32(0x80065110u) == 1u || !R32(0x80059764u))
+            sub_8003AAC8(0u, 0u, 0u);
+        else
+            race_call2(0x80090858u, 0u, 0u);
+        if (R32(0x80064B5Cu) || R32(0x80065110u) == 1u || !R32(0x80059768u))
+            sub_8003AAC8(1u, 0u, 0u);
+        else
+            race_call2(0x80090858u, 1u, 1u);
+        race_dispatch_slot(4u);
+        R32(0x80064A30u) += 1u;
+        race_empty42C44();
+        race_call1(0x8003D9ACu, 0u);
+        race_call0(0x80017D38u);
+        race_render_screen(0u);
+        race_render_screen(1u);
+        race_call0(0x80013364u);
         result = R32(0x80064D0Cu);
     }
-    race_call0(0x8001CD48u); race_call0(0x8001E328u);
-    sub_8003AAC8(0u, 0u, 0u); sub_8003AAC8(1u, 0u, 0u);
+    race_call0(0x8001CD48u);
+    race_call0(0x8001E328u);
+    sub_8003AAC8(0u, 0u, 0u);
+    sub_8003AAC8(1u, 0u, 0u);
     race_call1(0x8004261Cu, R32(0x800651BCu));
-    if (!R32(0x80064A2Cu) && !R8(0x80064EA1u)) race_call0(0x8002AD28u);
+    if (!R32(0x80064A2Cu) && !R8(0x80064EA1u))
+        race_call0(0x8002AD28u);
     race_call1(0x8003D9ACu, 0u);
     return (uint32)VSync(0);
 }
@@ -488,45 +815,62 @@ uint32 sub_80016C68(void)
     uint32 count, index, swaps, first, second, first_object, second_object;
     uint32 first_distance, second_distance, first_progress, second_progress;
     uint32 length, baseline, object, lap, next_lap, threshold, crossed, sum, previous_laps;
-    if (result == 1u) return result;
+    if (result == 1u)
+        return result;
     result = R32(0x80064A44u);
-    if (result == 1u) return result;
+    if (result == 1u)
+        return result;
     count = R32(0x80065254u);
-    for (index = 0u; (sint32)index < (sint32)count; ++index) progress_cache[index] = 0xC001u;
-    do {
+    for (index = 0u; (sint32)index < (sint32)count; ++index)
+        progress_cache[index] = 0xC001u;
+    do
+    {
         swaps = 0u;
-        for (index = 0u; (sint32)index < (sint32)(R32(0x80065254u) - 1u); ++index) {
+        for (index = 0u; (sint32)index < (sint32)(R32(0x80065254u) - 1u); ++index)
+        {
             first = R8(0x80066B1Cu + index);
             first_object = 0x80066D14u + first * 952u;
-            if (R8(first_object + 945u)) continue;
+            if (R8(first_object + 945u))
+                continue;
             second = R8(0x80066B1Du + index);
             first_distance = R16(first_object + 92u);
             second_object = 0x80066D14u + second * 952u;
             second_distance = R16(second_object + 92u);
-            if (R32(0x80059738u) == 2u) {
+            if (R32(0x80059738u) == 2u)
+            {
                 uint32 turnaround = R32(0x80064C14u);
                 if ((sint32)turnaround >= (sint32)first)
                     first_distance = R32(R32(0x800651E4u) + 60u) - first_distance;
                 if ((sint32)turnaround >= (sint32)second)
                     second_distance = R32(R32(0x800651E4u) + 60u) - second_distance;
             }
-            if (R8(0x800670C5u + first * 952u) || R8(0x800670C5u + second * 952u)) continue;
-            if ((sint16)first_distance < (sint16)second_distance) goto swap_pair;
-            if ((sint16)first_distance != (sint16)second_distance) continue;
-            if ((sint16)progress_cache[first] == -16383) {
+            if (R8(0x800670C5u + first * 952u) || R8(0x800670C5u + second * 952u))
+                continue;
+            if ((sint16)first_distance < (sint16)second_distance)
+                goto swap_pair;
+            if ((sint16)first_distance != (sint16)second_distance)
+                continue;
+            if ((sint16)progress_cache[first] == -16383)
+            {
                 first_progress = sub_8002F4A4(first_object + 88u, first_object + 100u);
                 if (R32(0x80059738u) == 2u && (sint32)first < (sint32)R32(0x8005973Cu))
                     first_progress = 256u - first_progress;
                 progress_cache[first] = (uint16)first_progress;
-            } else first_progress = (uint32)(sint32)(sint16)progress_cache[first];
-            if ((sint16)progress_cache[second] == -16383) {
+            }
+            else
+                first_progress = (uint32)(sint32)(sint16)progress_cache[first];
+            if ((sint16)progress_cache[second] == -16383)
+            {
                 second_progress = sub_8002F4A4(second_object + 88u, second_object + 100u);
                 if (R32(0x80059738u) == 2u && (sint32)second < (sint32)R32(0x8005973Cu))
                     second_progress = 256u - second_progress;
                 progress_cache[second] = (uint16)second_progress;
-            } else second_progress = (uint32)(sint32)(sint16)progress_cache[second];
-            if ((sint32)first_progress >= (sint32)second_progress) continue;
-swap_pair:
+            }
+            else
+                second_progress = (uint32)(sint32)(sint16)progress_cache[second];
+            if ((sint32)first_progress >= (sint32)second_progress)
+                continue;
+        swap_pair:
             swaps += 1u;
             R8(0x80066B1Cu + index) = (uint8)second;
             R8(0x80066B1Du + index) = (uint8)first;
@@ -536,27 +880,37 @@ swap_pair:
         R8(0x800670C4u + R8(0x80066B1Cu + index) * 952u) = (uint8)index;
     length = R32(R32(0x800651E4u) + 60u);
     baseline = game_800AE420(length);
-    for (index = 0u; (sint32)index < (sint32)R32(0x80065254u); ++index) {
+    for (index = 0u; (sint32)index < (sint32)R32(0x80065254u); ++index)
+    {
         uint32 mode;
         object = 0x80066D14u + index * 952u;
         mode = R32(0x80059738u);
         lap = (uint32)(sint32)(sint16)R16(object + 928u);
         next_lap = lap + 1u;
-        if (mode == 2u) {
-            if (index == 0u || (R32(0x8005973Cu) == mode && index == 1u)) {
+        if (mode == 2u)
+        {
+            if (index == 0u || (R32(0x8005973Cu) == mode && index == 1u))
+            {
                 threshold = next_lap * R32(0x800653A4u);
                 crossed = (sint32)((uint32)(sint32)(sint16)R16(object + 92u) - baseline) < (sint32)(0u - threshold);
-            } else {
+            }
+            else
+            {
                 threshold = next_lap * R32(0x800653A4u);
                 crossed = (sint32)(baseline + threshold) < (sint32)(sint16)R16(object + 94u);
             }
-        } else {
+        }
+        else
+        {
             threshold = next_lap * R32(0x800653A4u);
             crossed = (sint32)(baseline + threshold) < (sint32)(sint16)R16(object + 92u);
         }
-        if (!crossed) continue;
-        if ((sint32)lap >= (sint32)(R32(0x80064BD4u) - 1u)) {
-            if (!R8(object + 945u)) {
+        if (!crossed)
+            continue;
+        if ((sint32)lap >= (sint32)(R32(0x80064BD4u) - 1u))
+        {
+            if (!R8(object + 945u))
+            {
                 R8(object + 945u) = 1u;
                 R16(object + 910u) = (uint16)R32(0x800BEEA4u);
             }
@@ -571,12 +925,15 @@ swap_pair:
         R16(object + 912u + previous_laps * 2u) = (uint16)(R32(0x800BEEA4u) - sum);
     }
     result = R8(0x800651CAu);
-    if (result) {
+    if (result)
+    {
         result = 1u;
-        if (!R8(0x800670C5u)) {
+        if (!R8(0x800670C5u))
+        {
             uint32 elapsed = R32(0x800BEEA4u);
             uint32 score = R16(0x80066E98u);
-            R8(0x800670C5u) = 1u; R8(0x800651CAu) = 0u;
+            R8(0x800670C5u) = 1u;
+            R8(0x800651CAu) = 0u;
             R16(0x800670A2u) = (uint16)elapsed;
             R16(0x80066E98u) = (uint16)(score + 10000u);
         }

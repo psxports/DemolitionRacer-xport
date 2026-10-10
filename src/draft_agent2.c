@@ -33,8 +33,7 @@ void sub_80015074(uint32 source, uint32 destination, sint32 capacity)
         printf((const char *)psx_addr(0x80010078u, 1u));
         return;
     }
-    unpacked = ((uint32)r_u8(source + 4u) << 24) | ((uint32)r_u8(source + 5u) << 16)
-        | ((uint32)r_u8(source + 6u) << 8) | r_u8(source + 7u);
+    unpacked = ((uint32)r_u8(source + 4u) << 24) | ((uint32)r_u8(source + 5u) << 16) | ((uint32)r_u8(source + 6u) << 8) | r_u8(source + 7u);
     if (capacity < (sint32)unpacked)
     {
         printf((const char *)psx_addr(0x80010084u, 1u));
@@ -49,8 +48,7 @@ void sub_80015074(uint32 source, uint32 destination, sint32 capacity)
 uint32 sub_80015150(uint32 source)
 {
     if (r_u8(source) == 'R' && r_u8(source + 1u) == 'N' && r_u8(source + 2u) == 'C')
-        return (((uint32)r_u8(source + 4u) << 24) | ((uint32)r_u8(source + 5u) << 16)
-            | ((uint32)r_u8(source + 6u) << 8) | r_u8(source + 7u)) + 1024u;
+        return (((uint32)r_u8(source + 4u) << 24) | ((uint32)r_u8(source + 5u) << 16) | ((uint32)r_u8(source + 6u) << 8) | r_u8(source + 7u)) + 1024u;
     printf((const char *)psx_addr(0x80010078u, 1u));
     return 0u;
 }
@@ -220,7 +218,6 @@ uint32 sub_8001C958(void)
 
 void sub_8001E320(uint32 value)
 {
-    (void)value;
 }
 
 uint32 sub_8001F8FC(uint32 voice, sint32 frequency, sint32 pan, sint32 volume)
@@ -252,13 +249,17 @@ uint32 sub_8001F8FC(uint32 voice, sint32 frequency, sint32 pan, sint32 volume)
     w_u32(0x800742A0u, 1u << (voice & 31u));
     w_u16(0x800742B4u, (uint16)pitch);
     clamped = (sint32)right;
-    if (clamped < -16384) clamped = -16384;
-    else if (clamped >= 16384) clamped = 16383;
+    if (clamped < -16384)
+        clamped = -16384;
+    else if (clamped >= 16384)
+        clamped = 16383;
     w_u16(0x800742A8u, (uint16)clamped);
     left <<= 2;
     clamped = (sint32)left;
-    if (clamped < -16384) clamped = -16384;
-    else if (clamped >= 16384) clamped = 16383;
+    if (clamped < -16384)
+        clamped = -16384;
+    else if (clamped >= 16384)
+        clamped = 16383;
     w_u16(0x800742AAu, (uint16)clamped);
     /* TODO: Original SpuSetVoiceAttr result needs a reviewed return adapter */
     return draft_agent2_missing_spu_voice_attr_result((SpuVoiceAttr *)psx_addr(0x800742A0u, sizeof(SpuVoiceAttr)));
@@ -343,7 +344,6 @@ uint32 sub_8004225C(const char *path, uint32 buffer, uint32 capacity)
 {
     uint8 position[24];
     uint32 index, sector, bytes, sectors;
-    (void)capacity;
     printf("LOADING %s\n", path);
     VSync(0);
     index = (uint32)sub_80041D50(path);
@@ -479,14 +479,18 @@ uint32 sub_8001AB18(uint32 model, uint32 texture_a, uint32 texture_b)
                 if (r_u16(second + 14u) != 0u)
                 {
                     texture = texture_a;
-                    width = width_a; height = height_a;
-                    origin_u = origin_u_a; origin_v = origin_v_a;
+                    width = width_a;
+                    height = height_a;
+                    origin_u = origin_u_a;
+                    origin_v = origin_v_a;
                 }
                 else
                 {
                     texture = texture_b;
-                    width = width_b; height = height_b;
-                    origin_u = origin_u_b; origin_v = origin_v_b;
+                    width = width_b;
+                    height = height_b;
+                    origin_u = origin_u_b;
+                    origin_v = origin_v_b;
                 }
                 palette = r_u16(texture + 8u);
                 w_u16(first + tpage_offset, palette);
@@ -524,10 +528,23 @@ uint32 sub_80024A30(uint32 port)
     draft_agent2_missing_8004D9D4(port << 4);
     for (;;)
     {
-        if (draft_agent2_missing_8004DCF4(r_u32(0x800652FCu)) == 1u) { state = 0u; break; }
-        if (draft_agent2_missing_8004DCF4(r_u32(0x80065300u)) == 1u) { state = 1u; break; }
-        if (draft_agent2_missing_8004DCF4(r_u32(0x80065304u)) == 1u) { state = 2u; break; }
-        if (draft_agent2_missing_8004DCF4(r_u32(0x80065308u)) == 1u) break;
+        if (draft_agent2_missing_8004DCF4(r_u32(0x800652FCu)) == 1u)
+        {
+            state = 0u;
+            break;
+        }
+        if (draft_agent2_missing_8004DCF4(r_u32(0x80065300u)) == 1u)
+        {
+            state = 1u;
+            break;
+        }
+        if (draft_agent2_missing_8004DCF4(r_u32(0x80065304u)) == 1u)
+        {
+            state = 2u;
+            break;
+        }
+        if (draft_agent2_missing_8004DCF4(r_u32(0x80065308u)) == 1u)
+            break;
     }
     if (state - 1u < 2u)
     {
@@ -540,10 +557,7 @@ uint32 sub_80024A30(uint32 port)
         for (event = 0u; event < 4u; ++event)
             draft_agent2_missing_8004DCF4(r_u32(0x8006530Cu + event * 4u));
         draft_agent2_missing_8004DC84(port << 4);
-        while (draft_agent2_missing_8004DCF4(r_u32(0x8006530Cu)) != 1u
-            && draft_agent2_missing_8004DCF4(r_u32(0x80065310u)) != 1u
-            && draft_agent2_missing_8004DCF4(r_u32(0x80065314u)) != 1u
-            && draft_agent2_missing_8004DCF4(r_u32(0x80065318u)) != 1u)
+        while (draft_agent2_missing_8004DCF4(r_u32(0x8006530Cu)) != 1u && draft_agent2_missing_8004DCF4(r_u32(0x80065310u)) != 1u && draft_agent2_missing_8004DCF4(r_u32(0x80065314u)) != 1u && draft_agent2_missing_8004DCF4(r_u32(0x80065318u)) != 1u)
             ;
     }
     for (event = 0u; event < 4u; ++event)
@@ -552,13 +566,17 @@ uint32 sub_80024A30(uint32 port)
     for (;;)
     {
         selection = 0u;
-        if (draft_agent2_missing_8004DCF4(r_u32(0x800652FCu)) == 1u) break;
+        if (draft_agent2_missing_8004DCF4(r_u32(0x800652FCu)) == 1u)
+            break;
         selection = 1u;
-        if (draft_agent2_missing_8004DCF4(r_u32(0x80065300u)) == 1u) break;
+        if (draft_agent2_missing_8004DCF4(r_u32(0x80065300u)) == 1u)
+            break;
         selection = 2u;
-        if (draft_agent2_missing_8004DCF4(r_u32(0x80065304u)) == 1u) break;
+        if (draft_agent2_missing_8004DCF4(r_u32(0x80065304u)) == 1u)
+            break;
         selection = 3u;
-        if (draft_agent2_missing_8004DCF4(r_u32(0x80065308u)) == 1u) break;
+        if (draft_agent2_missing_8004DCF4(r_u32(0x80065308u)) == 1u)
+            break;
     }
     if (selection == 0u)
     {
@@ -640,8 +658,10 @@ uint32 sub_8003A578(void)
             w_u32(0x80065510u + player * 4u, r_u8(packet + 5u));
             w_u32(0x80065518u + player * 4u, r_u8(packet + 6u));
             buttons = ~(uint32)r_u16(packet + 2u);
-            if (r_u32(0x80065510u + player * 4u) >= 65u) buttons |= 0x4000u;
-            if (r_u8(packet + 7u) >= 65u) buttons |= 0x400u;
+            if (r_u32(0x80065510u + player * 4u) >= 65u)
+                buttons |= 0x4000u;
+            if (r_u8(packet + 7u) >= 65u)
+                buttons |= 0x400u;
             previous = r_u32(0x80065144u + player * 4u);
             w_u16(0x80065524u + player * 2u, (uint16)(~previous & buttons));
             w_u16(0x80065520u + player * 2u, (uint16)buttons);
@@ -771,8 +791,7 @@ const uint16 *sub_8003CED8(const MATRIX *matrix, uint32 transform)
     translation.vx = (sint32)((uint32)((sint32)r_u32(transform + 16u) >> 8) - r_u32(0x80081BB8u));
     translation.vy = (sint32)((uint32)((sint32)r_u32(transform + 20u) >> 8) - r_u32(0x80081BBCu));
     translation.vz = (sint32)((uint32)((sint32)r_u32(transform + 24u) >> 8) - r_u32(0x80081BC0u));
-    dr_geometry_apply_matrix((const MATRIX *)psx_addr(0x80081BA4u, sizeof(MATRIX)), &translation,
-        (VECTOR *)psx_addr(0x80081C78u, sizeof(VECTOR)));
+    dr_geometry_apply_matrix((const MATRIX *)psx_addr(0x80081BA4u, sizeof(MATRIX)), &translation, (VECTOR *)psx_addr(0x80081C78u, sizeof(VECTOR)));
     for (column = 0u; column < 3u; ++column)
     {
         for (row = 0u; row < 3u; ++row)

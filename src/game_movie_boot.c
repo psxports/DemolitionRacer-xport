@@ -22,10 +22,10 @@ uint32 sub_8002BC5C(uint32 movie_descriptor)
     w_u32(header + 52u, 0u);
     DrawSync(0);
     sub_80023968();
-    StopRCnt(0xF2000000u,0x8005E8D8u,0x8005E8E0u);
-    StopRCnt(0xF2000001u,0x8005E8D8u,0x8005E8E0u);
-    StopRCnt(0xF2000002u,0x8005E8D8u,0x8005E8E0u);
-    StopRCnt(0xF2000003u,0x8005E8D8u,0x8005E8E0u);
+    StopRCnt(0xF2000000u, 0x8005E8D8u, 0x8005E8E0u);
+    StopRCnt(0xF2000001u, 0x8005E8D8u, 0x8005E8E0u);
+    StopRCnt(0xF2000002u, 0x8005E8D8u, 0x8005E8E0u);
+    StopRCnt(0xF2000003u, 0x8005E8D8u, 0x8005E8E0u);
     sub_8004E1A4();
     ResetGraph(3);
     StopCallback();
