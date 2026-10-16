@@ -85,6 +85,7 @@ void game_80090C50(uint32 object, uint32 view)
             vehicle_axle_effects(object);
             return;
         case 0x80090E78u:
+        case 0x8009108C:
             vehicle_axle_effects(object);
             return;
         case 0x80090B60u:
@@ -112,8 +113,12 @@ void game_80090C50(uint32 object, uint32 view)
             if ((sint16)r_u16(object + 904u) > 200)
                 game_800AF8C4(object, 8u, 15u);
             return;
+        case 0x80090F48:
+            if (r_s32(object + 888) > 25600)
+                game_800AF8C4(object, 6, 15);
+            return;
         default:
-            fprintf(stderr, "Unsupported vehicle callback %08X object=%08X view=%u\n", target, object, view);
+            draft_agent1_missing_diagnostic("Unsupported vehicle callback %08X object=%08X view=%u\n", target, object, view);
             abort();
     }
 }

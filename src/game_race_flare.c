@@ -79,12 +79,7 @@ void game_8008F924(uint32 object)
     }
 }
 
-static void flare_pending_object(uint32 object)
-{
-    /* TODO: Translate the complete 736-word GAME 8C864 quaternion effect update */
-    fprintf(stderr, "Untranslated GAME 8008C864 effect object %08X\n", object);
-    abort();
-}
+extern void game_8008C864(uint32 object);
 
 void game_8008F6F8(void)
 {
@@ -95,7 +90,7 @@ void game_8008F6F8(void)
         if (!object)
             continue;
         if (R8(object + 156u) == 1u)
-            flare_pending_object(object);
+            game_8008C864(object);
         else
             game_8008F924(object);
     }

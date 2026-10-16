@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 extern uint32 game_800A8848(uint32 template_address, const VECTOR *position, const SVECTOR *rotation, const SVECTOR *scale, uint32 flags);
+extern void game_800A7FA8(uint32 packet, uint32 attributes);
 
 void game_8009082C(uint32 owner, uint32 value)
 {
@@ -20,14 +21,58 @@ static sint16 drive_effect_velocity(uint32 word)
     return (sint16)((sint32)value >> 2);
 }
 
+/* Original A86AC allocation used only by the AEDDC following effects */
+static uint32 drive_effect_spawn_follow(uint32 template_address, const SVECTOR *velocity, const SVECTOR *scale, uint32 lifetime)
+{
+    uint32 effect = r_u32(0x800C40ECu), next, active;
+    if (effect == 0x800C40ECu)
+        return 0;
+    next = r_u32(effect);
+    w_u32(0x800C40ECu, next);
+    w_u32(r_u32(effect) + 4u, 0x800C40ECu);
+    active = r_u32(0x800C4174u);
+    w_u32(effect + 4u, 0x800C4174u);
+    w_u8(effect + 11u, 0);
+    w_u32(effect, active);
+    w_u32(0x800C4208u, r_u32(0x800C4208u) + 1u);
+    w_u32(0x800C4210u, r_u32(0x800C4210u) - 1u);
+    w_u32(r_u32(0x800C4174u) + 4u, effect);
+    w_u32(0x800C4174u, effect);
+    if (!effect)
+        return 0;
+    w_u16(effect + 8u, lifetime);
+    w_u8(effect + 10u, 6);
+    /* AEDDC overwrites all three undefined position fields before their first use */
+    w_u16(effect + 104u, (uint16)velocity->vx);
+    w_u16(effect + 106u, (uint16)velocity->vy);
+    w_u16(effect + 108u, (uint16)velocity->vz);
+    w_u16(effect + 110u, (uint16)scale->vx);
+    w_u16(effect + 112u, (uint16)scale->vy);
+    w_u16(effect + 114u, (uint16)scale->vz);
+    w_u8(effect + 131u, 0);
+    w_u32(effect + 116u, template_address);
+    w_u16(effect + 128u, 0);
+    w_u16(effect + 124u, (uint32)r_u8(template_address + 26u) << 4);
+    w_u16(effect + 126u, (uint32)r_u8(template_address + 27u) << 4);
+    w_u8(effect + 130u, r_u8(template_address + 24u));
+    w_u32(effect + 120u, r_u32(template_address + 16u));
+    game_800A7FA8(effect + 12u, effect + 116u);
+    return effect;
+}
+
 void game_800AEDDC(uint32 player)
 {
     uint32 object = 0x80066D14u + player * 952u, index;
     if (!r_u8(object + 84u))
     {
-        /* TODO Original A86AC reads an undefined initial position before the first projection */
-        fprintf(stderr, "TODO AEDDC undefined original initial effect position player=%u\n", player);
-        abort();
+        for (index = 0; index < 5; ++index)
+        {
+            uint32 effect = drive_effect_spawn_follow(0x800BF058u, (const SVECTOR *)psx_addr(0x800BF7C4u, 6u), (const SVECTOR *)psx_addr(0x800BF7BCu, 6u), 0x7FFFu);
+            w_u32(object + 48u + index * 4u, effect);
+            if (effect)
+                w_u8(effect + 131u, index & 3u);
+        }
+        w_u8(object + 84u, 1);
     }
     for (index = 0u; index < 5u; ++index)
     {

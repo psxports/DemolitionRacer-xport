@@ -53,7 +53,7 @@ static uint32 movie_validate_slice(void)
     sint32 words = movie_slice_words();
     if (words <= 0 || (uint64)(uint32)words * 4u > movie_slice_bytes)
     {
-        fprintf(stderr, "Movie slice output exceeds allocated buffer\n");
+        draft_agent1_missing_diagnostic("Movie slice output exceeds allocated buffer\n");
         w_u8(MOV_GP + 72u, 1u);
         return 0u;
     }
@@ -65,13 +65,13 @@ static void movie_decode_frame(uint32 *frame, uint32 slot)
     uint64 required = ((uint64)(frame[0] & 65535u) + 1u) * 4u;
     if (required <= 4u || required > movie_vlc_bytes)
     {
-        fprintf(stderr, "Movie VLC header exceeds allocated buffer\n");
+        draft_agent1_missing_diagnostic("Movie VLC header exceeds allocated buffer\n");
         w_u8(MOV_GP + 72u, 1u);
         return;
     }
     if (DecDCTvlc(frame, movie_vlc[slot]) != 0)
     {
-        fprintf(stderr, "Movie VLC decoder returned an incomplete chunk\n");
+        draft_agent1_missing_diagnostic("Movie VLC decoder returned an incomplete chunk\n");
         w_u8(MOV_GP + 72u, 1u);
     }
 }
@@ -131,7 +131,7 @@ uint32 *mov_800C0AE8(uint32 *logical_buffers)
     header = (StHEADER *)raw_header;
     if (header->frameSize < 12u)
     {
-        fprintf(stderr, "Movie frame has a truncated VLC header\n");
+        draft_agent1_missing_diagnostic("Movie frame has a truncated VLC header\n");
         StFreeRing(frame);
         return NULL;
     }
@@ -225,9 +225,9 @@ uint32 mov_800C0E10(const char *path)
         for (field = 4u; field < 12u; ++field)
             movie_logical[field] = r_u32(0x800E0520u + field * 4u);
     }
-    if (!CdSearchFile(&file, path))
+    if (!dr_data_stream(&file, path))
     {
-        printf("File %s not found\n", path);
+        draft_agent1_missing_diagnostic("File %s not found\n", path);
         goto done;
     }
     memcpy(psx_addr(MOV_GP + 76u, 3u), &file.pos, 3u);
@@ -343,7 +343,7 @@ uint32 mov_800C0C74(void)
     ResetGraph(0);
     SetGraphDebug(0);
     SetDispMask(0);
-    printf("hello\n");
+    draft_agent1_missing_diagnostic("hello\n");
     while ((sint32)index < (sint32)r_u32(descriptors))
     {
         w_u16(MOV_GP + 92u, 3u);
@@ -361,7 +361,7 @@ uint32 mov_800C0C74(void)
     VSync(0);
     VSync(0);
     VSync(0);
-    printf("bye\n");
+    draft_agent1_missing_diagnostic("bye\n");
     StopRCnt(0xF2000000u, 0x800E0384u, 0x800E038Cu);
     StopRCnt(0xF2000001u, 0x800E0384u, 0x800E038Cu);
     StopRCnt(0xF2000002u, 0x800E0384u, 0x800E038Cu);
@@ -369,7 +369,7 @@ uint32 mov_800C0C74(void)
     ResetGraph(3);
     mov_800CA584();
     StopCallback();
-    printf("bye2\n");
+    draft_agent1_missing_diagnostic("bye2\n");
     return 0u;
 }
 

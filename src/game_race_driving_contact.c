@@ -18,12 +18,12 @@ static uint32 contact_divide(uint32 numerator, uint32 denominator)
 {
     if (!denominator)
     {
-        fprintf(stderr, "GAME97C44 original DIV break7\n");
+        draft_agent1_missing_diagnostic("GAME97C44 original DIV break7\n");
         abort();
     }
     if (numerator == 0x80000000u && denominator == 0xFFFFFFFFu)
     {
-        fprintf(stderr, "GAME97C44 original DIV break6\n");
+        draft_agent1_missing_diagnostic("GAME97C44 original DIV break6\n");
         abort();
     }
     return (uint32)((sint32)numerator / (sint32)denominator);

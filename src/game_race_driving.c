@@ -67,7 +67,7 @@ static void driving_angles(const sint16 *matrix, sint16 *angles)
 
 static uint32 driving_pending(uint32 target, uint32 a, uint32 b, uint32 c, uint32 d, uint32 e)
 {
-    fprintf(stderr, "TODO GAME driving %08X(%08X,%08X,%08X,%08X,%08X)\n", target, a, b, c, d, e);
+    draft_agent1_missing_diagnostic("TODO GAME driving %08X(%08X,%08X,%08X,%08X,%08X)\n", target, a, b, c, d, e);
     abort();
     return 0u;
 }

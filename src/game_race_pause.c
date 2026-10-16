@@ -5,16 +5,10 @@
 #define R32(a) (*(uint32 *)psx_addr((a), 4u))
 #define R16(a) (*(uint16 *)psx_addr((a), 2u))
 #define R8(a) (*(uint8 *)psx_addr((a), 1u))
+void game_800B9E38(uint32 port);
 extern uint32 sub_8003AAC8(uint32 player, uint32 first, uint32 second);
 extern void draft_agent3_missing_8003DD18(const sint16 *, uint32, uint32);
 extern uint32 draft_agent3_missing_8003D9AC(uint32);
-
-static void pause_pending(uint32 target)
-{
-    /* TODO: Translate the complete pause dependency before invoking it */
-    fprintf(stderr, "Untranslated pause dependency %08X\n", target);
-    abort();
-}
 
 static void pause_packet(uint32 packet, uint32 texture, uint32 x, uint32 y)
 {
@@ -77,7 +71,10 @@ void game_800BA7B4(void)
     sub_8001E328();
     sub_8002037C();
     if (R32(0x8005973Cu) == 2u)
-        pause_pending(0x80049E64u);
+    {
+        SetDefDrawEnv((DRAWENV *)psx_addr(0x80081A38u, sizeof(DRAWENV)), 0, 0, 320, 256);
+        SetDefDrawEnv((DRAWENV *)psx_addr(0x80081AACu, sizeof(DRAWENV)), 0, 256, 320, 256);
+    }
     R32(0x800C7ED4u) = sub_80039ADC(0x8008BF10u);
     R32(0x800C7EDCu) = sub_80039ADC(0x8008BF18u);
     R32(0x800C7ED8u) = sub_80039ADC(0x8008BF20u);
@@ -100,7 +97,7 @@ void game_800BA7B4(void)
         sub_800208E4();
         sub_800399D4();
         sub_80039908();
-        pause_pending(0x800B9E38u);
+        game_800B9E38((uint32)(sint32)r_s16(0x800BFBBcu));
         if (R8(0x800BFAE4u) && R32(0x80065538u) != 255u)
             R8(0x800BFAE4u) = 0u;
         if (R8(0x800BFAE5u) && R32(0x8006553Cu) != 255u)

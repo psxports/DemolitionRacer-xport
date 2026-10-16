@@ -30,13 +30,13 @@ void sub_80015074(uint32 source, uint32 destination, sint32 capacity)
     uint32 unpacked;
     if (r_u8(source) != 'R' || r_u8(source + 1u) != 'N' || r_u8(source + 2u) != 'C')
     {
-        printf((const char *)psx_addr(0x80010078u, 1u));
+        draft_agent1_missing_diagnostic((const char *)psx_addr(0x80010078u, 1u));
         return;
     }
     unpacked = ((uint32)r_u8(source + 4u) << 24) | ((uint32)r_u8(source + 5u) << 16) | ((uint32)r_u8(source + 6u) << 8) | r_u8(source + 7u);
     if (capacity < (sint32)unpacked)
     {
-        printf((const char *)psx_addr(0x80010084u, 1u));
+        draft_agent1_missing_diagnostic((const char *)psx_addr(0x80010084u, 1u));
         return;
     }
     sub_80047254();
@@ -49,7 +49,7 @@ uint32 sub_80015150(uint32 source)
 {
     if (r_u8(source) == 'R' && r_u8(source + 1u) == 'N' && r_u8(source + 2u) == 'C')
         return (((uint32)r_u8(source + 4u) << 24) | ((uint32)r_u8(source + 5u) << 16) | ((uint32)r_u8(source + 6u) << 8) | r_u8(source + 7u)) + 1024u;
-    printf((const char *)psx_addr(0x80010078u, 1u));
+    draft_agent1_missing_diagnostic((const char *)psx_addr(0x80010078u, 1u));
     return 0u;
 }
 
@@ -342,27 +342,8 @@ uint32 sub_8003C034(const sint32 *vector)
 
 uint32 sub_8004225C(const char *path, uint32 buffer, uint32 capacity)
 {
-    uint8 position[24];
-    uint32 index, sector, bytes, sectors;
-    printf("LOADING %s\n", path);
-    VSync(0);
-    index = (uint32)sub_80041D50(path);
-    sector = r_u32(0x800839F8u + index * 40u);
-    sub_80041A5C(sector, position);
-    for (;;)
-    {
-        if (CdControlBPSX(21u, position, 0))
-        {
-            bytes = r_u32(0x800839F4u + index * 40u);
-            sectors = (bytes + 2047u) >> 11;
-            if (CdRead((sint32)sectors, (uint32 *)psx_addr(buffer, 1u), 128))
-                break;
-        }
-        CdReset(0);
-    }
-    while (CdReadSync(1, 0) > 0)
-        ;
-    return r_u32(0x800839F4u + index * 40u);
+    draft_agent1_missing_diagnostic("LOADING %s\n", path);
+    return dr_data_read(path, buffer, capacity);
 }
 
 void sub_8004FABC(uint32 projection)
@@ -549,7 +530,7 @@ uint32 sub_80024A30(uint32 port)
     if (state - 1u < 2u)
     {
         /* TODO: Bind the original CARD ERROR format string */
-        printf("CARD ERROR\n");
+        draft_agent1_missing_diagnostic("CARD ERROR\n");
         return 0u;
     }
     if (state == 3u)

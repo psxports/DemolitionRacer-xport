@@ -49,7 +49,7 @@ void game_8008F9A8(uint32 port)
             extent = other;
         if (!divisor)
         {
-            fprintf(stderr, "Original GAME 8008F9A8 division by zero\n");
+            draft_agent1_missing_diagnostic("Original GAME 8008F9A8 division by zero\n");
             abort();
         }
         w_u16(0x800BE82Cu + port * 2u, extent / divisor > 0 ? (uint16)(extent / divisor) : 1u);

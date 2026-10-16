@@ -1,15 +1,6 @@
 #include "draft_signatures.h"
-#include <stdio.h>
-#include <stdlib.h>
 
 extern void pres_800A0240(sint32 flags, uint32 object);
-
-static void controls_card_pending(void)
-{
-    /* TODO: Translate the full card UI state machine 80021DB8 */
-    fprintf(stderr, "Untranslated card UI dependency 80021DB8\n");
-    abort();
-}
 
 static void controls_availability(void)
 {
@@ -61,7 +52,7 @@ void pres_8009AE08(void)
 void pres_8009B094(uint32 object)
 {
     uint32 buttons;
-    controls_card_pending();
+    sub_80021DB8();
     controls_availability();
     if (r_u32(0x80064E68u) == 5u)
     {

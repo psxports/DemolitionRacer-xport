@@ -10,7 +10,7 @@ uint32 scene_8004FDDC(uint32 packet);
 
 static uint32 scene_packet_pending(uint32 target, uint32 packet)
 {
-    fprintf(stderr, "TODO Scene packet helper %08X packet=%08X\n", target, packet);
+    draft_agent1_missing_diagnostic("TODO Scene packet helper %08X packet=%08X\n", target, packet);
     abort();
     return 0u;
 }

@@ -170,7 +170,7 @@ uint32 sub_80039484(uint32 player)
         if (R32(0x8007AA60u + offset) == R32(object + 100u) && R32(0x8007AA68u + offset) == R32(object + 104u) && R32(0x8007AA70u + offset) == R32(object + 108u))
         {
             R32(0x80064A44u) = 1u;
-            fputs((const char *)psx_addr(0x8001201Cu, 1u), stdout);
+            draft_agent1_missing_diagnostic("%s", (const char *)psx_addr(0x8001201Cu, 1u));
         }
         else
             R32(0x80064A44u) = 1u;
@@ -328,4 +328,25 @@ sound:
         sub_8001CF78(player, object + 100u, object + 112u, flags);
         R32(0x800BE854u + player * 4u) = flags;
     }
+}
+
+uint32 game_8009076C(void)
+{
+    sint32 first = r_s16(0x80066D70u), second = r_s16(0x80067128u);
+    sint32 limit = r_s32(0x800BE848u);
+    sint32 difference = first < second ? (second - first) * 2 : (first - second) * 2;
+    uint32 adjustment = (uint32)(difference < limit ? difference : limit), result;
+    FUNCTION_MARKER(0x8009076Cu, "GAME.BIN");
+    if (first < second)
+    {
+        w_u16(0x800BE844u, adjustment + 256u);
+        result = 256u - adjustment;
+    }
+    else
+    {
+        w_u16(0x800BE844u, 256u - adjustment);
+        result = adjustment + 256u;
+    }
+    w_u16(0x800BE846u, result);
+    return result;
 }

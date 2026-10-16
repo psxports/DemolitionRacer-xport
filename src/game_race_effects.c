@@ -39,6 +39,46 @@ void game_800A7FA8(uint32 packet, uint32 attributes)
     w_u16(packet + 76u, r_u16(packet + 36u));
 }
 
+uint32 game_800A83FC(uint32 position, uint32 velocity, uint32 acceleration, uint32 callback, uint32 interval, uint32 lifetime)
+{
+    uint32 effect = r_u32(0x800C40EC), next, active, active_count, free_count;
+    uint16 last_acceleration;
+    if (effect == 0x800C40EC)
+        return 0;
+    next = r_u32(effect);
+    w_u32(0x800C40EC, next);
+    w_u32(r_u32(effect) + 4, 0x800C40EC);
+    active = r_u32(0x800C4174);
+    w_u32(effect + 4, 0x800C4174);
+    w_u8(effect + 11, 0);
+    active_count = r_u32(0x800C4208);
+    w_u32(effect, active);
+    active = r_u32(0x800C4174);
+    free_count = r_u32(0x800C4210);
+    w_u32(0x800C4208, active_count + 1);
+    w_u32(0x800C4210, free_count - 1);
+    w_u32(active + 4, effect);
+    w_u32(0x800C4174, effect);
+    if (!effect)
+        return effect;
+    w_u16(effect + 8, (uint16)lifetime);
+    w_u8(effect + 10, 4);
+    w_u32(effect + 16, r_u32(position));
+    w_u32(effect + 20, r_u32(position + 4));
+    w_u32(effect + 24, r_u32(position + 8));
+    w_u16(effect + 28, r_u16(velocity));
+    w_u16(effect + 30, r_u16(velocity + 2));
+    w_u16(effect + 32, r_u16(velocity + 4));
+    w_u16(effect + 34, r_u16(acceleration));
+    w_u16(effect + 36, r_u16(acceleration + 2));
+    last_acceleration = r_u16(acceleration + 4);
+    w_u32(effect + 12, callback);
+    w_u16(effect + 42, (uint16)interval);
+    w_u16(effect + 40, (uint16)interval);
+    w_u16(effect + 38, last_acceleration);
+    return effect;
+}
+
 uint32 game_800A8848(uint32 template_address, const VECTOR *position, const SVECTOR *rotation, const SVECTOR *scale, uint32 flags)
 {
     uint32 effect = r_u32(0x800C40ECu), next, active;

@@ -238,7 +238,7 @@ uint32 sub_80038258(uint32 object, uint32 port, uint32 pattern)
         patterns[i] = r_u8(0x80011F48u + i);
     if (pattern >= 5u)
     {
-        fprintf(stderr, "Original camera pattern outside local table: %u\n", pattern);
+        draft_agent1_missing_diagnostic("Original camera pattern outside local table: %u\n", pattern);
         abort();
     }
     time = (sint32)time < (sint32)(4095u - step) ? time + step : 4095u;

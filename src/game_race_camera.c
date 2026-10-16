@@ -73,3 +73,39 @@ uint32 sub_80012E90(uint32 player)
     w_u32(head, (old & 0xFF000000u) | (packet & 0xFFFFFFu));
     return r_u8(CAMERA_GP + 0x60u);
 }
+
+static uint32 race_player_viewport(uint32 buffer, uint32 player)
+{
+    uint32 vertical = r_u32(0x80064B68u), width = vertical ? 160u : 320u;
+    uint32 height = vertical ? 240u : 120u;
+    uint32 x = vertical ? player * 160u : 0u;
+    uint32 y = (buffer << 8u) | (vertical ? 0u : player * 120u);
+    SetDefDrawEnv((DRAWENV *)psx_addr(0x80081A38u + buffer * 116u, sizeof(DRAWENV)), (sint32)x, (sint32)y, (sint32)width, (sint32)height);
+    w_u32(0x80065240u, width);
+    w_u32(0x8006524Cu, height);
+    w_u32(0x8006522Cu, 0u);
+    w_u32(0x80065230u, 0u);
+    w_u32(0x8006511Cu, width);
+    w_u32(0x80065120u, height);
+    return sub_8003BF0C(width / 2u, height / 2u, width);
+}
+
+uint32 sub_8001BAC0(uint32 buffer)
+{
+    FUNCTION_MARKER(0x8001BAC0u, "SLUS_009.69");
+    return race_player_viewport(buffer, 0u);
+}
+
+uint32 sub_8001BBB4(uint32 buffer)
+{
+    FUNCTION_MARKER(0x8001BBB4u, "SLUS_009.69");
+    return race_player_viewport(buffer, 1u);
+}
+
+void sub_8003997C(uint32 buffer)
+{
+    uint32 environment = 0x80081A38u + buffer * 116u;
+    FUNCTION_MARKER(0x8003997Cu, "SLUS_009.69");
+    PutDrawEnv((DRAWENV *)psx_addr(environment, sizeof(DRAWENV)));
+    PutDispEnv((DISPENV *)psx_addr(environment + 92u, sizeof(DISPENV)));
+}

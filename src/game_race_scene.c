@@ -143,6 +143,7 @@ void game_800B9374(uint32 port)
 }
 
 extern void sub_800416E0(uint32 packet);
+extern uint32 scene_800456AC(uint32 packet);
 
 static void scene_rotate_long(const sint32 input[3], sint32 output[3])
 {
@@ -196,6 +197,36 @@ void sub_8004171C(uint32 object, sint32 maximum)
     sub_800416E0(object);
 }
 
+uint32 sub_800418B4(uint32 object, sint32 maximum)
+{
+    sint32 input[3], output[3], radius;
+    uint32 axis, term, side;
+    for (axis = 0; axis < 3; ++axis)
+        input[axis] = (sint32)(r_u32(object + 16 + axis * 4) - r_u32(0x80081BB8 + axis * 4));
+    radius = r_s16(object + 8) >> (r_u32(0x80065170) & 31);
+    scene_rotate_long(input, output);
+    if ((sint32)((uint32)output[2] + (uint32)radius) <= 0)
+        return (uint32)output[2] - (uint32)radius;
+    if ((sint32)((uint32)output[2] - (uint32)radius) >= maximum)
+        return 0;
+    term = (uint32)output[2] * (uint32)(sint32)r_s16(0x80065554);
+    side = (uint32)output[0] * (uint32)(sint32)r_s16(0x80065550) + term;
+    if (((sint32)side >> 12) >= radius)
+        return 0u - (uint32)output[0];
+    side = (0u - (uint32)output[0]) * (uint32)(sint32)r_s16(0x80065550) + term;
+    if (((sint32)side >> 12) >= radius)
+        return 0;
+    term = (uint32)output[2] * (uint32)(sint32)r_s16(0x80065564);
+    side = (uint32)output[1] * (uint32)(sint32)r_s16(0x80065562) + term;
+    if (((sint32)side >> 12) >= radius)
+        return 0u - (uint32)output[1];
+    side = (0u - (uint32)output[1]) * (uint32)(sint32)r_s16(0x80065562) + term;
+    if (((sint32)side >> 12) >= radius)
+        return 0;
+    w_u32(0x80065548, (uint32)output[2]);
+    return scene_800456AC(object);
+}
+
 extern uint32 draft_agent3_missing_8003D9AC(uint32 mode);
 
 uint32 sub_80042924(uint32 bytes, uint32 owner)
@@ -240,7 +271,7 @@ uint32 sub_80042924(uint32 bytes, uint32 owner)
     }
     w_u32(0x8006518Cu, 1u);
     w_u32(0x80065188u, r_u32(0x80065188u) + 1u);
-    fprintf(stderr, "%s", (const char *)psx_addr(0x800123DCu, 1u));
+    draft_agent1_missing_diagnostic("%s", (const char *)psx_addr(0x800123DCu, 1u));
     draft_agent3_missing_8003D9AC(0u);
     {
         uint32 destination = r_u32(0x80065590u), source = destination, previous = 0u, next;
@@ -310,7 +341,7 @@ static sint32 scene_free_object(void)
     for (i = 0; i < 30; ++i)
         if (!r_u8(0x800C449Fu + i * 300u))
             return (sint32)i;
-    fprintf(stderr, "%s", (const char *)psx_addr(0x8008BB60u, 1u));
+    draft_agent1_missing_diagnostic("%s", (const char *)psx_addr(0x8008BB60u, 1u));
     return -1;
 }
 
@@ -329,7 +360,7 @@ void game_800AA078(uint32 records)
         for (i = 0; i < 30; ++i)
             if (r_u8(0x800C449Fu + i * 300u) && r_u8(0x800C44A2u + i * 300u) == identity)
             {
-                fprintf(stderr, (const char *)psx_addr(0x8008BB20u, 1u), identity);
+                draft_agent1_missing_diagnostic((const char *)psx_addr(0x8008BB20u, 1u), identity);
                 blocked = 1u;
                 break;
             }
@@ -346,7 +377,7 @@ void game_800AA078(uint32 records)
         buffer = r_u32(object + 120u);
         if (!buffer)
         {
-            fprintf(stderr, "%s", (const char *)psx_addr(0x8008BB34u, 1u));
+            draft_agent1_missing_diagnostic("%s", (const char *)psx_addr(0x8008BB34u, 1u));
             continue;
         }
         for (i = 0; i < 300; ++i)
@@ -369,7 +400,7 @@ void game_800AA078(uint32 records)
         w_u16(object + 4u, r_u16(object + 2u));
         w_u8(object + 299u, 0u);
         w_u16(object + 290u, r_u8(record + 5u));
-        fprintf(stderr, (const char *)psx_addr(0x8008BB4Cu, 1u), (sint16)r_u16(object + 2u), (sint16)r_u16(object));
+        draft_agent1_missing_diagnostic((const char *)psx_addr(0x8008BB4Cu, 1u), (sint16)r_u16(object + 2u), (sint16)r_u16(object));
         game_800AB380(object);
         w_u16(r_u32(object + 120u) + 8u, (uint16)r_u32(object + 116u));
         {
@@ -487,7 +518,7 @@ void game_800AE264(uint32 object)
     if (!dr_track_normal((const uint8 *)psx_addr(object, 10u), (const sint32 *)psx_addr(object + 12u, 12u), normal))
     {
         /* Original normal output is undefined for unsupported track cell types */
-        fprintf(stderr, "Undefined scene normal object=%08X\n", object);
+        draft_agent1_missing_diagnostic("Undefined scene normal object=%08X\n", object);
         abort();
     }
     normal_x = (sint32)((uint32)(sint32)normal[0] * (uint32)cosine - (uint32)(sint32)normal[2] * (uint32)sine) / 4096;

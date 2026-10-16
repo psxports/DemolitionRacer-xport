@@ -400,3 +400,112 @@ uint32 sub_8001EE94(void)
     }
     return 0u;
 }
+
+void sub_8001E51C(uint32 voice)
+{
+    FUNCTION_MARKER(0x8001E51Cu, "SLUS_009.69");
+    w_u16(0x80073FBAu + (voice << 5u), 0u);
+}
+
+uint32 sub_8001FF6C(void)
+{
+    FUNCTION_MARKER(0x8001FF6Cu, "SLUS_009.69");
+    return sub_8001FF14(0u);
+}
+
+uint32 sub_8001CD48(void)
+{
+    uint32 voice;
+    FUNCTION_MARKER(0x8001CD48u, "SLUS_009.69");
+    for (voice = 0u; voice < 24u; ++voice)
+    {
+        sub_8001E2E8(voice);
+        if (voice < 13u)
+            sub_8001E51C(voice);
+        sub_8001ED2C(37u, voice, 0u, 4096, 0u, 0u);
+    }
+    return sub_8001FF6C();
+}
+
+static uint32 audio_listener_delta(uint32 camera, uint32 player, uint32 position, sint32 delta[3])
+{
+    uint32 index;
+    for (index = 0u; index < 3u; ++index)
+    {
+        uint32 sum = r_u32(camera + index * 4u) + (uint32)(r_s32(player + index * 4u) >> 8);
+        delta[index] = (sint32)((uint32)((sint32)sum >> 1) - (uint32)(r_s32(position + index * 4u) >> 8));
+    }
+    if ((uint32)delta[0] + 32767u > 65534u || (uint32)delta[2] + 32767u > 65534u)
+        return 0x7FFFFFFFu;
+    return audio_square(delta);
+}
+
+uint32 sub_8001F354(void)
+{
+    uint32 voice;
+    FUNCTION_MARKER(0x8001F354u, "SLUS_009.69");
+    if (r_u32(0x80064C14u) && !r_u32(0x80064D18u))
+        return 0u;
+    for (voice = 0u; voice < 24u; ++voice)
+    {
+        uint32 slot = 0x80073FA0u + voice * 32u, position = r_u32(slot);
+        sint32 amount, frequency, delta[3], other_delta[3];
+        if (!position)
+            continue;
+        amount = r_s32(slot + 16u);
+        if (amount > 0 && !r_u8(slot + 30u))
+        {
+            sint32 first_distance = (sint32)audio_listener_delta(0x80073DC4u, 0x80066D78u, position, delta);
+            sint32 second_distance = (sint32)audio_listener_delta(0x80073DE4u, 0x80067130u, position, other_delta);
+            if (first_distance != 0x7FFFFFFF || second_distance != 0x7FFFFFFF)
+            {
+                uint32 listener_velocity = 0x80066D84u;
+                sint32 distance;
+                if (second_distance < first_distance)
+                {
+                    uint32 index;
+                    first_distance = second_distance;
+                    for (index = 0u; index < 3u; ++index)
+                        delta[index] = other_delta[index];
+                    listener_velocity = 0x8006713Cu;
+                }
+                distance = (sint32)audio_sqrt((uint32)first_distance);
+                if (distance >= 751)
+                {
+                    sint32 attenuation = (sint32)(2724u - (uint32)((sint32)audio_log((uint32)distance << 12u) / 16));
+                    amount = attenuation > 0 ? audio_div((uint32)attenuation * r_u32(slot + 16u), 1024) : 0;
+                }
+                frequency = r_s32(slot + 20u);
+                if ((r_u8(slot + 31u) & 1u) && r_u32(slot + 4u) != listener_velocity && distance >= 11)
+                {
+                    uint32 velocity = r_u32(slot + 4u), self_dot, other_dot, numerator, denominator;
+                    if (!velocity)
+                        velocity = 0x80059BF4u;
+                    self_dot = (uint32)delta[0] * (uint32)(r_s32(listener_velocity) >> 12) + (uint32)delta[2] * (uint32)(r_s32(listener_velocity + 8u) >> 12);
+                    other_dot = (uint32)delta[0] * (uint32)(r_s32(velocity) >> 12) + (uint32)delta[2] * (uint32)(r_s32(velocity + 8u) >> 12);
+                    numerator = (256u - (uint32)audio_div(self_dot, distance)) * (uint32)frequency;
+                    denominator = 256u - (uint32)audio_div(other_dot, distance);
+                    if (denominator)
+                    {
+                        sint32 adjusted = audio_div(numerator, (sint32)denominator);
+                        sint32 maximum = (sint32)((uint32)frequency << 1u);
+                        if (adjusted < frequency / 2)
+                            adjusted = frequency / 2;
+                        frequency = maximum < adjusted ? maximum : adjusted;
+                    }
+                }
+                if (amount > 0)
+                {
+                    sint32 volume = audio_div((uint32)amount * r_u32(0x80064BFCu), 4096);
+                    if (r_u32(AUDIO_GP + 0x89Cu))
+                        draft_agent3_missing_8001FBE4(voice, frequency, 0u, volume);
+                    else
+                        sub_8001F8FC(voice, frequency, 0, volume);
+                    continue;
+                }
+            }
+        }
+        sub_8001F8FC(voice, r_s32(slot + 20u), 0, 0);
+    }
+    return 0u;
+}

@@ -7,11 +7,9 @@
 #define R16(a) (*(uint16 *)psx_addr((a), 2u))
 #define R8(a) (*(uint8 *)psx_addr((a), 1u))
 
-static uint32 car_pending(uint32 target, uint32 first, uint32 second)
+static void car_effect_deactivate(uint32 effect)
 {
-    /* TODO: Translate the complete callee before replacing this boundary */
-    fprintf(stderr, "Untranslated car drawing %08X: %08X %08X\n", target, first, second);
-    abort();
+    w_u8(effect + 10, 0);
 }
 
 static void car_matrix(uint32 object)
@@ -241,7 +239,7 @@ uint32 sub_80017D80(void)
             {
                 uint32 effect = R32(object + 48u + part * 4u);
                 if (effect)
-                    car_pending(0x800A7F58u, effect, 0u);
+                    car_effect_deactivate(effect);
             }
         }
         count = R32(0x80065254u);

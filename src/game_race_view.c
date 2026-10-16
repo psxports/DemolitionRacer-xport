@@ -13,7 +13,7 @@ extern uint32 dr_camera_angles(const sint16 *angles);
 
 static uint32 view_pending(uint32 target, uint32 object, uint32 port)
 {
-    fprintf(stderr, "Untranslated camera %08X: %08X %08X\n", target, object, port);
+    draft_agent1_missing_diagnostic("Untranslated camera %08X: %08X %08X\n", target, object, port);
     abort();
 }
 
@@ -206,7 +206,7 @@ static uint32 view_div(uint32 numerator, uint32 denominator)
 {
     if (!denominator || (denominator == 0xFFFFFFFFu && numerator == 0x80000000u))
     {
-        fprintf(stderr, "Original camera division exception\n");
+        draft_agent1_missing_diagnostic("Original camera division exception\n");
         abort();
     }
     return (uint32)((sint32)numerator / (sint32)denominator);

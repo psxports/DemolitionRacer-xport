@@ -1,6 +1,7 @@
 #include "draft_signatures.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #define R32(a) (*(uint32 *)psx_addr((a), 4u))
 #define R16(a) (*(uint16 *)psx_addr((a), 2u))
@@ -189,9 +190,9 @@ void game_800A5BC4(uint32 freeze)
     seconds = hud_div(remain, half);
     remain -= seconds * half;
     fractions = hud_div(remain * 100u, half);
-    sprintf_s(text, sizeof(text), (const char *)psx_addr((sint32)minutes < 10 ? 0x8008BA3Cu : 0x8008BA44u, 1u), (sint32)minutes);
-    sprintf_s(text + 3u, sizeof(text) - 3u, (const char *)psx_addr((sint32)seconds < 10 ? 0x8008BA3Cu : 0x8008BA44u, 1u), (sint32)seconds);
-    sprintf_s(text + 6u, sizeof(text) - 6u, (const char *)psx_addr((sint32)fractions < 10 ? 0x8008BA48u : 0x8008BA4Cu, 1u), (sint32)fractions);
+    snprintf(text, sizeof(text), (const char *)psx_addr((sint32)minutes < 10 ? 0x8008BA3Cu : 0x8008BA44u, 1u), (sint32)minutes);
+    snprintf(text + 3u, sizeof(text) - 3u, (const char *)psx_addr((sint32)seconds < 10 ? 0x8008BA3Cu : 0x8008BA44u, 1u), (sint32)seconds);
+    snprintf(text + 6u, sizeof(text) - 6u, (const char *)psx_addr((sint32)fractions < 10 ? 0x8008BA48u : 0x8008BA4Cu, 1u), (sint32)fractions);
     for (index = 0u; index < 8u; ++index)
     {
         uint32 offset = ((uint32)(uint8)text[index] - 48u) * 8u;
@@ -342,5 +343,95 @@ void game_800A7098(uint32 player)
             break;
         default:
             break;
+    }
+}
+
+void game_800A69D4(uint32 player)
+{
+    uint32 value, texture, frame, packet, index;
+    sint32 speed;
+    FUNCTION_MARKER(0x800A69D4u, "GAME.BIN");
+    speed = (sint32)R32(player + 888u) >> 8;
+    if (speed < 0)
+        speed = 0;
+    if (R32(0x80064BB8u))
+    {
+        value = ((uint32)speed << 8) + 389u;
+        speed = (sint32)((uint32)((sint32)((uint32)hud_high(value, 0xA8791709u) + value) >> 9) - (uint32)((sint32)value >> 31));
+    }
+    else
+    {
+        value = ((uint32)speed << 8) + 626u;
+        speed = (sint32)((uint32)((sint32)((uint32)hud_high(value, 0xD161543Fu) + value) >> 10) - (uint32)((sint32)value >> 31));
+    }
+    texture = R32(0x800C0C64u);
+    frame = R32(0x80065128u) * 40u;
+    value = R8(texture + 24u) + R8(player + 18u) * 13u;
+    R8(0x800C0C84u + frame) = R8(0x800C0C74u + frame) = (uint8)value;
+    texture = R32(0x800C0C64u);
+    frame = R32(0x80065128u) * 40u;
+    value = R8(texture + 24u) + R8(player + 18u) * 13u + 12u;
+    R8(0x800C0C8Cu + frame) = R8(0x800C0C7Cu + frame) = (uint8)value;
+    hud_link(0x800C0C68u + R32(0x80065128u) * 40u, 1u);
+    for (index = 0u; index < 3u; ++index)
+    {
+        sint32 quotient, digit;
+        if (!speed && index)
+            break;
+        quotient = speed / 10;
+        digit = speed - quotient * 10;
+        texture = R32(0x800C0F3Cu);
+        packet = 0x800C0DFCu + R32(0x80065128u) * 40u + index * 80u;
+        R8(packet + 12u) = (uint8)(R8(texture + 24u) + (uint32)digit * 8u);
+        R8(packet + 13u) = R8(texture + 25u);
+        R8(packet + 20u) = (uint8)(R8(texture + 24u) + (uint32)digit * 8u + 7u);
+        R8(packet + 21u) = R8(texture + 25u);
+        R8(packet + 28u) = (uint8)(R8(texture + 24u) + (uint32)digit * 8u);
+        R8(packet + 29u) = (uint8)(R8(texture + 25u) + R8(texture + 23u));
+        R8(packet + 36u) = (uint8)(R8(texture + 24u) + (uint32)digit * 8u + 7u);
+        R8(packet + 37u) = (uint8)(R8(texture + 25u) + R8(texture + 23u));
+        hud_link(packet, 1u);
+        speed = quotient;
+    }
+    frame = R32(0x80065128u) * 40u;
+    hud_link(0x800C0DACu + frame, 1u);
+    hud_link(0x800C0B1Cu + frame, 1u);
+}
+
+void game_800A730C(uint32 player, uint32 port)
+{
+    uint32 mode;
+    FUNCTION_MARKER(0x800A730Cu, "GAME.BIN");
+    game_800A6E8C(player);
+    if (R32(0x80065110u) || R32(0x80064A44u) || R32(0x800BEEA8u) != 1u)
+        return;
+    game_800A69D4(player);
+    mode = R32(0x80059738u);
+    if (mode > 6u)
+        return;
+    if (mode == 3u || mode == 4u)
+    {
+        game_800A315C(player, port, 1u);
+        if (mode == 3u)
+            game_800A5864(player, port);
+        game_800A4230(player, port);
+        game_800A5BC4(mode == 3u ? 0u : port);
+        return;
+    }
+    if (R8(player + 937u) < 2u && !R32(0x80064A44u))
+        game_800A7940(player);
+    if (mode == 1u || mode == 2u)
+        game_800A5BC4(mode == 1u ? port : 0u);
+    game_800A315C(player, port, 0u);
+    if (mode != 1u && mode != 2u)
+        game_800A5864(player, port);
+    game_800A37B8(player, port);
+    game_800A4230(player, port);
+    if (R8(player + 945u))
+    {
+        const char *text = (const char *)psx_addr(R32(0x800BECB4u + R32(0x80064B8Cu) * 4u), 1u);
+        uint32 count = (uint32)strlen(text), index;
+        for (index = 0u; index < count; ++index)
+            hud_link(0x800C0F4Cu + R32(0x80065128u) * 40u + index * 80u, 1u);
     }
 }

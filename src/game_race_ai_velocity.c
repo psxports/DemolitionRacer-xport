@@ -2,7 +2,7 @@
 #include <limits.h>
 extern uint32 sub_8001685C(uint32);
 extern uint32 sub_8002C188(uint32, uint32);
-extern uint32 sub_8002EDE0(uint32, uint32, uint32);
+extern void sub_8002EDE0(uint32, uint32, uint32);
 extern uint32 sub_8002F5F8(uint32, uint32, uint32);
 extern uint32 sub_8002F78C(uint32, uint32, uint32);
 extern uint32 sub_8002F860(uint32, uint32, uint32);

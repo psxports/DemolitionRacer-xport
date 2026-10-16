@@ -252,63 +252,68 @@ uint32 sub_8002DC38(uint32 state, uint32 position, uint32 height_output)
     return dr_track_height((const uint8 *)psx_addr(state, 10u), (const sint32 *)psx_addr(position, 12u), (sint32 *)psx_addr(height_output, 4u));
 }
 
-uint32 sub_8002E408(uint32 state, uint32 position, uint32 normal_output, uint32 mode)
+uint32 dr_track_surface(const uint8 *state, const sint32 *position, sint16 *normal_output, uint32 mode)
 {
     VECTOR left, right, cross;
     uint32 section, first, second, third, vertex, numerator;
     sint32 point[3];
     if (!R32(0x800593A0u))
     {
-        track_triangle((const uint8 *)psx_addr(state, 10u), (const sint32 *)psx_addr(position, 12u), 0, &section, &first, &second, &third, point);
+        track_triangle(state, position, 0, &section, &first, &second, &third, point);
         track_edges(first, second, third, &left, &right);
         OuterProduct0(&left, &right, &cross);
         cross.vx >>= 12;
         cross.vz >>= 12;
         if (!cross.vx && !cross.vz)
         {
-            R16(normal_output + 4u) = 0u;
-            R16(normal_output) = 0u;
-            R16(normal_output + 2u) = (uint16)-4096;
+            normal_output[2] = 0;
+            normal_output[0] = 0;
+            normal_output[1] = -4096;
             return (track_component(track_vertex(first), 2u) + R32(section + 16u)) << 8;
         }
         cross.vy >>= 12;
-        dr_race_normalize(&cross, (SVECTOR *)psx_addr(normal_output, 6u));
+        dr_race_normalize(&cross, (SVECTOR *)normal_output);
         vertex = track_vertex(first);
         if (mode)
         {
-            numerator = (track_component(vertex, 0u) + R32(section + 12u)) * track_component(normal_output, 0u);
-            numerator += (track_component(vertex, 2u) + R32(section + 16u)) * track_component(normal_output, 2u);
-            numerator += (track_component(vertex, 4u) + R32(section + 20u)) * track_component(normal_output, 4u);
+            numerator = (track_component(vertex, 0u) + R32(section + 12u)) * (uint32)(sint32)normal_output[0];
+            numerator += (track_component(vertex, 2u) + R32(section + 16u)) * (uint32)(sint32)normal_output[1];
+            numerator += (track_component(vertex, 4u) + R32(section + 20u)) * (uint32)(sint32)normal_output[2];
             return (uint32)((sint32)(0u - numerator) >> 4);
         }
-        if (!R16(normal_output + 2u))
-            R16(normal_output + 2u) = 1u;
-        numerator = (track_component(vertex, 0u) - (uint32)point[0]) * track_component(normal_output, 0u);
-        numerator += (track_component(vertex, 4u) - (uint32)point[2]) * track_component(normal_output, 4u);
-        return (track_div(numerator, track_component(normal_output, 2u)) + track_component(vertex, 2u) + R32(section + 16u)) << 8;
+        if (!normal_output[1])
+            normal_output[1] = 1;
+        numerator = (track_component(vertex, 0u) - (uint32)point[0]) * (uint32)(sint32)normal_output[0];
+        numerator += (track_component(vertex, 4u) - (uint32)point[2]) * (uint32)(sint32)normal_output[2];
+        return (track_div(numerator, (uint32)(sint32)normal_output[1]) + track_component(vertex, 2u) + R32(section + 16u)) << 8;
     }
-    track_grid((const sint32 *)psx_addr(position, 12u), 0, &left, &right);
+    track_grid(position, 0, &left, &right);
     OuterProduct0(&left, &right, &cross);
     cross.vx >>= 7;
     cross.vy >>= 7;
     cross.vz >>= 7;
-    dr_race_normalize(&cross, (SVECTOR *)psx_addr(normal_output, 6u));
+    dr_race_normalize(&cross, (SVECTOR *)normal_output);
     if (mode)
     {
         uint32 width = R32(GP + 0x9ACu), spacing = R32(GP + 0x9A4u);
         uint32 half = (uint32)((sint32)(width + (width >> 31)) >> 1);
         uint32 x = (R32(GP + 0x938u) - half) * spacing;
         uint32 z = (R32(GP + 0x93Cu) - half) * spacing;
-        numerator = x * track_component(normal_output, 0u) + z * track_component(normal_output, 4u);
+        numerator = x * (uint32)(sint32)normal_output[0] + z * (uint32)(sint32)normal_output[2];
         R32(GP + 0x940u) = x;
         R32(GP + 0x944u) = z;
-        numerator += R32(GP + 0x948u) * track_component(normal_output, 2u);
+        numerator += R32(GP + 0x948u) * (uint32)(sint32)normal_output[1];
         return (uint32)((sint32)(0u - numerator) >> 4);
     }
     if (!cross.vy)
         cross.vy = 1;
     numerator = R32(GP + 0x940u) * (uint32)cross.vx + R32(GP + 0x944u) * (uint32)cross.vz;
     return (track_div(0u - numerator, (uint32)cross.vy) + R32(GP + 0x948u)) << 8;
+}
+
+uint32 sub_8002E408(uint32 state, uint32 position, uint32 normal_output, uint32 mode)
+{
+    return dr_track_surface((const uint8 *)psx_addr(state, 10u), (const sint32 *)psx_addr(position, 12u), (sint16 *)psx_addr(normal_output, 6u), mode);
 }
 
 uint32 sub_8002F4A4(uint32 state, uint32 position)

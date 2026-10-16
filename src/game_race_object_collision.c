@@ -8,6 +8,7 @@ extern sint32 draft_agent3_missing_8004388C(uint32 angle);
 extern uint32 sub_8001ED2C(uint32, uint32, uint32, sint32, uint32, uint32);
 void game_800BC824(uint32 model, uint32 angles, uint32 velocity, uint32 flags);
 void game_800BB800(uint32 kind, uint32 origin, uint32 angles, uint32 velocity, uint32 vertex0, uint32 vertex1, uint32 vertex2, uint32 vertex3, uint32 packet_a, uint32 packet_b, uint32 flags);
+static void effect_polygon(uint32 kind, uint32 origin, uint32 angles, uint32 velocity, uint32 vertex0, uint32 vertex1, uint32 vertex2, uint32 vertex3, uint32 packet_a, uint32 packet_b, uint32 flags, const VECTOR *native_velocity);
 
 static sint32 collision_add(sint32 a, sint32 b)
 {
@@ -114,7 +115,7 @@ void game_800AAA94(uint32 object, uint32 position, sint32 angle, sint32 penetrat
     game_800AE184(object, impulse >> 10, 0u);
 }
 
-void game_800BC824(uint32 model, uint32 angles, uint32 velocity, uint32 flags)
+static void effect_model(uint32 model, uint32 angles, uint32 velocity, uint32 flags, const VECTOR *native_velocity)
 {
     uint32 stream = model + r_u32(model + 48u), vertices = model + r_u32(model + 44u);
     uint32 packet_a = model + r_u32(model + 52u), packet_b = model + r_u32(model + 56u);
@@ -132,11 +133,21 @@ void game_800BC824(uint32 model, uint32 angles, uint32 velocity, uint32 flags)
                 for (i = 0u; i < vertex_count; ++i)
                     vertex[i] = vertices + (uint32)(sint32)(sint16)r_u16(stream + i * 2u) * 8u;
                 stream += stride;
-                game_800BB800(kind, model + 16u, angles, velocity, vertex[0], vertex[1], vertex[2], vertex[3], packet_a, packet_b, flags);
+                effect_polygon(kind, model + 16u, angles, velocity, vertex[0], vertex[1], vertex[2], vertex[3], packet_a, packet_b, flags, native_velocity);
                 packet_a += packet_bytes;
                 packet_b += packet_bytes;
             }
     }
+}
+
+void game_800BC824(uint32 model, uint32 angles, uint32 velocity, uint32 flags)
+{
+    effect_model(model, angles, velocity, flags, NULL);
+}
+
+void dr_effect_model_native(uint32 model, uint32 angles, const VECTOR *velocity, sint32 flags)
+{
+    effect_model(model, angles, 0, (uint32)flags, velocity);
 }
 
 static void effect_copy_words(uint32 destination, uint32 source, uint32 bytes)
@@ -169,7 +180,7 @@ static void effect_rotate_vertex(const MATRIX *matrix, uint32 vertex)
         w_u16(vertex + i * 2u, (uint16)xport_gte_read_data(9u + i));
 }
 
-void game_800BB800(uint32 kind, uint32 origin, uint32 angles, uint32 velocity, uint32 vertex0, uint32 vertex1, uint32 vertex2, uint32 vertex3, uint32 packet_a, uint32 packet_b, uint32 flags)
+static void effect_polygon(uint32 kind, uint32 origin, uint32 angles, uint32 velocity, uint32 vertex0, uint32 vertex1, uint32 vertex2, uint32 vertex3, uint32 packet_a, uint32 packet_b, uint32 flags, const VECTOR *native_velocity)
 {
     MATRIX matrix;
     sint32 center[4];
@@ -230,9 +241,12 @@ void game_800BB800(uint32 kind, uint32 origin, uint32 angles, uint32 velocity, u
     }
     for (j = 0u; j < 3u; ++j)
         w_u16(effect + 52u + j * 2u, (uint16)collision_div((sint16)r_u16(effect + 52u + j * 2u) * 32, largest));
-    if (velocity)
-        for (j = 0u; j < 3u; ++j)
-            w_u16(effect + 52u + j * 2u, (uint16)(r_u16(effect + 52u + j * 2u) + ((sint32)r_u32(velocity + j * 4u) >> 8)));
+    if (velocity || native_velocity)
+        for (j = 0; j < 3; ++j)
+        {
+            sint32 input = native_velocity ? (j == 0 ? native_velocity->vx : j == 1 ? native_velocity->vy : native_velocity->vz) : r_s32(velocity + j * 4);
+            w_u16(effect + 52 + j * 2, (uint16)(r_u16(effect + 52 + j * 2) + (input >> 8)));
+        }
     for (j = 0u; j < 3u; ++j)
         w_u32(effect + 40u + j * 4u, ((uint32)center[j] << 8) + r_u32(origin + j * 4u));
     for (i = 0u; i < count; ++i)
@@ -248,4 +262,9 @@ void game_800BB800(uint32 kind, uint32 origin, uint32 angles, uint32 velocity, u
         effect_copy_words(effect + 100u, packet_a, bytes);
         effect_copy_words(effect + 100u + bytes, packet_b, bytes);
     }
+}
+
+void game_800BB800(uint32 kind, uint32 origin, uint32 angles, uint32 velocity, uint32 vertex0, uint32 vertex1, uint32 vertex2, uint32 vertex3, uint32 packet_a, uint32 packet_b, uint32 flags)
+{
+    effect_polygon(kind, origin, angles, velocity, vertex0, vertex1, vertex2, vertex3, packet_a, packet_b, flags, NULL);
 }

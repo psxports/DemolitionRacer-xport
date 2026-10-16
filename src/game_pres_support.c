@@ -349,7 +349,7 @@ void pres_8009F1F0(void)
             }
             else if (phase == 1u)
             {
-                printf("%s", (const char *)psx_addr(0x800A9B7Cu, 1u));
+                draft_agent1_missing_diagnostic("%s", (const char *)psx_addr(0x800A9B7Cu, 1u));
                 goto car_menu;
             }
             break;
@@ -365,11 +365,11 @@ void pres_8009F1F0(void)
             }
             else if (phase == 1u)
             {
-                printf("%s", (const char *)psx_addr(0x800A9B8Cu, 1u));
+                draft_agent1_missing_diagnostic("%s", (const char *)psx_addr(0x800A9B8Cu, 1u));
             }
             else if (phase == 2u)
             {
-                printf("%s", (const char *)psx_addr(0x800A9B9Cu, 1u));
+                draft_agent1_missing_diagnostic("%s", (const char *)psx_addr(0x800A9B9Cu, 1u));
                 player = P32(0x80059744u);
                 P32(0x800ABB80u) = 9u;
                 P32(0x800AD680u) = 0u;
@@ -499,7 +499,7 @@ void pres_8009EF04(uint32 mode)
     P32(0x800AD6C0u) = 0u;
     P32(0x800AD850u) = 1u;
     P32(0x800ABB20u) = 0u;
-    sprintf(number, "%d", (sint32)value);
+    snprintf(number, sizeof(number), "%d", (sint32)value);
     memcpy(psx_addr(0x800ABB88u, strlen(number) + 1u), number, strlen(number) + 1u);
     P32(0x800A2900u) = 0x800ABB88u;
     for (index = 0u; (sint32)index < (sint32)P32(descriptor + 12u); ++index)
@@ -540,14 +540,14 @@ void pres_8009EF04(uint32 mode)
         value = P32(pointer + 16u);
         if (!value)
         {
-            fputs("PRES division BREAK 7 at 8009F128\n", stderr);
+            draft_agent1_missing_diagnostic("%s", "PRES division BREAK 7 at 8009F128\n");
             abort();
         }
         left = (uint32)(1048576 / (sint32)value);
         value = P32(pointer + 20u);
         if (!value)
         {
-            fputs("PRES division BREAK 7 at 8009F15C\n", stderr);
+            draft_agent1_missing_diagnostic("%s", "PRES division BREAK 7 at 8009F15C\n");
             abort();
         }
         right = (uint32)(1048576 / (sint32)value);
@@ -1094,7 +1094,7 @@ static uint32 pres_scale_reciprocal(uint32 value, uint32 pc)
 {
     if (!value)
     {
-        fprintf(stderr, "PRES division BREAK 7 at %08X\n", pc);
+        draft_agent1_missing_diagnostic("PRES division BREAK 7 at %08X\n", pc);
         abort();
     }
     return (uint32)(1048576 / (sint32)value);
@@ -1377,7 +1377,7 @@ void pres_8009CEA8(void)
         else
         {
             /* Original carries uninitialized incoming S2 through S6 for unsupported phases */
-            fprintf(stderr, "PRES 8009CEA8 unsupported animation phase %u\n", mode);
+            draft_agent1_missing_diagnostic("PRES 8009CEA8 unsupported animation phase %u\n", mode);
             abort();
         }
         encoded = P32(P32(entry) + 16u);

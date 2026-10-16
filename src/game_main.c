@@ -170,14 +170,14 @@ sint32 sub_800535C8(void)
     }
     if (interrupt_code == 5u && (sint32)r_u32(0x8005FBD8u) > 0)
     {
-        printf((const char *)psx_addr(0x80012AC4u, 1u));
+        draft_agent1_missing_diagnostic((const char *)psx_addr(0x80012AC4u, 1u));
         if ((sint32)r_u32(0x8005FBD8u) > 0)
         {
             uint32 command_index = r_u8(0x8005FBEDu);
             uint32 status_word = r_u32(0x8005FBDCu);
             uint32 detail_word = r_u32(0x8005FBE0u);
             uint32 command_name = r_u32(0x8005FBF4u + 4u * command_index);
-            printf((const char *)psx_addr(0x80012AD0u, 1u), (const char *)psx_addr(command_name, 1u), status_word, detail_word);
+            draft_agent1_missing_diagnostic((const char *)psx_addr(0x80012AD0u, 1u), (const char *)psx_addr(command_name, 1u), status_word, detail_word);
         }
     }
     switch (interrupt_code)
@@ -232,8 +232,8 @@ sint32 sub_800535C8(void)
                 w_u8(0x8008B36Cu + i, result_bytes[i]);
             return 6;
         default:
-            puts((const char *)psx_addr(0x80012AECu, 1u));
-            printf((const char *)psx_addr(0x80012B00u, 1u), interrupt_code);
+            draft_agent1_missing_diagnostic("%s\n", (const char *)psx_addr(0x80012AECu, 1u));
+            draft_agent1_missing_diagnostic((const char *)psx_addr(0x80012B00u, 1u), interrupt_code);
             return 0;
     }
 }
@@ -339,27 +339,7 @@ void sub_80015E38(void)
 uint32 sub_80041C3C(uint32 path, uint32 destination, uint32 capacity)
 {
     FUNCTION_MARKER(0x80041C3Cu, "SLUS_009.69");
-    uint32 file[6];
-    for (;;)
-    {
-        if (CdSearchFile((CdlFILE *)file, (const char *)psx_addr(path, 1u)) == NULL)
-        {
-            CdReset(0);
-            continue;
-        }
-        if (CdControlBPSX(0x15u, (uint8 *)file, NULL) == 0)
-        {
-            CdReset(0);
-            continue;
-        }
-        if (CdRead((file[1] + 2047u) >> 11, (uint32 *)psx_addr(destination, 1u), 0x80) != 0)
-            break;
-        CdReset(0);
-    }
-    while (CdReadSync(1, NULL) > 0)
-    {
-    }
-    return file[1];
+    return dr_data_read((const char *)psx_addr(path, 1u), destination, capacity);
 }
 
 uint32 sub_800237D8(void)
@@ -449,7 +429,6 @@ uint32 sub_80057160(uint32 owner, sint32 value);
 uint32 sub_8004F39C(uint32 value);
 uint32 sub_80039934(void);
 uint32 sub_8004225C(const char *path, uint32 buffer, uint32 capacity);
-uint32 SpuInitMalloc(uint32 count, uint32 table);
 uint32 _SpuInit(uint32 mode);
 sint32 CD_vol(CdlATV *volume);
 void SpuSetReverbDepth(SpuReverbAttr *attr);
@@ -509,7 +488,7 @@ uint32 sub_8001E13C(void)
         return initialized;
     w_u8(0x80064D28u, 1u);
     sub_8004B294();
-    SpuInitMalloc(0x30u, 0x80073DF0u);
+    SpuInitMalloc(0x30, (char *)psx_addr(0x80073DF0u, 0x31u * 8u));
     w_u16(0x80073F7Cu, 0x3FFCu);
     w_u16(0x80073F7Eu, 0x3FFCu);
     w_u32(0x80073F78u, 3u);
@@ -579,59 +558,7 @@ uint32 sub_8004B89C(const uint8 *volume)
 uint32 sub_80041E24(uint32 path)
 {
     FUNCTION_MARKER(0x80041E24u, "SLUS_009.69");
-    uint32 file[6];
-    uint32 minute;
-    uint32 second;
-    uint32 frame;
-    uint32 base_sector;
-    uint32 index;
-    CdReset(0);
-    printf((const char *)psx_addr(0x800123BCu, 1u), (const char *)psx_addr(path, 1u));
-    for (;;)
-    {
-        if (CdSearchFile((CdlFILE *)file, (const char *)psx_addr(path, 1u)) == NULL)
-        {
-            CdReset(0);
-            continue;
-        }
-        if (CdControlBPSX(0x15u, (uint8 *)file, NULL) == 0)
-        {
-            CdReset(0);
-            continue;
-        }
-        if (CdRead(10, (uint32 *)psx_addr(0x800839D4u, 20480u), 0x80) == 0)
-        {
-            CdReset(0);
-            continue;
-        }
-        break;
-    }
-    while (CdReadSync(1, NULL) > 0)
-        ;
-    minute = ((uint8 *)file)[0];
-    second = ((uint8 *)file)[1];
-    frame = ((uint8 *)file)[2];
-    minute = 10u * (minute >> 4) + (minute & 15u);
-    second = 10u * (second >> 4) + (second & 15u);
-    frame = 10u * (frame >> 4) + (frame & 15u);
-    base_sector = 4500u * minute + 75u * second + frame;
-    index = 0u;
-    for (;;)
-    {
-        uint32 offset;
-        uint32 sector;
-        uint32 count;
-        if (index >= 512u)
-            return index;
-        offset = 40u * index;
-        sector = r_u32(0x800839F8u + offset);
-        w_u32(0x800839F8u + offset, sector + 10u + base_sector);
-        if (r_u8(0x800839D4u + offset) == 0u)
-            return offset;
-        count = r_u32(0x80065180u);
-        w_u32(0x80065180u, count + 1u);
-        index += 1u;
-    }
+    return dr_data_catalog();
 }
 
 void sub_8002B88C(uint32 buffer, uint32 path)

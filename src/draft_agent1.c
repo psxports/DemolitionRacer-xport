@@ -127,7 +127,7 @@ sint32 sub_800201EC(uint32 path, uint32 channel)
     uint32 start, end, track;
     sint32 bytes;
     CdReset(1);
-    if (!CdSearchFile((CdlFILE *)file, (const char *)psx_addr(path, 1u)))
+    if (!dr_data_stream((CdlFILE *)file, (const char *)psx_addr(path, 1u)))
         return draft_agent1_missing_diagnostic("Got here: PlayXA\n");
     start = (uint32)draft_agent1_missing_cd_position_to_sector(file);
     track = r_u32(0x800652CCu);

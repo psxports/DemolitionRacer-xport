@@ -11,7 +11,7 @@ extern uint32 draft_agent3_missing_8003D9AC(uint32 mode);
 static void render_pending(uint32 target, uint32 object, uint32 second)
 {
     /* TODO: Translate this complete original callee when reached */
-    fprintf(stderr, "Untranslated frame render %08X(%08X,%08X)\n", target, object, second);
+    draft_agent1_missing_diagnostic("Untranslated frame render %08X(%08X,%08X)\n", target, object, second);
     abort();
 }
 
@@ -422,6 +422,30 @@ void game_800BC0B4(void)
         for (i = 0; i < 3u; ++i)
             R32(object + 12u + i * 4u) += (uint32)(sint32)(sint16)R16(object + 52u + i * 2u);
         R16(object + 54u) = (uint16)(R16(object + 54u) - 5u);
+        object = R32(object);
+    }
+}
+
+void game_800A9E24(void)
+{
+    uint32 object = R32(0x800C4174u);
+    FUNCTION_MARKER(0x800A9E24u, "GAME.BIN");
+    SetRotMatrix((MATRIX *)psx_addr(0x80081BA4u, sizeof(MATRIX)));
+    xport_gte_write_control(5u, R32(0x800BEFB8u));
+    xport_gte_write_control(6u, R32(0x800BEFBCu));
+    xport_gte_write_control(7u, R32(0x800BEFC0u));
+    while (object != 0x800C4174u)
+    {
+        if (R8(object + 11u) != 128u)
+        {
+            uint32 kind = R8(object + 10u);
+            if (kind == 1u || kind == 6u)
+                game_800A9078(object);
+            else if (kind == 2u)
+                game_800A96C4(object);
+            else if (kind == 5u)
+                game_800A8DD8(object);
+        }
         object = R32(object);
     }
 }

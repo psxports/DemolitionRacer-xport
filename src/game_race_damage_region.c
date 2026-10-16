@@ -6,7 +6,7 @@ extern uint32 sub_80033554(uint32, sint32, sint32, sint32);
 
 static sint32 region_pending(uint32 target, uint32 a, uint32 b, uint32 c, uint32 d)
 {
-    fprintf(stderr, "TODO Damage region %08X(%08X,%08X,%08X,%08X)\n", target, a, b, c, d);
+    draft_agent1_missing_diagnostic("TODO Damage region %08X(%08X,%08X,%08X,%08X)\n", target, a, b, c, d);
     abort();
     return 0;
 }

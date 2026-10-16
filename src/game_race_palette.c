@@ -42,7 +42,7 @@ void game_800BCB60(void)
         char name[16];
         strcpy(name, (const char *)psx_addr(0x8008BF88u, 1u));
         if (i > 0u)
-            sprintf(name + 5, (const char *)psx_addr(0x8008BF90u, 1u), (int)i + 1);
+            snprintf(name + 5, sizeof(name) - 5u, (const char *)psx_addr(0x8008BF90u, 1u), (int)i + 1);
         race_clut_location(dr_texture_lookup(name), 0x800C8BA4u + i * 8u);
     }
     race_clut_location(sub_80039ADC(0x8008BF94u), 0x800C8BC4u);

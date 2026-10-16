@@ -102,7 +102,7 @@ static void frame_render(uint32 object, uint32 visibility)
             return;
         if (kind > 1u)
         {
-            fprintf(stderr, "Unsupported original 4ECE4 primitive kind %u\n", kind);
+            draft_agent1_missing_diagnostic("Unsupported original 4ECE4 primitive kind %u\n", kind);
             abort();
         }
         group += 4u;

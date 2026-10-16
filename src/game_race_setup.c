@@ -1,4 +1,5 @@
 #include "draft_signatures.h"
+#include "psx_gpu.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -37,6 +38,19 @@ void game_8008F6F8(void);
 void game_800B3924(void);
 void game_800A7098(uint32 player);
 void game_800A23CC(uint32 port);
+void game_800B8704(void);
+void game_8009545C(void);
+void game_800B9518(void);
+extern sint32 draft_agent3_missing_8004388C(uint32 angle);
+static void level_pipe_init(void);
+static void level_pipe_update(void);
+static void level_pipe_draw(void);
+static void level_texture_init(void);
+static void level_texture_update(void);
+static void level_particles(void);
+static void level_crane_init(void);
+static void level_crane_update(void);
+static void level_crane_draw(void);
 
 uint32 sub_800131C8(void)
 {
@@ -91,10 +105,10 @@ uint32 sub_80037B18(void)
 static uint32 race_pending(uint32 target, uint32 argument_count, const uint32 *arguments)
 {
     uint32 index;
-    fprintf(stderr, "Untranslated race dependency %08X (%u arguments)", target, argument_count);
+    draft_agent1_missing_diagnostic("Untranslated race dependency %08X (%u arguments)", target, argument_count);
     for (index = 0u; index < argument_count; ++index)
-        fprintf(stderr, " %08X", arguments[index]);
-    fprintf(stderr, "\n");
+        draft_agent1_missing_diagnostic(" %08X", arguments[index]);
+    draft_agent1_missing_diagnostic("\n");
     abort();
 }
 
@@ -102,6 +116,87 @@ static uint32 race_call0(uint32 target)
 {
     switch (target)
     {
+        case 0x800BDA5C:
+            level_pipe_init();
+            return 0;
+        case 0x800BDA7C:
+            level_pipe_update();
+            return 0;
+        case 0x800BDA9C:
+            level_pipe_draw();
+            return 0;
+        case 0x800BDD68:
+            level_texture_init();
+            return 0;
+        case 0x800BDD88:
+            level_texture_update();
+            return 0;
+        case 0x800BE0BC:
+            level_particles();
+            return 0;
+        case 0x800BE6A0:
+            level_crane_init();
+            return 0;
+        case 0x800BE6C0:
+            level_crane_update();
+            return 0;
+        case 0x800BE6E0:
+            level_crane_draw();
+            return 0;
+        /* Empty callbacks in the otherwise nonempty level rows */
+        case 0x800BDDA8:
+        case 0x800BE0B4:
+        case 0x800BE0DC:
+            return 0;
+        /* Remaining reviewed empty entries in the level callback table */
+        case 0x800BDDB0:
+        case 0x800BDDB8:
+        case 0x800BDDC0:
+        case 0x800BDDC8:
+        case 0x800BDDD0:
+        case 0x800BDDD8:
+        case 0x800BDDE0:
+        case 0x800BDDE8:
+        case 0x800BDDF0:
+        case 0x800BDE10:
+        case 0x800BDE18:
+        case 0x800BDE20:
+        case 0x800BDE28:
+        case 0x800BDE30:
+        case 0x800BDE38:
+        case 0x800BE700:
+        case 0x800BE708:
+        case 0x800BE710:
+        case 0x800BE718:
+        case 0x800BE720:
+        case 0x800BE728:
+            return 0;
+        /* Level 4 callbacks each contain JR RA and a NOP delay slot */
+        case 0x800BDAD4:
+        case 0x800BDADC:
+        case 0x800BDAE4:
+            return 0;
+        /* Level 3 callbacks each contain JR RA and a NOP delay slot */
+        case 0x800BDABC:
+        case 0x800BDAC4:
+        case 0x800BDACC:
+            return 0;
+        /* Level 9 callbacks each contain JR RA and a NOP delay slot */
+        case 0x800BDDF8:
+        case 0x800BDE00:
+        case 0x800BDE08:
+            return 0;
+        case 0x800B8704:
+            game_800B8704();
+            return 0;
+        case 0x8009545C:
+            game_8009545C();
+            return 0;
+        case 0x800B9518:
+            game_800B9518();
+            return 0;
+        case 0x8002AD28:
+            return sub_8002AD28();
         /* The complete original BD530 consists of JR RA and its NOP delay slot */
         case 0x800AA78Cu:
             game_800AA78C();
@@ -169,6 +264,15 @@ static uint32 race_call0(uint32 target)
             return sub_8001697C();
         case 0x80015664u:
             return sub_80015664();
+        case 0x8001CD48u:
+            return sub_8001CD48();
+        case 0x800A9E24u:
+            game_800A9E24();
+            return 0u;
+        case 0x8009076Cu:
+            return game_8009076C();
+        case 0x8001F354u:
+            return sub_8001F354();
         case 0x8001D1DCu:
             return sub_8001D1DC();
         case 0x8001EE94u:
@@ -217,6 +321,15 @@ static uint32 race_call0(uint32 target)
 
 static uint32 race_call1(uint32 target, uint32 argument)
 {
+    if (target == 0x8001BAC0u)
+        return sub_8001BAC0(argument);
+    if (target == 0x8001BBB4u)
+        return sub_8001BBB4(argument);
+    if (target == 0x8003997Cu)
+    {
+        sub_8003997C(argument);
+        return 0u;
+    }
     switch (target)
     {
         case 0x8008F784u:
@@ -264,6 +377,11 @@ static uint32 race_call1(uint32 target, uint32 argument)
 static uint32 race_call2(uint32 target, uint32 first, uint32 second)
 {
     uint32 arguments[2] = {first, second};
+    if (target == 0x800A730Cu)
+    {
+        game_800A730C(first, second);
+        return 0u;
+    }
     if (target == 0x80020A14u)
         return sub_80020A14(first, second);
     if (target == 0x80037DC8u)
@@ -289,6 +407,8 @@ static uint32 race_call2(uint32 target, uint32 first, uint32 second)
 static uint32 race_call3(uint32 target, uint32 first, uint32 second, uint32 third)
 {
     uint32 arguments[3] = {first, second, third};
+    if (target == 0x80015780)
+        return sub_80015780(first, second, third);
     if (target == 0x800B8DB8u)
     {
         game_800B8DB8(first, (sint32)second, (sint32)third);
@@ -794,6 +914,8 @@ uint32 sub_8001BCAC(void)
         race_call0(0x80017D38u);
         race_render_screen(0u);
         race_render_screen(1u);
+        /* Service host events after both viewports are complete */
+        psx_native_poll_events();
         race_call0(0x80013364u);
         result = R32(0x80064D0Cu);
     }
@@ -939,4 +1061,277 @@ uint32 sub_80016C68(void)
         }
     }
     return result;
+}
+
+static void level_set_position(uint32 record, uint32 x, uint32 y, uint32 z)
+{
+    w_u32(record + 4, x);
+    w_u32(record + 8, y);
+    w_u32(record + 12, z);
+}
+
+/* Original BD548 */
+static void level_pipe_init(void)
+{
+    uint32 index, record;
+    w_u32(0x800C8CB8, sub_800162D8(0x8008BFA0));
+    w_u32(0x800C8CD4, sub_800162D8(0x8008BFB4));
+    w_u32(0x800C8CF0, sub_800162D8(0x8008BFA0));
+    w_u32(0x800C8D0C, sub_800162D8(0x8008BFB4));
+    for (index = 0; index < 4; ++index)
+    {
+        record = 0x800C8CB8 + index * 28;
+        w_u32(record + 24, 0);
+        w_u16(record + 16, 0);
+        w_u16(record + 18, 0);
+        w_u16(record + 20, 0);
+        if (index < 2)
+            level_set_position(record, 0x027B94FC, 0x000315D8, 0x029C3680);
+        else
+            level_set_position(record, 0x01CDD100, 0x0014EAB0, 0x017A15D8);
+    }
+    for (index = 0; index < 3; ++index)
+    {
+        record = 0x800C8C60 + index * 28;
+        w_u32(record, sub_800162D8(0x8008BFC8));
+        w_u16(record + 16, 0);
+        w_u16(record + 18, 0);
+        w_u16(record + 20, 0);
+    }
+    w_u16(0x800C8C72, 1024);
+    level_set_position(0x800C8C60, 0x02449FD8, 0x002F7FC4, 0x005CBBD8);
+    level_set_position(0x800C8C7C, 0x00CFDED8, 0x0019B3B0, 0x01F107D8);
+    level_set_position(0x800C8C98, 0x02C037B0, 0x001E81C4, 0x00BE68EC);
+}
+
+static void level_oscillate(uint32 base, uint32 count, uint32 angle_offset)
+{
+    uint32 index, record, phase;
+    sint32 delta;
+    for (index = 0; index < count; ++index)
+    {
+        record = base + index * 28;
+        phase = r_s32(record + 24) < 4096 ? r_u32(record + 24) + 16 : 0;
+        w_u32(record + 24, phase);
+        delta = draft_agent3_missing_8004388C(phase) / 512;
+        w_u16(record + angle_offset, (uint16)(r_u16(record + angle_offset) + (uint32)delta));
+    }
+}
+
+/* Original BD7B8 */
+static void level_pipe_update(void)
+{
+    uint32 index, address;
+    level_oscillate(0x800C8CB8, 4, 18);
+    for (index = 0; index < 3; ++index)
+    {
+        address = 0x800C8C70 + index * 28;
+        w_u16(address, r_u16(address) + 24);
+    }
+}
+
+static void level_draw_model(uint32 record, uint32 all_axes)
+{
+    uint32 model = r_u32(record), axis;
+    MATRIX matrix;
+    for (axis = 0; axis < 3; ++axis)
+        w_u32(model + 16 + axis * 4, r_u32(record + 4 + axis * 4));
+    if (!sub_8003D188(model))
+        return;
+    memset(&matrix, 0, sizeof(matrix));
+    matrix.m[0][0] = matrix.m[1][1] = matrix.m[2][2] = 4096;
+    if (all_axes)
+        RotMatrixX(r_s16(record + 16), &matrix);
+    RotMatrixY(r_s16(record + 18), &matrix);
+    if (all_axes)
+        RotMatrixZ(r_s16(record + 20), &matrix);
+    sub_8003C164(&matrix);
+    sub_8003CED8(&matrix, model);
+    sub_800416E0(model);
+}
+
+/* Original BD88C */
+static void level_pipe_draw(void)
+{
+    uint32 index;
+    for (index = 0; index < 4; ++index)
+        level_draw_model(0x800C8CB8 + index * 28, 0);
+    for (index = 0; index < 3; ++index)
+        level_draw_model(0x800C8C60 + index * 28, 1);
+}
+
+/* Original BE730 compares eight bytes including the empty sentinel */
+static uint32 level_texture_find(uint32 name)
+{
+    uint32 texture = r_u32(0x800654F4);
+    for (;;)
+    {
+        if (!memcmp(psx_addr(texture, 8), psx_addr(name, 8), 8))
+            return texture;
+        if (!r_u8(texture))
+            break;
+        texture += 26;
+    }
+    draft_agent1_missing_diagnostic((const char *)psx_addr(0x8008C03C, 1), (const char *)psx_addr(name, 1));
+    return 0;
+}
+
+/* Original BDAEC with the formatted filename on the native stack */
+static void level_texture_init(void)
+{
+    uint32 texture = level_texture_find(0x8008C000), page = r_u16(texture + 8);
+    uint32 x = ((page << 6) & 1023) + (r_u8(texture + 24) >> 2);
+    uint32 y = ((page << 4) & 256) + ((page >> 2) & 512) + r_u8(texture + 25);
+    uint32 index, record, size, image;
+    char path[64];
+    PSX_RECT rectangle;
+    for (index = 0; index < 2; ++index)
+    {
+        record = 0x800BFBF8 + index * 60;
+        snprintf(path, sizeof(path), (const char *)psx_addr(0x8008C008, 1), (const char *)psx_addr(r_u32(record), 1));
+        size = sub_800423EC(path, 1);
+        image = sub_80042544(size);
+        sub_8004225C(path, image, size);
+        w_u32(record + 20, r_u32(record + 20) + x);
+        w_u32(record + 24, r_u32(record + 24) + y);
+        rectangle.x = (sint16)r_u32(record + 20);
+        rectangle.y = (sint16)r_u32(record + 24);
+        rectangle.w = (sint16)(r_s32(record + 12) / 4);
+        rectangle.h = (sint16)r_u32(record + 16);
+        LoadImagePSX(&rectangle, (uint32 *)psx_addr(image + 64, 1));
+        DrawSync(0);
+        sub_8004261C(image);
+    }
+}
+
+/* Original BDC58 computes an unused local rectangle without issuing a transfer */
+static void level_texture_update(void)
+{
+    uint32 index, record;
+    for (index = 0; index < 2; ++index)
+    {
+        record = 0x800BFBF8 + index * 60;
+        w_u32(record + 44, r_u32(record + 44) + 1);
+        if (r_u32(record + 44) != r_u32(record + 40))
+            continue;
+        w_u32(record + 44, 0);
+        w_u32(record + 48, r_s32(record + 48) < r_s32(record + 36) ? r_u32(record + 48) + 1 : 0);
+        (void)r_u32(record + 52);
+        (void)r_u32(record + 56);
+        (void)r_u32(record + 28);
+        (void)r_u32(record + 32);
+    }
+}
+
+/* Original BDE40 */
+static uint32 level_visible(uint32 position)
+{
+    VECTOR input, output;
+    uint32 axis;
+    sint32 depth, x, y, product;
+    for (axis = 0; axis < 3; ++axis)
+    {
+        sint32 value = (sint32)((uint32)(r_s32(position + axis * 4) >> 8) - r_u32(0x80081BB8 + axis * 4));
+        if (axis == 0)
+            input.vx = value;
+        else if (axis == 1)
+            input.vy = value;
+        else
+            input.vz = value;
+    }
+    ApplyMatrixLV((MATRIX *)psx_addr(0x80081BA4, sizeof(MATRIX)), &input, &output);
+    depth = output.vz;
+    if (depth <= 0 || depth >= (r_s32(0x8006514C) >> (r_u32(0x80065170) & 31)))
+        return 0;
+    x = (sint32)((uint32)output.vx * (uint32)(sint32)r_s16(0x80065550));
+    product = (sint32)((uint32)depth * (uint32)(sint32)r_s16(0x80065554));
+    if ((sint32)((uint32)x + (uint32)product) >= 0 || (sint32)((uint32)(0 - (uint32)x) + (uint32)product) >= 0)
+        return 0;
+    y = (sint32)((uint32)output.vy * (uint32)(sint32)r_s16(0x80065562));
+    product = (sint32)((uint32)depth * (uint32)(sint32)r_s16(0x80065564));
+    if ((sint32)((uint32)y + (uint32)product) >= 0)
+        return 0;
+    return ((0 - (uint32)y) + (uint32)product) >> 31;
+}
+
+extern uint32 game_800A8848(uint32 template_address, const VECTOR *position, const SVECTOR *velocity, const SVECTOR *acceleration, uint32 flags);
+
+/* Original BDF88 advances the CRT RNG even on frames without particles */
+static void level_particles(void)
+{
+    SVECTOR velocity = {0}, acceleration;
+    sint32 random = (sint32)randPSX();
+    uint32 index;
+    velocity.vy = (sint16)(random % 400 + 1000);
+    memcpy(&acceleration, psx_addr(0x8008C014, 8), 8);
+    if ((r_u32(0x80064A30) & 7) >= 3)
+        return;
+    for (index = 0; index < 9; ++index)
+    {
+        uint32 position = 0x800BFC90 + index * 12;
+        if (level_visible(position))
+            game_800A8848(0x800BFC70, (const VECTOR *)psx_addr(position, 12), &velocity, &acceleration, 60);
+    }
+}
+
+/* Original BE0E4 */
+static void level_crane_init(void)
+{
+    uint32 index, record, axis;
+    for (index = 0; index < 3; ++index)
+        w_u32(0x800C8BD0 + index * 28, sub_800162D8(0x8008C01C));
+    for (index = 0; index < 3; ++index)
+    {
+        record = 0x800C8BD0 + index * 28;
+        w_u32(record + 24, 0);
+        w_u16(record + 16, 0);
+        w_u16(record + 18, (sint32)randPSX() % 1024 + 2048);
+        w_u16(record + 20, 0);
+        for (axis = 0; axis < 3; ++axis)
+            w_u32(record + 4 + axis * 4, r_u32(0x800BFD24 + index * 12 + axis * 4));
+    }
+    for (index = 0; index < 2; ++index)
+        w_u32(0x800C8C28 + index * 28, sub_800162D8(0x8008C02C));
+    for (index = 0; index < 2; ++index)
+    {
+        record = 0x800C8C28 + index * 28;
+        w_u32(record + 24, 0);
+        w_u16(record + 16, 0);
+        w_u16(record + 18, 0);
+        w_u16(record + 20, 0);
+        for (axis = 0; axis < 3; ++axis)
+            w_u32(record + 4 + axis * 4, r_u32(0x800BFCFC + index * 12 + axis * 4));
+    }
+    w_u16(0x800C8C3A, 2000);
+    w_u16(0x800C8C56, 2600);
+}
+
+/* Original BE2E4 */
+static void level_crane_update(void)
+{
+    level_oscillate(0x800C8BD0, 3, 18);
+    level_oscillate(0x800C8C28, 2, 20);
+}
+
+/* Original BE40C */
+static void level_crane_draw(void)
+{
+    uint32 player = r_u32(0x8005973C) == 2 ? r_u32(0x80065128) : 0, index;
+    sint32 progress = r_s16(0x80066D6E + player * 952), low, high;
+    for (index = 0; index < 3; ++index)
+    {
+        low = r_s32(0x800BFD48 + index * 8);
+        high = r_s32(0x800BFD4C + index * 8);
+        if (progress < low && high < progress)
+            continue;
+        level_draw_model(0x800C8BD0 + index * 28, 0);
+    }
+    for (index = 0; index < 2; ++index)
+    {
+        low = r_s32(0x800BFD14 + index * 8);
+        high = r_s32(0x800BFD18 + index * 8);
+        if (progress < low || high < progress)
+            continue;
+        level_draw_model(0x800C8C28 + index * 28, 1);
+    }
 }

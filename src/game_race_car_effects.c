@@ -12,7 +12,7 @@ uint32 sub_8001685C(uint32 state);
 static void car_effect_pending(uint32 target, uint32 first, uint32 second, uint32 third)
 {
     /* TODO: Translate this complete original effect callee when reached */
-    fprintf(stderr, "Untranslated car effect %08X(%08X,%08X,%08X)\n", target, first, second, third);
+    draft_agent1_missing_diagnostic("Untranslated car effect %08X(%08X,%08X,%08X)\n", target, first, second, third);
     abort();
 }
 

@@ -4,7 +4,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#if defined(_WIN32)
 #include <direct.h>
+#include <windows.h>
+#endif
 
 uint32 sub_80041694(uint32 first_name, uint32 second_name)
 {
@@ -22,7 +25,7 @@ static uint32 dr_tim_blocks(uint32 tim, uint32 *palette_pixels, uint32 *image_pi
     if (r_u32(tim) != 16u)
     {
         /* The original would consume an uninitialized TIM result after this failure */
-        fprintf(stderr, "TODO: Invalid model TIM at %08X\n", tim);
+        draft_agent1_missing_diagnostic("TODO: Invalid model TIM at %08X\n", tim);
         abort();
     }
     block = tim + 8u;
@@ -160,7 +163,7 @@ static sint32 dr_native_exec(void *context, uint32 entry, uint32 argc, uint32 ar
 {
     if (entry == 0x800C14B8u)
         return dr_movie_entry();
-    fprintf(stderr, "Unsupported native PS-X EXE entry %08X\n", entry);
+    draft_agent1_missing_diagnostic("Unsupported native PS-X EXE entry %08X\n", entry);
     abort();
 }
 
@@ -171,7 +174,7 @@ static sint32 dr_guest_callback(void *context, uint32 address)
         sub_8002B6AC();
         return 1;
     }
-    fprintf(stderr, "Unsupported game callback %08X\n", address);
+    draft_agent1_missing_diagnostic("Unsupported game callback %08X\n", address);
     abort();
 }
 
@@ -180,7 +183,7 @@ void dr_native_scanout(void)
     /* Host scanout continues when the game removes its VBlank callback */
     if (!gpu_present())
     {
-        fprintf(stderr, "Native display presentation failed\n");
+        draft_agent1_missing_diagnostic("Native display presentation failed\n");
         abort();
     }
 }
@@ -303,7 +306,7 @@ uint32 sub_800246B0(uint32 slot)
     char path[32];
     sint32 descriptor;
     uint32 index, checksum = 0u;
-    sprintf(path, "bu%d0:BASLUS-00969", (sint32)slot);
+    snprintf(path, sizeof(path), "bu%d0:BASLUS-00969", (sint32)slot);
     memset(psx_addr(0x80076838u, 0x2000u), 0, 0x2000u);
     descriptor = openPSX(path, 1u);
     if (descriptor < 0)
@@ -395,35 +398,42 @@ void dr_startup(void)
     static const PsxPadCallbackBinding pad_callbacks[] = {{0x8004F5ACu, psx_pad_owner_cleanup}, {0x800585CCu, dr_pad_owner_begin}};
     SpuMallocGuestBinding heap_binding = {0x8005FF98u, 0x8005FFA0u, 0x8005FFD0u, 0x8005FFD4u, 0x8005FFD8u, 0x8005FF08u, 0x8005FF0Cu};
     SpuNativeTransferGuestBinding transfer_binding = {0x8005FF00u, 0x8005FF8Cu, 0x8005FF88u, 0x8005FFA4u, 0x8005FFA8u, 0x8005FFC4u, 0x8005FFC8u, 0u};
-    char *program_path;
+#if defined(_WIN32)
     char directory[1024];
     char *separator;
+    DWORD directory_length;
+#endif
+    CdlFILE initial_stream;
     const PSX_EXE executable = {"DATA/SLUS_009.69", 0x80010000u, 0x80065194u, 0x8008B434u, 0x8005E7F8u, 0x8008B434u, 0x0076CBC4u};
-    if (!_get_pgmptr(&program_path) && strlen(program_path) < sizeof(directory))
+#if defined(_WIN32)
+    directory_length = GetModuleFileNameA(NULL, directory, sizeof(directory));
+    if (!directory_length || directory_length >= sizeof(directory))
     {
-        strcpy(directory, program_path);
+        xport_set_exit_code(2);
+        return;
+    }
+    {
         separator = strrchr(directory, '\\');
         if (separator)
         {
             *separator = 0;
-            if (_chdir(directory))
+            if (!SetCurrentDirectoryA(directory))
             {
                 xport_set_exit_code(2);
                 return;
             }
         }
     }
+#endif
+    /* Disable frame skipping for this project */
+    gpu_set_frame_skip(0);
+#if defined(_WIN32) && !defined(XPORT_XCRT)
     _set_abort_behavior(0u, _WRITE_ABORT_MSG | _CALL_REPORTFAULT);
+#endif
     if (!xport_psx_exe_load(&executable))
     {
         xport_set_exit_code(2);
         xport_message_error("Demolition Racer", "Cannot load DATA/SLUS_009.69");
-        return;
-    }
-    if (!cd_mount_cue("../iso/Demolition Racer (USA).cue"))
-    {
-        xport_set_exit_code(2);
-        xport_message_error("Demolition Racer", "Cannot mount configured game disc");
         return;
     }
     if (!spu_bind_malloc_guest(&heap_binding))
@@ -444,6 +454,8 @@ void dr_startup(void)
     psx_pad_bind_callbacks(pad_callbacks, sizeof(pad_callbacks) / sizeof(pad_callbacks[0]));
     /* Original card patch destinations derived from the active BIOS handlers */
     psx_bios_bind_card_patches(0x800582D8u, 0x80058348u, 0x8005835Cu, 0x6444u, 0x4D98u);
+    /* Provide the CD API with an extracted stream before CdInit */
+    dr_data_stream(&initial_stream, "PRES.XA");
     sub_80015E38();
 }
 
@@ -568,7 +580,7 @@ sint32 sub_8003909C(void)
         w_u8(0x80064EA0u, 0u);
         w_u32(0x80065110u, 1u);
     }
-    return printf((const char *)psx_addr(0x80011FF4u, 1u), 2044);
+    return draft_agent1_missing_diagnostic((const char *)psx_addr(0x80011FF4u, 1u), 2044);
 }
 
 uint32 sub_80012D58(void)
@@ -759,7 +771,7 @@ void sub_80012C3C(void)
         if (target)
         {
             /* TODO: Translate the original optional cheat callback */
-            fprintf(stderr, "Untranslated cheat callback %08X\n", target);
+            draft_agent1_missing_diagnostic("Untranslated cheat callback %08X\n", target);
             abort();
         }
         sequence = r_u32(0x80064A5Cu);
@@ -891,9 +903,7 @@ static uint32 dr_body_quarter(uint32 value)
 
 static void dr_body_detach(uint32 player, uint32 object, uint32 side)
 {
-    /* TODO: Translate full 34C74 and its detached-object dependencies */
-    fprintf(stderr, "Untranslated body detachment 80034C74: %08X %08X %08X\n", player, object, side);
-    abort();
+    sub_80034C74(player, object, side);
 }
 
 static void dr_body_panel(uint32 player, uint32 object, uint32 side, uint32 impulse, uint32 drag, uint8 *flags)

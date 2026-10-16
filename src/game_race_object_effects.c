@@ -31,7 +31,7 @@ void game_800ADCE8(uint32 object, uint32 mask)
         if (!dr_track_normal((const uint8 *)psx_addr(object, 10u), (const sint32 *)psx_addr(object + 12u, 12u), normal))
         {
             /* TODO Original normal output is undefined when the track helper rejects the cell */
-            fprintf(stderr, "TODO ADCE8 unresolved track normal object=%08X\n", object);
+            draft_agent1_missing_diagnostic("TODO ADCE8 unresolved track normal object=%08X\n", object);
             abort();
         }
         x = (uint32)(sint32)normal[0];

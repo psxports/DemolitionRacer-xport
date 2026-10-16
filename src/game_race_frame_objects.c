@@ -17,7 +17,7 @@ uint32 sub_8002DC38(uint32 state, uint32 position, uint32 output);
 static void object_pending(uint32 target, uint32 object, uint32 second, uint32 third, uint32 fourth)
 {
     /* TODO: Translate the full original object callee when reached */
-    fprintf(stderr, "Untranslated frame object %08X(%08X,%08X,%08X,%08X)\n", target, object, second, third, fourth);
+    draft_agent1_missing_diagnostic("Untranslated frame object %08X(%08X,%08X,%08X,%08X)\n", target, object, second, third, fourth);
     abort();
 }
 

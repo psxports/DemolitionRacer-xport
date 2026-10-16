@@ -27,12 +27,12 @@ static uint32 collision_divide(uint32 a, uint32 b)
 {
     if (!b)
     {
-        fprintf(stderr, "GAME91A6C original DIV break7\n");
+        draft_agent1_missing_diagnostic("GAME91A6C original DIV break7\n");
         abort();
     }
     if (a == 0x80000000u && b == 0xFFFFFFFFu)
     {
-        fprintf(stderr, "GAME91A6C original DIV break6\n");
+        draft_agent1_missing_diagnostic("GAME91A6C original DIV break6\n");
         abort();
     }
     return (uint32)((sint32)a / (sint32)b);
@@ -40,7 +40,7 @@ static uint32 collision_divide(uint32 a, uint32 b)
 
 static void collision_pending(uint32 target, uint32 a, uint32 b, uint32 c)
 {
-    fprintf(stderr, "TODO GAME %08X(%08X,%08X,%08X)\n", target, a, b, c);
+    draft_agent1_missing_diagnostic("TODO GAME %08X(%08X,%08X,%08X)\n", target, a, b, c);
     abort();
 }
 

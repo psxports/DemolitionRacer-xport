@@ -11,7 +11,7 @@ static uint32 model_divide(uint32 numerator, uint32 denominator)
 {
     if (!denominator || (numerator == 0x80000000u && denominator == ~0u))
     {
-        fprintf(stderr, "PRES model renderer original DIV trap\n");
+        draft_agent1_missing_diagnostic("PRES model renderer original DIV trap\n");
         abort();
     }
     return (uint32)((sint32)numerator / (sint32)denominator);
@@ -180,7 +180,7 @@ void sdk_model_80050D50(uint32 model)
             return;
         if (kind > 3u)
         {
-            fprintf(stderr, "Unsupported original 50D50 primitive group %u\n", kind);
+            draft_agent1_missing_diagnostic("Unsupported original 50D50 primitive group %u\n", kind);
             abort();
         }
         record_size = kind < 2u ? 20u : (kind == 2u ? 44u : 56u);

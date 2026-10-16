@@ -4,7 +4,20 @@
 #include "psx.h"
 #include "xport.h"
 
+sint32 draft_agent1_missing_diagnostic(const char *format, ...);
+uint32 dr_data_read(const char *path, uint32 destination, uint32 capacity);
+uint32 dr_data_catalog(void);
+CdlFILE *dr_data_stream(CdlFILE *result, const char *path);
+void dr_data_stream_position(uint8 *position);
+
 /* Unverified draft interfaces frozen before translation */
+void sub_80034C74(uint32 player, uint32 object, uint32 side);
+uint32 sub_800218CC(void);
+uint32 sub_80021B24(uint32 font, uint32 initial_selection);
+uint32 sub_80021DB8(void);
+uint32 sub_80023B58(uint32 slot);
+uint32 sub_80023BD4(uint32 slot);
+uint32 sub_800247DC(uint32 slot);
 /* TODO: Integrate modules and reconcile legacy forward declarations separately */
 
 void sub_80015074(uint32 source, uint32 destination, sint32 capacity);
@@ -35,6 +48,16 @@ uint32 sub_8001F8FC(uint32 voice, sint32 frequency, sint32 pan, sint32 volume);
 sint32 sub_8001FE94(void);
 sint32 sub_8001FEF4(void);
 uint32 sub_8001FF98(void);
+uint32 sub_8001BAC0(uint32 buffer);
+uint32 sub_8001BBB4(uint32 buffer);
+void sub_8003997C(uint32 buffer);
+uint32 game_8009076C(void);
+void game_800A730C(uint32 player, uint32 port);
+void game_800A9E24(void);
+uint32 sub_8001F354(void);
+uint32 sub_8001CD48(void);
+void sub_8001E51C(uint32 voice);
+uint32 sub_8001FF6C(void);
 sint32 sub_800200E0(void);
 sint32 sub_800201EC(uint32 path, uint32 channel);
 uint32 sub_80020430(uint32 index);
@@ -44,6 +67,16 @@ uint32 sub_80023C2C(uint32 card_slot);
 uint32 sub_80023F78(uint32 index);
 sint32 sub_80023FDC(uint32 index);
 uint32 sub_80024A30(uint32 port);
+uint32 sub_80024D60(uint32 font, uint32 initial_selection);
+uint32 sub_80028390(void);
+uint32 sub_800286BC(void);
+uint32 sub_800272F0(void);
+uint32 sub_800294BC(void);
+uint32 sub_800254DC(void);
+uint32 sub_80025410(uint32 track);
+uint32 sub_8002ABE4(void);
+uint32 sub_8002AD28(void);
+uint32 sub_8002BDE8(uint32 restore);
 uint32 sub_8002B4B0(void);
 uint32 sub_8002B6AC(void);
 uint32 sub_8002B6CC(void);
@@ -146,6 +179,10 @@ uint32 sub_8002F78C(uint32 angles, uint32 positions, uint32 heights);
 uint32 sub_8002F860(uint32 angles, uint32 positions, uint32 heights);
 uint32 dr_race_motion_sqrt(uint32 value);
 uint32 dr_pair_squared_distance(const VECTOR *vector);
+uint32 sub_80015780(uint32 player, uint32 type, uint32 position);
+uint32 sub_80015968(uint32 position);
+uint32 sub_8002FEF4(uint32 player);
+void dr_effect_model_native(uint32 model, uint32 angles, const VECTOR *velocity, sint32 flags);
 uint32 dr_pair_sqrt_q12(sint32 value);
 uint32 sub_8001CF18(uint32 owner, sint32 strength, const VECTOR *position);
 uint32 sub_8001EA08(uint32 sound, sint32 voice, sint32 volume, sint32 frequency, const VECTOR *position);
@@ -241,6 +278,7 @@ uint32 sub_8001D070(uint32 classification, uint32 strength, uint32 player);
 void game_800ADCE8(uint32 object, uint32 mask);
 void game_800AAA94(uint32 object, uint32 position, sint32 angle, sint32 penetration);
 void game_800A81F0(uint32 packet, uint32 frames);
+uint32 game_800A83FC(uint32 position, uint32 velocity, uint32 acceleration, uint32 callback, uint32 interval, uint32 lifetime);
 void game_800A8DD8(uint32 object);
 void game_800B1804(uint32 object, uint32 strength);
 void game_800B1A70(uint32 object, uint32 strength);

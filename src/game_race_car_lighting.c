@@ -10,7 +10,7 @@ static uint32 light_div(uint32 a, uint32 b)
 {
     if (!b || (b == 0xFFFFFFFFu && a == 0x80000000u))
     {
-        fprintf(stderr, "Original lighting division exception\n");
+        draft_agent1_missing_diagnostic("Original lighting division exception\n");
         abort();
     }
     return (uint32)((sint32)a / (sint32)b);
@@ -150,7 +150,7 @@ void game_8009E320(uint32 object)
             uint32 mode = L8(descriptor + 26u), points[3][3];
             if (mode > 2u)
             {
-                fprintf(stderr, "Original lighting selects undefined local points: %u\n", mode);
+                draft_agent1_missing_diagnostic("Original lighting selects undefined local points: %u\n", mode);
                 abort();
             }
             for (lane = 0u; lane < 3u; ++lane)

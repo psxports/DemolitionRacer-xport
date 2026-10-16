@@ -16,7 +16,7 @@ uint32 draft_agent3_missing_8004BB74(const void *attributes);
 
 static void dr_missing(const char *name)
 {
-    fprintf(stderr, "Missing native implementation: %s\n", name);
+    draft_agent1_missing_diagnostic("Missing native implementation: %s\n", name);
     xport_message_error("Demolition Racer: missing implementation", name);
     abort();
 }
@@ -91,6 +91,9 @@ static void dr_validate_gpu_packet(uint32 address, uint32 words)
             break;
         case 0x3Cu:
             minimum = 12u;
+            break;
+        case 0x50u:
+            minimum = 4u;
             break;
         case 0x40u:
             minimum = 3u;
@@ -182,7 +185,8 @@ void draft_agent1_missing_store_image(uint32 rect, uint32 pixels)
 
 void draft_agent1_missing_palette_update(uint32 colors, uint32 x, uint32 y)
 {
-    LoadClut((uint32 *)psx_addr(colors, 1u), (sint32)x, (sint32)y);
+    PSX_RECT rectangle = {(sint16)x, (sint16)y, 256, 1};
+    LoadImagePSX(&rectangle, (uint32 *)psx_addr(colors, 512u));
 }
 
 sint32 draft_agent1_missing_cd_pause(sint32 mode)
@@ -197,7 +201,10 @@ sint32 draft_agent1_missing_cd_pause(sint32 mode)
 
 sint32 draft_agent1_missing_cd_command(uint32 command, const uint8 *parameters, uint8 *result)
 {
-    return CdControl((uint8)command, (uint8 *)parameters, result);
+    sint32 status = CdControl((uint8)command, (uint8 *)parameters, result);
+    if (command == 16 && status && result)
+        dr_data_stream_position(result);
+    return status;
 }
 
 sint32 draft_agent1_missing_cd_command_wait(uint32 command, const uint8 *parameters)
@@ -224,12 +231,17 @@ void draft_agent1_missing_cd_sector_to_position(uint32 sector, uint8 *position)
 
 sint32 draft_agent1_missing_diagnostic(const char *format, ...)
 {
+#if defined(XPORT_XCRT)
+    (void)format;
+    return 0;
+#else
     va_list arguments;
     sint32 result;
     va_start(arguments, format);
     result = vprintf(format, arguments);
     va_end(arguments);
     return result;
+#endif
 }
 
 uint32 draft_agent1_missing_add_primitives(uint32 ordering_table, uint32 primitive)
@@ -554,7 +566,7 @@ void draft_agent3_missing_dispatch_packet(uint32 target, uint32 packet)
         return;
     }
     /* TODO: Translate each remaining renderer from its complete original CFG */
-    fprintf(stderr, "Untranslated packet renderer %08X for model %08X\n", target, packet);
+    draft_agent1_missing_diagnostic("Untranslated packet renderer %08X for model %08X\n", target, packet);
     dr_missing("Untranslated packet renderer");
 }
 
@@ -650,7 +662,7 @@ void dr_overlay_call(uint32 entry)
         pres_80092410();
         return;
     }
-    sprintf(message, "PRES.BIN entry 0x%08X has no native translation", entry);
+    snprintf(message, sizeof(message), "PRES.BIN entry 0x%08X has no native translation", entry);
     dr_missing(message);
 }
 
@@ -937,7 +949,7 @@ void pres_dispatch_callback1(uint32 target, uint32 object)
         pres_80093D1C(object);
         return;
     }
-    sprintf(message, "TODO: Translate PRES callback1 0x%08X", target);
+    snprintf(message, sizeof(message), "TODO: Translate PRES callback1 0x%08X", target);
     dr_missing(message);
 }
 

@@ -28,7 +28,7 @@ uint32 sub_8002F860(uint32 angles, uint32 positions, uint32 heights);
 static uint32 motion_pending(uint32 target, uint32 first, uint32 second, uint32 third, uint32 count)
 {
     /* TODO: Translate the full GAME or SLUS callee before replacing this boundary */
-    fprintf(stderr, "Untranslated GAME motion %08X (%u arguments): %08X %08X %08X\n", target, count, first, second, third);
+    draft_agent1_missing_diagnostic("Untranslated GAME motion %08X (%u arguments): %08X %08X %08X\n", target, count, first, second, third);
     abort();
 }
 
@@ -276,7 +276,7 @@ static uint32 quaternion_subtract(uint32 first, uint32 second)
     sint64 result = (sint64)(sint32)first - (sint64)(sint32)second;
     if (result < (-2147483647LL - 1LL) || result > 2147483647LL)
     {
-        fprintf(stderr, "Original quaternion signed SUB overflow\n");
+        draft_agent1_missing_diagnostic("Original quaternion signed SUB overflow\n");
         abort();
     }
     return (uint32)result;

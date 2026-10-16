@@ -11,7 +11,7 @@ static sint32 car_sub(uint32 a, uint32 b)
     uint32 result = a - b;
     if (((a ^ b) & (a ^ result) & 0x80000000u) != 0u)
     {
-        fprintf(stderr, "Car packet original signed SUB overflow\n");
+        draft_agent1_missing_diagnostic("Car packet original signed SUB overflow\n");
         abort();
     }
     return (sint32)result;
@@ -22,7 +22,7 @@ static uint32 car_add(uint32 a, uint32 b)
     uint32 result = a + b;
     if ((~(a ^ b) & (a ^ result) & 0x80000000u) != 0u)
     {
-        fprintf(stderr, "Car packet original signed ADD overflow\n");
+        draft_agent1_missing_diagnostic("Car packet original signed ADD overflow\n");
         abort();
     }
     return result;
@@ -85,7 +85,7 @@ void scene_80050700(uint32 packet)
             return;
         if (type >= 4u)
         {
-            fprintf(stderr, "TODO Car50700 primitive table index %u\n", type);
+            draft_agent1_missing_diagnostic("TODO Car50700 primitive table index %u\n", type);
             abort();
         }
         group += 4u;

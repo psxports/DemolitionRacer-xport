@@ -31,7 +31,10 @@ void game_800A7CA8(uint32 count);
 
 uint32 sub_800162A4(void)
 {
-    return (uint32)sprintf((char *)psx_addr(0x8006569Cu, 1u), "LEVEL%d\\", (int32_t)r_u32(RACE_GP + 0x1F8u));
+    char level[20];
+    sint32 length = snprintf(level, sizeof(level), "LEVEL%d\\", (int32_t)r_u32(RACE_GP + 0x1F8u));
+    strcpy((char *)psx_addr(0x8006569Cu, strlen(level) + 1u), level);
+    return (uint32)length;
 }
 
 /* Full original MIPS and complete canonical pseudocode 800161CC */
@@ -67,7 +70,7 @@ uint32 sub_800161CC(void)
 /* TODO: Translate direct dependencies after full callee ABI and loaded-image review */
 static void race_pending0(uint32 entry)
 {
-    fprintf(stderr, "Untranslated race startup dependency 0x%08X\n", entry);
+    draft_agent1_missing_diagnostic("Untranslated race startup dependency 0x%08X\n", entry);
     abort();
 }
 
@@ -87,6 +90,7 @@ static void race_pending3(uint32 entry, uint32 first, uint32 second, uint32 thir
 }
 
 extern uint32 sub_8001DE6C(void);
+uint32 sub_800200B0(void);
 
 /* Full caller algorithm 80014BC4 with explicit unresolved dependency stops */
 uint32 sub_8001488C(void);
@@ -237,9 +241,12 @@ uint32 sub_80014BC4(void)
     w_u32(0x800654C4u, 2u);
     sub_80036914(0x80066D3Cu, 1u, 0u);
     sub_800388AC();
-    sub_8001DE6C();
-    for (index = 0u; index < 13u; ++index)
-        VSync(0);
+    /* Finish native loading without the timed CD fade and thirteen idle fields */
+    value = r_u32(0x80064BF8);
+    w_u32(0x80064BF8, 0);
+    sub_8001FF98();
+    sub_800200B0();
+    w_u32(0x80064BF8, value);
     sub_8001CBE8();
     sub_8001CBAC();
     value = r_u32(RACE_GP + 0x2Cu);
@@ -274,7 +281,7 @@ uint32 sub_8001488C(void)
     char path[64];
     uint32 allocation, bytes, level, fixed, data, sky, index;
     allocation = sub_80042544(0xB0000u);
-    sprintf(path, "%sSTREAM.VRM", (const char *)psx_addr(0x8006569Cu, 1u));
+    snprintf(path, sizeof(path), "%sSTREAM.VRM", (const char *)psx_addr(0x8006569Cu, 1u));
     sub_8004225C(path, allocation, 0xB0000u);
     sub_80015238(allocation);
     sub_8004261C(allocation);
@@ -283,7 +290,7 @@ uint32 sub_8001488C(void)
     sub_8004225C(path, allocation, 0xB0000u);
     sub_80015238(allocation);
     sub_8004261C(allocation);
-    sprintf(path, "%sLEVEL.DAT", (const char *)psx_addr(0x8006569Cu, 1u));
+    snprintf(path, sizeof(path), "%sLEVEL.DAT", (const char *)psx_addr(0x8006569Cu, 1u));
     bytes = sub_800423EC(path, 1u);
     allocation = sub_80042544(bytes);
     w_u32(RACE_GP + 0x7E0u, allocation);
@@ -302,7 +309,7 @@ uint32 sub_8001488C(void)
     allocation = r_u32(fixed + 4u);
     w_u32(RACE_GP + 0x7D4u, data);
     sub_80039A4C(allocation);
-    sprintf(path, "%sSKY%1d.DAT", (const char *)psx_addr(0x8006569Cu, 1u), (int32_t)r_u32(0x800593A4u));
+    snprintf(path, sizeof(path), "%sSKY%1d.DAT", (const char *)psx_addr(0x8006569Cu, 1u), (int32_t)r_u32(0x800593A4u));
     bytes = sub_800423EC(path, 1u);
     sky = sub_80042544(bytes);
     sub_8004225C(path, sky, bytes);
@@ -473,7 +480,11 @@ uint32 sub_8001C9F8(uint32 mode)
     if (mode != 0u)
         strcpy((char *)psx_addr(path + 5u, 1u), "PRES.DAT");
     else
-        sprintf((char *)psx_addr(path + 5u, 1u), "CAR%d.DAT", (int32_t)r_u32(RACE_GP + 0x314u));
+    {
+        char name[20];
+        snprintf(name, sizeof(name), "CAR%d.DAT", (int32_t)r_u32(RACE_GP + 0x314u));
+        strcpy((char *)psx_addr(path + 5u, strlen(name) + 1u), name);
+    }
     path = r_u32(RACE_GP + 0x304u);
     capacity = (sub_80042488((const char *)psx_addr(path, 1u), 1u) + 2047u) & 0xFFFFFE00u;
     buffer = sub_80042544(capacity);
@@ -492,7 +503,7 @@ uint32 sub_8001C9F8(uint32 mode)
             if ((int32_t)bytes <= 0)
                 break;
             sub_8001E20C(data, bytes, (uint32 *)psx_addr(info, 12u));
-            printf("VAG %d Loaded\n", (int32_t)index);
+            draft_agent1_missing_diagnostic("VAG %d Loaded\n", (int32_t)index);
             info += 12u;
             index += 1u;
             data += bytes;
@@ -866,7 +877,7 @@ static uint32 race_signed_divide(uint32 numerator, uint32 denominator)
     return (uint32)((int32_t)numerator / (int32_t)denominator);
 }
 
-/* TODO: Translate GAME B5C60 with its original fifth argument */
+/* Player positioning preserves the original fifth argument */
 uint32 game_800B5C60(uint32 order, uint32 track, uint32 lateral, uint32 flag, uint32 sequence);
 
 /* Full original MIPS and complete canonical pseudocode 80014544 */
@@ -1246,7 +1257,7 @@ uint32 game_800B5C60(uint32 order, uint32 track, uint32 lateral, uint32 flag, ui
     w_u32(0x80066D94u + offset, game_800B5790((uint32)(int32_t)(int16_t)r_u16(position)) << 8);
     if (flag != 0u)
     {
-        printf("%s", (const char *)psx_addr(0x8008BC9Cu, 1u));
+        draft_agent1_missing_diagnostic("%s", (const char *)psx_addr(0x8008BC9Cu, 1u));
         w_u32(0x80066D94u + offset, r_u32(0x80066D94u + offset) + 0x80000u);
     }
     sub_800168C8(order);
@@ -1305,12 +1316,12 @@ uint32 game_800B44F0(void)
     if (r_u32(0x800593A0u) == 0u)
     {
         uint32 bytes, buffer;
-        sprintf(path, "%sLEFT.TRK", (const char *)psx_addr(0x8006569Cu, 1u));
+        snprintf(path, sizeof(path), "%sLEFT.TRK", (const char *)psx_addr(0x8006569Cu, 1u));
         bytes = sub_800423EC(path, 1u);
         buffer = sub_80042544(bytes);
         w_u32(0x800C7690u, buffer);
         sub_8004225C(path, buffer, bytes);
-        sprintf(path, "%sRIGHT.TRK", (const char *)psx_addr(0x8006569Cu, 1u));
+        snprintf(path, sizeof(path), "%sRIGHT.TRK", (const char *)psx_addr(0x8006569Cu, 1u));
         bytes = sub_800423EC(path, 1u);
         buffer = sub_80042544(bytes);
         w_u32(0x800C7694u, buffer);
@@ -1397,7 +1408,7 @@ static void race_load_circuit(void)
 {
     char path[256];
     uint32 bytes, buffer;
-    sprintf(path, "%sCIR%d.DAT", (const char *)psx_addr(0x8006569Cu, 1u), (int32_t)r_u32(0x80064C08u));
+    snprintf(path, sizeof(path), "%sCIR%d.DAT", (const char *)psx_addr(0x8006569Cu, 1u), (int32_t)r_u32(0x80064C08u));
     bytes = sub_800423EC(path, 1u);
     buffer = sub_80042544(bytes);
     w_u32(0x800C7D58u, buffer);

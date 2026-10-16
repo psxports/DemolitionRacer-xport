@@ -257,7 +257,7 @@ void pres_800957C0(uint32 object)
     else
     {
         /* Original S2 is undefined for an unsupported game mode */
-        fprintf(stderr, "Unsupported original vehicle selection mode %u\n", mode);
+        draft_agent1_missing_diagnostic("Unsupported original vehicle selection mode %u\n", mode);
         abort();
     }
     pres_800A0240(locks[selected] == 0u ? 16 : 8, 0x800AD860u + S32(0x800AD7A8u) * 68u);
