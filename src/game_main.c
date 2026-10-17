@@ -246,7 +246,9 @@ void sub_80015E38(void)
     sub_80047C94(0x801FFFF0u, 16u, 16u);
     ResetCallback();
     VSyncCallback(dr_native_scanout);
+#if !defined(AP_WEB)
     CdInit();
+#endif
     sub_8002BC5C(0x800597C4u);
     ResetGraph(0);
     SetGraphDebug(0);

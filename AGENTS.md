@@ -23,7 +23,19 @@ Resolve `[XPORT_ROOT]` from `xport-project.json` and read `[XPORT_ROOT]/AGENTS.m
 - The reviewed CUE contains one MODE2/2352 data track and no AUDIO tracks; Red Book conversion is disabled
 - GPU graph-type byte: `SLUS_009.69:0x8005CC28`, referenced by original ResetGraph `0x8003D630` and SetGraphDebug `0x8003D7A4`; listings: `orig/images/SLUS_009.69/functions/8003D630.mips.txt`, `orig/images/SLUS_009.69/functions/8003D7A4.mips.txt`
 - Native movies use the original MOVPLAY controller through shared PsyQ STR/VLC/MDEC; `sub_8002BC5C` loads and executes the native movie entry
-- Menu and race music use XA ADPCM from the raw disc; CD/SPU routing is initialized by CdInit and CdReset(1); media evidence: `status/draft-c/native-media-runtime-evidence.json`
+- Native menu and race music use extracted DATA/*.XA streams; CD/SPU routing is initialized by CdInit and CdReset(1); media evidence: `status/draft-c/native-media-runtime-evidence.json`
 
 
-- Native launch repair routing and current limitations: `status/draft-c/native-launch-latest.json`; current movie/music integration: `status/draft-c/native-media-latest.json`
+- Native launch repair routing and current limitations: `status/draft-c/native-launch-latest.json`; current movie/music integration: `status/draft-c/native-media-latest.json`; folder loading contract: `status/draft-c/data-folder-release.json`
+
+- Native frame skipping is disabled at dr_startup with gpu_set_frame_skip(0)
+
+- Final Release uses shared xcrt.c; build and runtime evidence, restored paths and explicit limitations: `status/draft-c/final-release-evidence.json`
+
+- Native two-player restoration and current runtime scope: `status/draft-c/two-player-evidence.json`
+
+- Native league qualification and next-stage routing, exercised with original finish-cheat input: `status/draft-c/league-advancement-evidence.json`
+
+- Native resources use xport_fopen under bin/DATA; DD.IDX supplies file sizes, extracted resource files supply payloads, and XA/STR use cd_mount_stream_file; CUE/BIN and DD.DAT are not runtime dependencies
+
+- Web Release: build with `make CONFIG=Release` in `src/platform/web`; output `../.github/site/DR`; AP_WEB uses MUSIC/1.WAV..16.WAV through RedBook, XA and STR are excluded; evidence: `status/draft-c/web-redbook-release.json`

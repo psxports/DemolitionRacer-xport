@@ -1,5 +1,8 @@
 #include "draft_signatures.h"
 #include <string.h>
+#if defined(AP_WEB)
+#include <stdlib.h>
+#endif
 
 /* Unverified draft bodies; dependencies remain declarations */
 /* TODO: Supply native-buffer adapters without guest stack emulation */
@@ -77,6 +80,10 @@ uint32 sub_8001FF98(void)
 
 sint32 sub_800200E0(void)
 {
+#if defined(AP_WEB)
+    /* RedBook playback repeats in the shared mixer without XA position polling */
+    return 0;
+#else
     uint32 previous = r_u32(0x80064D38u);
     sint32 result = (sint32)previous < 61;
     w_u32(0x80064D38u, previous + 1u);
@@ -119,10 +126,31 @@ sint32 sub_800200E0(void)
         }
     }
     return result;
+#endif
 }
 
 sint32 sub_800201EC(uint32 path, uint32 channel)
 {
+#if defined(AP_WEB)
+    SpuCommonAttr routing = {0};
+    sint32 track = (sint32)r_u32(0x800652CCu) + 1;
+    (void)path;
+    (void)channel;
+    if (track < 1 || track > 16)
+        abort();
+    routing.mask = SPU_COMMON_CDVOLL | SPU_COMMON_CDVOLR | SPU_COMMON_CDMIX;
+    routing.cd.volume.left = routing.cd.volume.right = 0x3FFF;
+    routing.cd.mix = 1;
+    SpuSetCommonAttr(&routing);
+    CdControl(CdlDemute, NULL, NULL);
+    sub_8001FF98();
+    if (!CdPlay(1, &track, 0))
+    {
+        xport_message_error("Demolition Racer", "Cannot play MUSIC track");
+        abort();
+    }
+    return sub_8001FEF4();
+#else
     uint8 file[24], mode[8], parameters[8], position[8], volume[4];
     uint32 start, end, track;
     sint32 bytes;
@@ -150,6 +178,7 @@ sint32 sub_800201EC(uint32 path, uint32 channel)
     draft_agent1_volume(volume);
     sub_8004B89C(volume);
     return sub_8001FEF4();
+#endif
 }
 
 sint32 sub_80023FDC(uint32 index)

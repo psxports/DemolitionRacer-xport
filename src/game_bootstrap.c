@@ -247,8 +247,12 @@ void sub_8002B2FC(void)
 
 uint32 sub_800200B0(void)
 {
+#if defined(AP_WEB)
+    return (uint32)CdControl(CdlStop, NULL, NULL);
+#else
     uint8 parameter = 0x80u;
     return (uint32)CdControlBPSX(14u, &parameter, NULL);
+#endif
 }
 
 uint32 sub_8001DE6C(void)
@@ -403,7 +407,9 @@ void dr_startup(void)
     char *separator;
     DWORD directory_length;
 #endif
+#if !defined(AP_WEB)
     CdlFILE initial_stream;
+#endif
     const PSX_EXE executable = {"DATA/SLUS_009.69", 0x80010000u, 0x80065194u, 0x8008B434u, 0x8005E7F8u, 0x8008B434u, 0x0076CBC4u};
 #if defined(_WIN32)
     directory_length = GetModuleFileNameA(NULL, directory, sizeof(directory));
@@ -454,8 +460,10 @@ void dr_startup(void)
     psx_pad_bind_callbacks(pad_callbacks, sizeof(pad_callbacks) / sizeof(pad_callbacks[0]));
     /* Original card patch destinations derived from the active BIOS handlers */
     psx_bios_bind_card_patches(0x800582D8u, 0x80058348u, 0x8005835Cu, 0x6444u, 0x4D98u);
+#if !defined(AP_WEB)
     /* Provide the CD API with an extracted stream before CdInit */
     dr_data_stream(&initial_stream, "PRES.XA");
+#endif
     sub_80015E38();
 }
 

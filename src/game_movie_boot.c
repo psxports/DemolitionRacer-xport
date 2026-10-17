@@ -6,7 +6,7 @@ extern void sub_800437BC(void);
 
 uint32 sub_8002BC5C(uint32 movie_descriptor)
 {
-#if defined(__EMSCRIPTEN__)
+#if defined(AP_WEB)
     /* STR movies are excluded by the shared web packager */
     (void)movie_descriptor;
     return 0u;

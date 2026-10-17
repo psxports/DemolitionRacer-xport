@@ -1,4 +1,8 @@
 {
+  "github": {
+    "repository": "psxports/DemolitionRacer-xport",
+    "branch": "main"
+  },
   "schema": 1,
   "name": "Demolition Racer",
   "short_name": "DR",
