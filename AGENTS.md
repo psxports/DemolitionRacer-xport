@@ -28,8 +28,6 @@ Resolve `[XPORT_ROOT]` from `xport-project.json` and read `[XPORT_ROOT]/AGENTS.m
 
 - Native launch repair routing and current limitations: `status/draft-c/native-launch-latest.json`; current movie/music integration: `status/draft-c/native-media-latest.json`; folder loading contract: `status/draft-c/data-folder-release.json`
 
-- Native frame skipping is disabled at dr_startup with gpu_set_frame_skip(0)
-
 - Final Release uses shared xcrt.c; build and runtime evidence, restored paths and explicit limitations: `status/draft-c/final-release-evidence.json`
 
 - Native two-player restoration and current runtime scope: `status/draft-c/two-player-evidence.json`
@@ -39,3 +37,9 @@ Resolve `[XPORT_ROOT]` from `xport-project.json` and read `[XPORT_ROOT]/AGENTS.m
 - Native resources use xport_fopen under bin/DATA; DD.IDX supplies file sizes, extracted resource files supply payloads, and XA/STR use cd_mount_stream_file; CUE/BIN and DD.DAT are not runtime dependencies
 
 - Web Release: build with `make CONFIG=Release` in `src/platform/web`; output `../.github/site/DR`; AP_WEB uses MUSIC/1.WAV..16.WAV through RedBook, XA and STR are excluded; evidence: `status/draft-c/web-redbook-release.json`
+
+- Shared runtime owns display presentation; no additional project gpu_present VBlank callback is registered; repair and web menu timing: `status/draft-c/web-presentation-performance.json`
+
+- NTSC build timing: FIELD_RATE=60 in Windows Debug/Release and Web Release; Windows x86 XCRT also links shared xcrt_x86.asm; build receipt: `status/draft-c/ntsc60-builds.json`
+
+- Vehicle callback 0x80090F14 restored after attract-mode crash; web PCM catch-up output is age-bounded in the shared backend; current build and verification limits: `status/draft-c/web-demo-audio-fix.json`

@@ -31,7 +31,6 @@ sint32 StopCallback(void);
 sint32 Exec(uint32 guest_header, uint32 argc, uint32 argv);
 uint32 ReadInitPadFlag(void);
 sint32 sub_80047C94(uint32 first, uint32 second, uint32 third);
-void dr_native_scanout(void);
 sint32 CdInit(void);
 sint32 randPSX(void);
 sint32 sub_8004BA44(uint32 position);
@@ -245,7 +244,6 @@ void sub_80015E38(void)
         w_u32(0x8005E7F4u, 1u);
     sub_80047C94(0x801FFFF0u, 16u, 16u);
     ResetCallback();
-    VSyncCallback(dr_native_scanout);
 #if !defined(AP_WEB)
     CdInit();
 #endif

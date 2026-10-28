@@ -123,7 +123,7 @@ uint32 sub_8002AD28(void)
     PSX_RECT image_rect = {0, 0, 320, 256};
     PSX_RECT background_rect = {704, 0, 320, 256};
     char path[64];
-    uint32 buffer, special = 0, value, result;
+    uint32 buffer, special = 0, value, result, saved = 0;
     sint32 random, divisor;
     sub_800399D4();
     sub_80039908();
@@ -188,7 +188,21 @@ uint32 sub_8002AD28(void)
                     R32(0x80065074) = 666;
                 break;
             case 3:
-                switch (sub_800286BC())
+                value = sub_800286BC();
+                if (!saved && !R32(0x80065110) && !R32(0x80064B5C))
+                {
+                    /* Capture league continuation after qualification and unlocks */
+                    if (R32(0x80059738) >= 7 && R32(0x80059738) < 12)
+                    {
+                        R32(0x80078CA8) = R8(0x8005A791 + (R32(0x80059738) << 4) + R32(0x80065200)) == 255 ? 0 : 1;
+                        R32(0x80065244) = R32(0x80065200) + (R32(0x80064ED4) == 1 ? 1 : 0);
+                        sub_8002BDE8(0);
+                    }
+                    if (sub_800247DC(0) != 1)
+                        draft_agent1_missing_diagnostic("Unable to save race progress\n");
+                    saved = 1;
+                }
+                switch (value)
                 {
                     case 1:
                         if (!R32(0x80064ED4))
@@ -205,9 +219,6 @@ uint32 sub_8002AD28(void)
                         R32(0x80064EC4) = 1;
                         R32(0x80065074) = 1;
                         break;
-                    case 4:
-                        R32(0x80065074) = 5;
-                        break;
                     case 5:
                         R32(0x80065074) = 7;
                         break;
@@ -222,26 +233,6 @@ uint32 sub_8002AD28(void)
                 break;
             case 4:
                 if (sub_800272F0() == 1)
-                    R32(0x80065074) = 3;
-                break;
-            case 5:
-                R32(0x80064E58) = 320;
-                R32(0x80064E60) = 1;
-                R32(0x80064E68) = 0;
-                R32(0x80065074) = 6;
-                break;
-            case 6:
-                R32(0x80064BEC) = R32(0x80064E68) == 5;
-                R32(0x80064BD8) = 1;
-                sub_80021DB8();
-                if (R32(0x80065020) == 1)
-                {
-                    value = R32(0x80078CA8);
-                    R32(0x80065020) = 0;
-                    if (value == 1)
-                        sub_8002BDE8(1);
-                }
-                if (sub_80028390())
                     R32(0x80065074) = 3;
                 break;
             case 7:

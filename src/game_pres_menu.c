@@ -290,48 +290,12 @@ void pres_80093D1C(uint32 object)
     uint32 state;
     w_u16(0x800AD896u + r_u32(0x800AD7A8u) * 68u, r_u32(0x8006553Cu) == 255u ? 1u : 0u);
     state = r_u32(0x80064BDCu);
-    if (state == 0u)
+    if (state < 3u)
     {
-        uint32 card_one = r_u32(0x80075704u);
-        uint32 card_two = r_u32(0x80075708u);
-        if (card_one == 1u && card_two == 1u && sub_80023F78(0u) != 0u)
-        {
-            w_u32(0x80064BDCu, card_two);
-            pres_800A0240(512u, 0x800AD860u + r_u32(0x800AD6B8u) * 68u);
-        }
-        else
-        {
-            uint32 countdown = r_u32(0x800A31D4u);
-            if (countdown == 0u)
-            {
-                w_u32(0x80064BDCu, 3u);
-                pres_card_hide_four();
-            }
-            else
-            {
-                w_u32(0x800A31D4u, countdown - 1u);
-                if (r_u32(0x80075704u) == 0u)
-                {
-                    pres_800A0240(512u, 0x800AD8A4u + r_u32(0x800AD6B8u) * 68u);
-                    pres_800A0240(512u, 0x800AD92Cu + r_u32(0x800AD6B8u) * 68u);
-                }
-                else if (sub_80023FDC(0u) == 1)
-                {
-                    pres_800A0240(512u, 0x800AD8E8u + r_u32(0x800AD6B8u) * 68u);
-                    pres_800A0240(512u, 0x800AD92Cu + r_u32(0x800AD6B8u) * 68u);
-                }
-            }
-        }
-    }
-    else if (state == 1u)
-    {
-        w_u32(0x80064BDCu, 2u);
-    }
-    else if (state == 2u)
-    {
+        /* Load once on entry without memory-card polling or its countdown */
         sub_800246B0(0u);
         w_u32(0x80064BDCu, 3u);
-        pres_800A0240(16u, 0x800AD860u + r_u32(0x800AD6B8u) * 68u);
+        pres_card_hide_four();
     }
     if ((r_u16(0x80065524u) & 0x4008u) != 0u && r_u32(0x800ABB48u) == 0u)
     {

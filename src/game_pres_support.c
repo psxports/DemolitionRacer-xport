@@ -402,10 +402,7 @@ void pres_8009880C(void)
 
 void pres_80093CC0(void)
 {
-    uint32 state = P32(0x80064BDCu);
     P32(0x800A31D4u) = 300u;
-    if (!state && sub_80024A30(P32(0x80064E74u)) == 0u)
-        sub_80024A30(P32(0x80064E74u));
 }
 
 void pres_8009B3E0(void)
@@ -506,7 +503,22 @@ void pres_8009EF04(uint32 mode)
         P32(0x800AD568u + index * 4u) = 0u;
     P32(0x800AD688u) = 0u;
     for (index = 0u, offset = 0u; (sint32)index < (sint32)P32(descriptor + 12u); ++index, offset += 48u)
-        pres_8009C35C(P32(descriptor + 8u) + offset);
+    {
+        object = P32(descriptor + 8u) + offset;
+        /* Omit LOAD/SAVE and SCREEN CONFIGURATION from navigation and rendering */
+        if (mode == 2u && (r_u32(object + 4u) == 0x800A34C8u || r_u32(object + 4u) == 0x800A35A0u))
+            continue;
+        pres_8009C35C(object);
+        if (mode == 2u && (r_u16(object + 2u) & 4u))
+        {
+            /* Close the removed rows while keeping the four options centered */
+            value = r_u32(object + 4u) == 0x800A3548u ? 0u : 24u;
+            pointer = r_u32(0x800AD860u + (r_u32(0x800AD830u) - 1u) * 68u);
+            w_u16(pointer + 20u, r_u16(pointer + 20u) - value);
+            w_u16(pointer + 28u, r_u16(pointer + 28u) - value);
+            w_u16(pointer + 36u, r_u16(pointer + 36u) - value);
+        }
+    }
     count = P32(0x800AD6C0u);
     for (index = 0u; (sint32)index < (sint32)count; ++index)
     {
@@ -523,6 +535,8 @@ void pres_8009EF04(uint32 mode)
     if (value != 17u)
     {
         value = P8(0x80078A78u + value);
+        if (mode == 2u && value >= r_u32(0x800AD688u))
+            value = 0u;
         P32(0x800AD668u) = value;
         P32(0x800AD560u) = value;
     }
@@ -1589,6 +1603,10 @@ void pres_8009DA08(void)
         switch (type)
         {
             case 0u:
+                data = r_u32(object + 4u);
+                /* Hide the two missing-card warning labels in the main menu */
+                if (r_u32(0x800ABB80u) == 0u && (data == 0x800A2B08u || data == 0x800A2C40u))
+                    break;
                 data = P32(P32(P32(entry) + 4u));
                 y = P32(entry + 24u) + (uint32)(sint32)(sint8)P8(0x800A21D8u + (data & 0x7Fu) * 144u);
                 if (P32(0x800AD568u + (P32(0x800AD668u) << 2)) == entry && P32(0x800AD884u + P32(0x800AD564u) * 68u) == 4096u && (sint16)P16(entry + 54u) == 0)

@@ -99,8 +99,8 @@ uint32 sub_800286BC(void)
 {
     static const uint32 tables[11] = {0x800117FC, 0x8001183C, 0x8001185C, 0x80011890, 0x800118B0, 0x80011178, 0x800118E0, 0x80011950, 0x800119BC, 0x80011A20, 0x80011A34};
     static const uint8 ordinary[4] = {5, 7, 6, 8};
-    static const uint8 success[5] = {5, 6, 8, 9, 10};
-    static const uint8 failure[5] = {4, 6, 8, 9, 10};
+    static const uint8 success[4] = {5, 6, 8, 10};
+    static const uint8 failure[4] = {4, 6, 8, 10};
     uint32 labels[11][5], table, language, threshold = 0, count = 4, base = 10, index, mode, position;
     const uint8 *items = ordinary;
     char text[64];
@@ -157,7 +157,7 @@ uint32 sub_800286BC(void)
         length = (size_t)snprintf(text, sizeof(text), "%s ", (const char *)psx_addr(labels[3][R32(0x80064B8C)], 1));
         results_menu_ordinal(text + length, sizeof(text) - length, threshold | 1, threshold, R32(0x80064B8C));
         results_menu_center(text, 56);
-        count = 5;
+        count = 4;
         base = 0;
     }
     for (index = 0; index < count; ++index)
@@ -171,6 +171,10 @@ uint32 sub_800286BC(void)
     if ((R16(0x80065524) & 0x10) && R8(0x80065028))
         --R8(0x80065028);
     if (R16(0x80065524) & 0x4000)
-        return base + R8(0x80065028) + 1;
+    {
+        /* Preserve command IDs after removing the league LOAD/SAVE item */
+        index = R8(0x80065028);
+        return base + index + 1 + (base == 0 && index >= 3);
+    }
     return base;
 }

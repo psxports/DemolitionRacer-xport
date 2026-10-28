@@ -31,6 +31,9 @@
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+    <Import Project="$(VCTargetsPath)\BuildCustomizations\masm.props" />
+  </ImportGroup>
   <PropertyGroup>
     <OutDir>$(ProjectDir)..\..\..\bin\</OutDir>
     <IntDir>$(ProjectDir)..\..\..\_build\x86\$(Configuration)\</IntDir>
@@ -51,7 +54,7 @@
       <TreatWarningAsError>true</TreatWarningAsError>
       <DisableSpecificWarnings>4100;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>GAPI_OGL;_CRT_SECURE_NO_WARNINGS;FULL_NAME="Demolition Racer";WND_TITLE="Demolition Racer (xport)";WND_WIDTH=960;WND_HEIGHT=720;FIELD_RATE=50;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GAPI_OGL;_CRT_SECURE_NO_WARNINGS;FULL_NAME="Demolition Racer";WND_TITLE="Demolition Racer (xport)";WND_WIDTH=960;WND_HEIGHT=720;FIELD_RATE=60;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(ProjectDir)..\..;$(ProjectDir)..\..\..\..\xport\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <CompileAs>CompileAsC</CompileAs>
       <Optimization>Disabled</Optimization>
@@ -74,7 +77,7 @@
       <TreatWarningAsError>true</TreatWarningAsError>
       <DisableSpecificWarnings>4100;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>GAPI_OGL;_CRT_SECURE_NO_WARNINGS;FULL_NAME="Demolition Racer";WND_TITLE="Demolition Racer (xport)";WND_WIDTH=960;WND_HEIGHT=720;FIELD_RATE=50;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GAPI_OGL;_CRT_SECURE_NO_WARNINGS;FULL_NAME="Demolition Racer";WND_TITLE="Demolition Racer (xport)";WND_WIDTH=960;WND_HEIGHT=720;FIELD_RATE=60;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(ProjectDir)..\..;$(ProjectDir)..\..\..\..\xport\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <CompileAs>CompileAsC</CompileAs>
       <Optimization>MaxSpeed</Optimization>
@@ -401,4 +404,12 @@
     <ClCompile Include="..\..\..\..\xport\src\psx_stream.c" />
     <ClCompile Include="..\..\..\..\xport\src\psx_xa.c" />
   </ItemGroup>
+  <ItemGroup>
+    <MASM Include="..\..\..\..\xport\src\platform\win\xcrt_x86.asm">
+      <ExcludedFromBuild Condition="'$(XcrtEnabled)'!='true'">true</ExcludedFromBuild>
+    </MASM>
+  </ItemGroup>
+  <ImportGroup Label="ExtensionTargets">
+    <Import Project="$(VCTargetsPath)\BuildCustomizations\masm.targets" />
+  </ImportGroup>
 </Project>

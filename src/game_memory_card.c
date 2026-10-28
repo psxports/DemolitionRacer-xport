@@ -153,11 +153,10 @@ uint32 sub_80023BD4(uint32 slot)
 
 uint32 sub_800247DC(uint32 slot)
 {
-    char path[32], title[24];
-    uint32 index, offset, words[4], written;
-    sint32 descriptor;
+    char title[24];
+    uint32 index, offset, words[4];
+    (void)slot;
     memcpy(title, psx_addr(0x80011074, 17), 17);
-    snprintf(path, sizeof(path), "bu%d0:BASLUS-00969", (sint32)slot);
     memset(psx_addr(0x80076838, 0x2000), 0, 0x2000);
     R8(0x80076838) = 'S';
     R8(0x80076839) = 'C';
@@ -187,12 +186,7 @@ uint32 sub_800247DC(uint32 slot)
     sub_8002409C(0);
     for (index = 0; index < 7676; ++index)
         R32(0x80076A38) += R8(0x80076A3C + index);
-    descriptor = openPSX(path, 2);
-    if (descriptor < 0)
-        return 0;
-    written = (uint32)writePSX(descriptor, psx_addr(0x80076838, 0x2000), 0x2000);
-    closePSX(descriptor);
-    return written == 0x2000;
+    return xport_save(psx_addr(0x80076838, 0x2000), 0x2000) == 1;
 }
 
 static uint32 card_format_pending(uint32 channel)

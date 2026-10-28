@@ -67,6 +67,12 @@ static void vehicle_axle_effects(uint32 object)
         game_800AF8C4(object, 2u, 12u);
 }
 
+void game_80090F14(uint32 object)
+{
+    if (r_s32(object + 888u) > 25600)
+        game_800AF8C4(object, 7u, 15u);
+}
+
 void game_80090C50(uint32 object, uint32 view)
 {
     uint32 target;
@@ -112,6 +118,9 @@ void game_80090C50(uint32 object, uint32 view)
         case 0x80090EE0u:
             if ((sint16)r_u16(object + 904u) > 200)
                 game_800AF8C4(object, 8u, 15u);
+            return;
+        case 0x80090F14u:
+            game_80090F14(object);
             return;
         case 0x80090F48:
             if (r_s32(object + 888) > 25600)

@@ -178,16 +178,6 @@ static sint32 dr_guest_callback(void *context, uint32 address)
     abort();
 }
 
-void dr_native_scanout(void)
-{
-    /* Host scanout continues when the game removes its VBlank callback */
-    if (!gpu_present())
-    {
-        draft_agent1_missing_diagnostic("Native display presentation failed\n");
-        abort();
-    }
-}
-
 static uint32 dr_pad_owner_begin(uint32 owner)
 {
     return psx_pad_owner_begin(owner, 0x8004F5ACu);
@@ -307,36 +297,25 @@ sint32 closePSX(sint32 descriptor);
 
 uint32 sub_800246B0(uint32 slot)
 {
-    char path[32];
-    sint32 descriptor;
     uint32 index, checksum = 0u;
-    snprintf(path, sizeof(path), "bu%d0:BASLUS-00969", (sint32)slot);
+    (void)slot;
+    /* Keep the original save block and validate it before applying settings */
     memset(psx_addr(0x80076838u, 0x2000u), 0, 0x2000u);
-    descriptor = openPSX(path, 1u);
-    if (descriptor < 0)
+    if (xport_load(psx_addr(0x80076838u, 0x2000u), 0x2000) != 0x2000)
         return 0u;
-    if (readPSX(descriptor, psx_addr(0x80076838u, 0x2000u), 0x2000u) != 0x2000)
-    {
-        closePSX(descriptor);
+    if (r_u8(0x80076838u) != 'S' || r_u8(0x80076839u) != 'C')
         return 0u;
-    }
     for (index = 0u; index < 7676u; ++index)
         checksum += r_u8(0x80076A3Cu + index);
     if (checksum != r_u32(0x80076A38u))
-    {
-        closePSX(descriptor);
         return 0u;
-    }
     w_u32(0x80065320u, 0u);
     w_u32(0x8006531Cu, 0x80076A3Cu);
     if (sub_8002409C(1u) == 1u)
     {
-        closePSX(descriptor);
         sub_8001FF98();
         strcpy((char *)psx_addr(0x8006647Cu, 1u), (const char *)psx_addr(0x80059770u, 1u));
     }
-    else
-        closePSX(descriptor);
     return 1u;
 }
 
@@ -432,7 +411,6 @@ void dr_startup(void)
     }
 #endif
     /* Disable frame skipping for this project */
-    gpu_set_frame_skip(0);
 #if defined(_WIN32) && !defined(XPORT_XCRT)
     _set_abort_behavior(0u, _WRITE_ABORT_MSG | _CALL_REPORTFAULT);
 #endif

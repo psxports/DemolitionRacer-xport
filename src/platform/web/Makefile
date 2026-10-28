@@ -119,7 +119,7 @@ APP_SOURCES := \
 	../../game_movie_boot.c \
 	../../game_movie_controller.c \
 	../../game_movie_sdk.c
-APP_DEFINES := -DAP_WEB -DFIELD_RATE=50 -DWND_WIDTH=960 -DWND_HEIGHT=720 -DWND_TITLE=\"DR\"
+APP_DEFINES := -DAP_WEB -DFIELD_RATE=60 -DWND_WIDTH=960 -DWND_HEIGHT=720 -DWND_TITLE=\"DR\"
 ifeq ($(CONFIG),Release)
 APP_DEFINES += -DXPORT_DISABLE_FUNCTION_MARKERS
 endif
